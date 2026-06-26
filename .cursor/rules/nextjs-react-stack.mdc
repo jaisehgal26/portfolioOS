@@ -1,0 +1,29 @@
+---
+description: Conventions for this Next.js 15 + React 19 + TS + Tailwind project
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Stack Conventions
+
+This is a Next.js 15 (App Router) + React 19 + TypeScript + Tailwind + Zustand project.
+
+## Components
+- Functional components only. Default to Server Components; add `"use client"` only when you need state, effects, or browser APIs.
+- One component per file; name the file after the component (`Button.tsx`).
+- Keep components small. Pull reusable logic into `hooks/` and pure helpers into `lib/`.
+
+## State
+- Local UI state: `useState`. Shared OS/app state: the Zustand store in `store/os-store.ts`.
+- Don't add new global state unless two unrelated components truly need it.
+
+## Styling
+- Tailwind utility classes only; merge conditional classes with the `cn`/`clsx` helpers in `lib/utils.ts`.
+- Reuse existing UI primitives in `components/ui/` before creating new ones.
+
+## Data & types
+- Static content lives in `data/`. Keep types close to where they're used; avoid premature shared type files.
+- No `any`. Prefer precise types and let inference do the work.
+
+## Before finishing
+Run `npm run lint`, `npm run typecheck`, and `npm run build`. All must pass.

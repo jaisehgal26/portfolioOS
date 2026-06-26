@@ -6,7 +6,6 @@ import { AppTwoPane } from "@/components/ui/AppShell";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
 import { projects } from "@/data/projects";
-import { useOSStore } from "@/store/os-store";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { ACCENT } from "@/lib/accent";
 import { cn } from "@/lib/utils";
@@ -21,7 +20,6 @@ const TABS: TabItem[] = [
 ];
 
 export function ProjectsApp() {
-  const mode = useOSStore((s) => s.mode);
   const reduced = usePrefersReducedMotion();
   const [activeId, setActiveId] = useState(projects[0].id);
   const [tab, setTab] = useState("overview");
@@ -146,11 +144,9 @@ export function ProjectsApp() {
                       ))}
                     </div>
                   </Block>
-                  {mode === "engineer" && (
-                    <Block title="Architecture & approach">
-                      <List items={cs.architecture} dot={accent.dot} />
-                    </Block>
-                  )}
+                  <Block title="Architecture & approach">
+                    <List items={cs.architecture} dot={accent.dot} />
+                  </Block>
                 </div>
               )}
 

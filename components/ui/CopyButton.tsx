@@ -9,7 +9,7 @@ interface CopyButtonProps {
   value: string;
   /** Accessible label, e.g. "Copy email". */
   label: string;
-  /** Toast message shown on success (defaults to "Copied"). */
+  /** Toast message shown on success (defaults to "Copied to clipboard"). */
   toast?: string;
   className?: string;
 }
@@ -21,7 +21,7 @@ export function CopyButton({ value, label, toast, className }: CopyButtonProps) 
 
   async function onClick() {
     const ok = await copy(value);
-    if (ok !== false) pushToast(toast ?? "Copied to clipboard");
+    if (ok) pushToast(toast ?? "Copied to clipboard");
   }
 
   return (

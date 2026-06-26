@@ -2,12 +2,10 @@
 
 import { Check, Download, MapPin, Sparkles } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
-import { useOSStore } from "@/store/os-store";
+import { Monogram } from "@/components/os/Monogram";
 import { profile, links } from "@/data/profile";
 
 export function AboutApp() {
-  const mode = useOSStore((s) => s.mode);
-
   const stats = [
     { k: "Experience", v: profile.experience },
     { k: "Current", v: "Velotio Technologies" },
@@ -19,9 +17,7 @@ export function AboutApp() {
     <AppScroll>
       {/* Identity panel */}
       <div className="flex flex-col items-center gap-4 rounded-3xl border border-line bg-surface-2/50 p-7 text-center sm:flex-row sm:text-left">
-        <span className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-gradient-to-br from-accent to-amber font-display text-2xl font-semibold text-white shadow-card ring-2 ring-white/30">
-          JS
-        </span>
+        <Monogram size="lg" className="rounded-3xl" />
         <div>
           <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">{profile.name}</h1>
           <p className="text-muted">{profile.role}</p>
@@ -72,17 +68,15 @@ export function AboutApp() {
         ))}
       </div>
 
-      {mode === "engineer" && (
-        <div className="mt-7 flex items-start gap-3 rounded-2xl border border-violet/25 bg-violet/[0.06] p-4">
-          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-violet" />
-          <p className="text-sm leading-relaxed text-ink">
-            <span className="font-semibold">Engineer note · </span>
-            I model real-time UI as ordered event streams folded into a keyed view model, with each
-            node owning a small state machine (pending → streaming → done → error). It keeps the tree
-            stable under heavy updates and makes reconnects and retries first-class.
-          </p>
-        </div>
-      )}
+      <div className="mt-7 flex items-start gap-3 rounded-2xl border border-violet/25 bg-violet/[0.06] p-4">
+        <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-violet" />
+        <p className="text-sm leading-relaxed text-ink">
+          <span className="font-semibold">Engineer note · </span>
+          I model real-time UI as ordered event streams folded into a keyed view model, with each
+          node owning a small state machine (pending → streaming → done → error). It keeps the tree
+          stable under heavy updates and makes reconnects and retries first-class.
+        </p>
+      </div>
 
       <a
         href={links.resume}

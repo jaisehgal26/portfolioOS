@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { SkillGroup } from "@/data/skills";
 import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import { ACCENT } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
@@ -44,9 +45,7 @@ export function SkillGroupCard({ group }: { group: SkillGroup }) {
 
       <div className="mt-4 flex flex-wrap gap-1.5">
         {group.skills.map((skill) => (
-          <span key={skill} className="chip">
-            {skill}
-          </span>
+          <Badge key={skill}>{skill}</Badge>
         ))}
       </div>
 

@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Lightbulb, MapPin } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { experience } from "@/data/experience";
-import { useOSStore } from "@/store/os-store";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { ACCENT } from "@/lib/accent";
 import { cn } from "@/lib/utils";
@@ -14,7 +13,6 @@ const VERSION: Record<string, string> = { velotio: "v4.5", gigmo: "v3.0", wipro:
 
 export function ExperienceApp() {
   const reduced = usePrefersReducedMotion();
-  const mode = useOSStore((s) => s.mode);
   const [activeId, setActiveId] = useState(experience[0].id);
   const role = experience.find((e) => e.id === activeId) ?? experience[0];
   const accent = ACCENT[role.accent];
@@ -105,13 +103,11 @@ export function ExperienceApp() {
               </p>
             </div>
 
-            {mode === "engineer" && (
-              <p className="mt-4 rounded-2xl border border-line bg-surface-2/50 p-4 text-sm leading-relaxed text-muted">
-                <span className="font-semibold text-ink">Interview talking point · </span>
-                How I structured this UI for {role.tech.slice(0, 3).join(", ")} — component boundaries,
-                shared state, and the loading / error / retry states behind the happy path.
-              </p>
-            )}
+            <p className="mt-4 rounded-2xl border border-line bg-surface-2/50 p-4 text-sm leading-relaxed text-muted">
+              <span className="font-semibold text-ink">Interview talking point · </span>
+              How I structured this UI for {role.tech.slice(0, 3).join(", ")} — component boundaries,
+              shared state, and the loading / error / retry states behind the happy path.
+            </p>
           </motion.div>
         </AnimatePresence>
       </div>

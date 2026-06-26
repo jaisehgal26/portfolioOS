@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { BatteryMedium, Bell, Briefcase, Code2, Moon, Search, Sun, Wifi } from "lucide-react";
+import { BatteryMedium, Bell, Moon, Search, Sun, Wifi } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { getApp } from "@/data/apps";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useCurrentTime } from "@/hooks/use-current-time";
+import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { JaiLogo } from "./JaiLogo";
+import { WatchDial } from "./WatchDial";
 import { cn } from "@/lib/utils";
 
 interface MenuEntry {
@@ -28,24 +31,8 @@ function MenuButton({
   brand?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useDismissOnOutside<HTMLDivElement>(open, () => setOpen(false));
   const reduced = usePrefersReducedMotion();
-
-  useEffect(() => {
-    if (!open) return;
-    function onDoc(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    function onEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onEsc);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onEsc);
-    };
-  }, [open]);
 
   return (
     <div ref={ref} className="relative">
@@ -111,8 +98,6 @@ export function TopBar() {
   const restart = useOSStore((s) => s.restart);
   const theme = useOSStore((s) => s.theme);
   const toggleTheme = useOSStore((s) => s.toggleTheme);
-  const mode = useOSStore((s) => s.mode);
-  const setMode = useOSStore((s) => s.setMode);
   const setHelpOpen = useOSStore((s) => s.setHelpOpen);
   const pushToast = useOSStore((s) => s.pushToast);
   const toggleSpotlight = useOSStore((s) => s.toggleSpotlight);
@@ -123,18 +108,11 @@ export function TopBar() {
   const minimizeWindow = useOSStore((s) => s.minimizeWindow);
   const focusWindow = useOSStore((s) => s.focusWindow);
   const notifications = useOSStore((s) => s.notifications);
-  const [now, setNow] = useState<Date | null>(null);
-
-  useEffect(() => {
-    setNow(new Date());
-    const id = setInterval(() => setNow(new Date()), 30_000);
-    return () => clearInterval(id);
-  }, []);
+  const now = useCurrentTime();
 
   const focusedApp = focusedId ? getApp(focusedId) : null;
   const unread = notifications.filter((n) => !n.read).length;
 
-  const time = now ? now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
   const date = now ? now.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) : "";
 
   return (
@@ -206,23 +184,6 @@ export function TopBar() {
         <button
           type="button"
           onClick={() => {
-            const next = mode === "recruiter" ? "engineer" : "recruiter";
-            setMode(next);
-            pushToast(next === "recruiter" ? "Recruiter mode" : "Engineer mode");
-          }}
-          aria-label={`Switch view mode, currently ${mode}`}
-          className="hidden items-center gap-1.5 rounded-full border border-line bg-surface-2 px-2.5 py-1 text-xs font-medium text-ink transition-colors hover:border-line-strong sm:inline-flex"
-        >
-          {mode === "recruiter" ? (
-            <Briefcase className="h-3.5 w-3.5 text-accent" />
-          ) : (
-            <Code2 className="h-3.5 w-3.5 text-violet" />
-          )}
-          <span className="capitalize">{mode}</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => {
             toggleTheme();
             pushToast(theme === "dark" ? "Light theme" : "Dark theme");
           }}
@@ -247,11 +208,12 @@ export function TopBar() {
         <button
           type="button"
           onClick={toggleNC}
-          className="ml-1 rounded-md px-2 py-1 text-xs font-medium text-ink transition-colors hover:bg-ink/5"
+          aria-label="Notifications and date"
+          className="ml-1 flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-ink/5"
           suppressHydrationWarning
         >
-          <span className="hidden sm:inline">{date} </span>
-          {time}
+          <span className="hidden text-xs font-medium text-ink sm:inline">{date}</span>
+          <WatchDial className="h-6 w-6" />
         </button>
       </div>
     </div>

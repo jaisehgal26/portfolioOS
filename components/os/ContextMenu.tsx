@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FolderKanban, FileText, Mail, Image, MoonStar, Info } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 
 export function ContextMenu() {
   const ctx = useOSStore((s) => s.contextMenu);
@@ -12,22 +12,7 @@ export function ContextMenu() {
   const openApp = useOSStore((s) => s.openApp);
   const toggleTheme = useOSStore((s) => s.toggleTheme);
   const reduced = usePrefersReducedMotion();
-
-  useEffect(() => {
-    if (!ctx.open) return;
-    function onDoc() {
-      close();
-    }
-    function onEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") close();
-    }
-    window.addEventListener("click", onDoc);
-    window.addEventListener("keydown", onEsc);
-    return () => {
-      window.removeEventListener("click", onDoc);
-      window.removeEventListener("keydown", onEsc);
-    };
-  }, [ctx.open, close]);
+  const menuRef = useDismissOnOutside<HTMLDivElement>(ctx.open, close);
 
   const items = [
     { label: "Open Projects", icon: FolderKanban, onClick: () => openApp("projects") },
@@ -47,6 +32,7 @@ export function ContextMenu() {
     <AnimatePresence>
       {ctx.open && (
         <motion.div
+          ref={menuRef}
           role="menu"
           initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -54,7 +40,6 @@ export function ContextMenu() {
           transition={{ duration: reduced ? 0 : 0.12, ease: [0.22, 1, 0.36, 1] }}
           style={{ left: x, top: y, transformOrigin: "top left" }}
           className="glass-strong fixed z-[90] w-52 rounded-xl p-1.5 shadow-card"
-          onClick={(e) => e.stopPropagation()}
         >
           {items.map((item, i) =>
             "sep" in item ? (

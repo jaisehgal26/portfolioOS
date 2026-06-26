@@ -1,4 +1,4 @@
-export interface SeedNotification {
+export interface OSNotification {
   id: string;
   title: string;
   body?: string;
@@ -7,7 +7,7 @@ export interface SeedNotification {
   time?: string;
 }
 
-export const initialNotifications: SeedNotification[] = [
+export const initialNotifications: OSNotification[] = [
   {
     id: "welcome",
     title: "Welcome to JaiOS",

@@ -15,7 +15,11 @@ export type AppId =
   | "settings"
   | "ui-gallery"
   | "system-monitor"
-  | "experiments";
+  | "experiments"
+  | "text-viewer"
+  | "terminal"
+  | "snake"
+  | "secret";
 
 export type AppCategory = "favorites" | "career" | "case-studies" | "system" | "lab";
 
@@ -212,6 +216,54 @@ export const APPS: AppMeta[] = [
     description: "Theme, mode, wallpaper and accent",
     defaultSize: { w: 800, h: 560 },
     inDock: true,
+    onDesktop: false,
+  },
+  {
+    id: "text-viewer",
+    name: "Text Viewer",
+    shortName: "Viewer",
+    icon: "fileText",
+    accent: "accent",
+    category: "system",
+    description: "Read a text file",
+    defaultSize: { w: 680, h: 560 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "terminal",
+    name: "Terminal",
+    shortName: "Terminal",
+    icon: "terminal",
+    accent: "mint",
+    category: "system",
+    description: "A tiny shell — try `help`",
+    defaultSize: { w: 720, h: 460 },
+    inDock: true,
+    onDesktop: false,
+  },
+  {
+    id: "snake",
+    name: "Snake",
+    shortName: "Snake",
+    icon: "gamepad2",
+    accent: "mint",
+    category: "lab",
+    description: "A quick game of Snake",
+    defaultSize: { w: 520, h: 620 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "secret",
+    name: "Secret",
+    shortName: "Secret",
+    icon: "sparkles",
+    accent: "violet",
+    category: "lab",
+    description: "You found something hidden",
+    defaultSize: { w: 560, h: 540 },
+    inDock: false,
     onDesktop: false,
   },
 ];

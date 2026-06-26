@@ -5,8 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
-  Briefcase,
-  Code2,
   CornerDownLeft,
   Download,
   Github,
@@ -44,7 +42,6 @@ export function Spotlight() {
   const close = useOSStore((s) => s.closeSpotlight);
   const openApp = useOSStore((s) => s.openApp);
   const toggleTheme = useOSStore((s) => s.toggleTheme);
-  const setMode = useOSStore((s) => s.setMode);
   const pushToast = useOSStore((s) => s.pushToast);
   const addNotification = useOSStore((s) => s.addNotification);
   const reduced = usePrefersReducedMotion();
@@ -133,30 +130,8 @@ export function Spotlight() {
         icon: <MoonStar className={iconCls} />,
         run: toggleTheme,
       },
-      {
-        id: "recruiter",
-        label: "Switch to Recruiter Mode",
-        group: "View",
-        keywords: "business impact summary",
-        icon: <Briefcase className={iconCls} />,
-        run: () => {
-          setMode("recruiter");
-          pushToast("Recruiter mode");
-        },
-      },
-      {
-        id: "engineer",
-        label: "Switch to Engineer Mode",
-        group: "View",
-        keywords: "technical architecture depth",
-        icon: <Code2 className={iconCls} />,
-        run: () => {
-          setMode("engineer");
-          pushToast("Engineer mode");
-        },
-      },
     ];
-  }, [openApp, toggleTheme, setMode, pushToast, doCopy]);
+  }, [openApp, toggleTheme, doCopy]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

@@ -2,10 +2,9 @@
 
 import { create } from "zustand";
 import { APPS, type AppId } from "@/data/apps";
-import { initialNotifications } from "@/data/notifications";
+import { initialNotifications, type OSNotification } from "@/data/notifications";
 
-export type { AppId };
-export type Mode = "recruiter" | "engineer";
+export type { AppId, OSNotification };
 export type Theme = "light" | "dark";
 
 export interface WindowRect {
@@ -22,18 +21,16 @@ export interface OSWindow extends WindowRect {
   maximized: boolean;
 }
 
-export interface OSNotification {
-  id: string;
-  title: string;
-  body?: string;
-  icon?: string;
-  read?: boolean;
-  time?: string;
-}
-
 export interface Toast {
   id: string;
   message: string;
+}
+
+/** A file the user dragged onto the desktop (positioned at the drop point). */
+export interface DesktopFile {
+  id: string;
+  x: number;
+  y: number;
 }
 
 interface ContextMenuState {
@@ -46,7 +43,6 @@ const STORAGE_KEY = "jaios-prefs";
 const TOP_BAR = 44;
 
 interface Persisted {
-  mode: Mode;
   theme: Theme;
   wallpaper: string;
   accent: string;
@@ -57,6 +53,8 @@ interface OSState extends Persisted {
   hasBooted: boolean;
   isLoggedIn: boolean;
   hydrated: boolean;
+  /** Fake "system crash" (BSOD) easter egg. */
+  crashed: boolean;
 
   windows: OSWindow[];
   focusedId: AppId | null;
@@ -64,7 +62,6 @@ interface OSState extends Persisted {
 
   spotlightOpen: boolean;
   notificationCenterOpen: boolean;
-  systemMenuOpen: boolean;
   helpOpen: boolean;
   contextMenu: ContextMenuState;
 
@@ -72,15 +69,24 @@ interface OSState extends Persisted {
   toasts: Toast[];
   /** A URL requested to open inside the in-OS Browser app (consumed by BrowserApp). */
   browserUrl: string | null;
+  /** A file requested to open in the Text Viewer (consumed by TextViewerApp). */
+  openFileId: string | null;
+  /** Files the user dragged onto the desktop (session only). */
+  desktopFiles: DesktopFile[];
 
   boot: () => void;
-  login: (mode?: Mode) => void;
-  lockToLogin: () => void;
+  login: () => void;
   restart: () => void;
+  crash: () => void;
+  reboot: () => void;
 
   openApp: (appId: AppId) => void;
   openUrlInBrowser: (url: string) => void;
   clearBrowserUrl: () => void;
+  openFile: (id: string) => void;
+  clearOpenFile: () => void;
+  addDesktopFile: (id: string, x: number, y: number) => void;
+  removeDesktopFile: (id: string) => void;
   closeWindow: (id: AppId) => void;
   minimizeWindow: (id: AppId) => void;
   toggleMaximize: (id: AppId) => void;
@@ -89,17 +95,14 @@ interface OSState extends Persisted {
 
   setTheme: (t: Theme) => void;
   toggleTheme: () => void;
-  setMode: (m: Mode) => void;
   setWallpaper: (w: string) => void;
   setAccent: (a: string) => void;
   setReducedMotionPref: (b: boolean) => void;
 
-  openSpotlight: () => void;
   closeSpotlight: () => void;
   toggleSpotlight: () => void;
   toggleNotificationCenter: () => void;
   closeNotificationCenter: () => void;
-  setSystemMenu: (open: boolean) => void;
   setHelpOpen: (open: boolean) => void;
   openContextMenu: (x: number, y: number) => void;
   closeContextMenu: () => void;
@@ -119,7 +122,6 @@ function persist(state: OSState) {
   if (typeof window === "undefined") return;
   try {
     const data: Persisted = {
-      mode: state.mode,
       theme: state.theme,
       wallpaper: state.wallpaper,
       accent: state.accent,
@@ -148,8 +150,8 @@ export const useOSStore = create<OSState>((set, get) => ({
   hasBooted: false,
   isLoggedIn: false,
   hydrated: false,
+  crashed: false,
 
-  mode: "recruiter",
   theme: "light",
   wallpaper: "aurora",
   accent: "terracotta",
@@ -161,21 +163,18 @@ export const useOSStore = create<OSState>((set, get) => ({
 
   spotlightOpen: false,
   notificationCenterOpen: false,
-  systemMenuOpen: false,
   helpOpen: false,
   contextMenu: { open: false, x: 0, y: 0 },
 
   notifications: initialNotifications,
   toasts: [],
   browserUrl: null,
+  openFileId: null,
+  desktopFiles: [],
 
   boot: () => set({ hasBooted: true }),
 
-  login: (mode) =>
-    set((s) => ({ isLoggedIn: true, mode: mode ?? s.mode })),
-
-  lockToLogin: () =>
-    set({ isLoggedIn: false, windows: [], focusedId: null, spotlightOpen: false }),
+  login: () => set({ isLoggedIn: true }),
 
   restart: () =>
     set({
@@ -185,8 +184,13 @@ export const useOSStore = create<OSState>((set, get) => ({
       focusedId: null,
       spotlightOpen: false,
       notificationCenterOpen: false,
-      systemMenuOpen: false,
     }),
+
+  crash: () => set({ crashed: true }),
+  reboot: () => {
+    set({ crashed: false });
+    get().restart();
+  },
 
   openApp: (appId) =>
     set((s) => {
@@ -200,7 +204,6 @@ export const useOSStore = create<OSState>((set, get) => ({
           focusedId: appId,
           zCounter: z,
           spotlightOpen: false,
-          systemMenuOpen: false,
         };
       }
       const rect = defaultRect(appId, s.windows.length);
@@ -210,7 +213,6 @@ export const useOSStore = create<OSState>((set, get) => ({
         focusedId: appId,
         zCounter: z,
         spotlightOpen: false,
-        systemMenuOpen: false,
       };
     }),
 
@@ -219,6 +221,18 @@ export const useOSStore = create<OSState>((set, get) => ({
     get().openApp("browser");
   },
   clearBrowserUrl: () => set({ browserUrl: null }),
+
+  openFile: (id) => {
+    set({ openFileId: id });
+    get().openApp("text-viewer");
+  },
+  clearOpenFile: () => set({ openFileId: null }),
+  addDesktopFile: (id, x, y) =>
+    set((s) => ({
+      desktopFiles: [...s.desktopFiles.filter((f) => f.id !== id), { id, x, y }],
+    })),
+  removeDesktopFile: (id) =>
+    set((s) => ({ desktopFiles: s.desktopFiles.filter((f) => f.id !== id) })),
 
   closeWindow: (id) =>
     set((s) => {
@@ -276,10 +290,6 @@ export const useOSStore = create<OSState>((set, get) => ({
     set((s) => ({ theme: s.theme === "dark" ? "light" : "dark" }));
     persist(get());
   },
-  setMode: (mode) => {
-    set({ mode });
-    persist(get());
-  },
   setWallpaper: (wallpaper) => {
     set({ wallpaper });
     persist(get());
@@ -293,15 +303,13 @@ export const useOSStore = create<OSState>((set, get) => ({
     persist(get());
   },
 
-  openSpotlight: () => set({ spotlightOpen: true, systemMenuOpen: false }),
   closeSpotlight: () => set({ spotlightOpen: false }),
-  toggleSpotlight: () => set((s) => ({ spotlightOpen: !s.spotlightOpen, systemMenuOpen: false })),
+  toggleSpotlight: () => set((s) => ({ spotlightOpen: !s.spotlightOpen })),
   toggleNotificationCenter: () =>
-    set((s) => ({ notificationCenterOpen: !s.notificationCenterOpen, systemMenuOpen: false })),
+    set((s) => ({ notificationCenterOpen: !s.notificationCenterOpen })),
   closeNotificationCenter: () => set({ notificationCenterOpen: false }),
-  setSystemMenu: (open) => set({ systemMenuOpen: open }),
   setHelpOpen: (open) => set({ helpOpen: open }),
-  openContextMenu: (x, y) => set({ contextMenu: { open: true, x, y }, systemMenuOpen: false }),
+  openContextMenu: (x, y) => set({ contextMenu: { open: true, x, y } }),
   closeContextMenu: () => set((s) => ({ contextMenu: { ...s.contextMenu, open: false } })),
 
   addNotification: (n) =>
@@ -331,7 +339,6 @@ export const useOSStore = create<OSState>((set, get) => ({
       if (raw) {
         const p = JSON.parse(raw) as Partial<Persisted>;
         set({
-          mode: p.mode === "engineer" ? "engineer" : "recruiter",
           theme: p.theme === "dark" ? "dark" : "light",
           wallpaper: typeof p.wallpaper === "string" ? p.wallpaper : "aurora",
           accent: typeof p.accent === "string" ? p.accent : "terracotta",

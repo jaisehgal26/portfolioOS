@@ -6,6 +6,7 @@ import { useOSStore } from "@/store/os-store";
 import { getAccentPreset, getWallpaperClass } from "@/data/system";
 import { useGlobalShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { BootScreen } from "./BootScreen";
+import { CrashScreen } from "./CrashScreen";
 import { LoginScreen } from "./LoginScreen";
 import { TopBar } from "./TopBar";
 import { Desktop } from "./Desktop";
@@ -21,6 +22,7 @@ import { cn } from "@/lib/utils";
 export function JaiOS() {
   const hasBooted = useOSStore((s) => s.hasBooted);
   const isLoggedIn = useOSStore((s) => s.isLoggedIn);
+  const crashed = useOSStore((s) => s.crashed);
   const hydrate = useOSStore((s) => s.hydrate);
   const theme = useOSStore((s) => s.theme);
   const accent = useOSStore((s) => s.accent);
@@ -48,8 +50,11 @@ export function JaiOS() {
 
   return (
     <div className={cn("fixed inset-0 overflow-hidden", getWallpaperClass(wallpaper))}>
-      {/* faint texture over the wallpaper */}
-      <div aria-hidden className="noise pointer-events-none absolute inset-0 opacity-[0.02]" />
+      {/* Depth + material: edge vignette and a faint film grain over the wallpaper. */}
+      <div aria-hidden className="vignette pointer-events-none absolute inset-0" />
+      <div aria-hidden className="noise pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-multiply dark:opacity-[0.05] dark:mix-blend-screen" />
+
+      {crashed && <CrashScreen />}
 
       <AnimatePresence mode="wait">
         {!hasBooted ? (

@@ -126,58 +126,60 @@ body {
 }
 
 @layer components {
-  /* Soft, warm-tinted elevation */
+  /* Precision elevation — a tight contact shadow + a wide, soft ambient one. */
   .shadow-soft {
     box-shadow:
-      0 1px 2px rgb(var(--shadow-color) / 0.04),
-      0 6px 18px -10px rgb(var(--shadow-color) / 0.12);
+      0 1px 2px rgb(var(--shadow-color) / 0.05),
+      0 6px 16px -12px rgb(var(--shadow-color) / 0.14);
   }
   .shadow-card {
     box-shadow:
-      0 1px 3px rgb(var(--shadow-color) / 0.05),
-      0 14px 44px -20px rgb(var(--shadow-color) / 0.18);
+      0 1px 2px rgb(var(--shadow-color) / 0.06),
+      0 18px 40px -28px rgb(var(--shadow-color) / 0.22);
   }
   .shadow-lift {
     box-shadow:
-      0 1px 3px rgb(var(--shadow-color) / 0.06),
-      0 28px 60px -28px rgb(var(--shadow-color) / 0.28);
+      0 1px 2px rgb(var(--shadow-color) / 0.06),
+      0 30px 64px -36px rgb(var(--shadow-color) / 0.3);
   }
 
-  /* Base card surface */
+  /* Base card surface — hairline border, gentle lift. */
   .card {
-    @apply rounded-3xl border border-line bg-surface shadow-soft;
+    @apply rounded-2xl border border-line bg-surface shadow-soft;
   }
 
   /* Small uppercase kicker used above section titles */
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent;
+    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent;
   }
 
   /* Pill chip for tech tags */
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2 px-3 py-1 text-xs font-medium text-muted;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2 px-2.5 py-1 text-xs font-medium text-muted;
   }
 
-  /* Translucent OS panel (dock, top bar, popovers, windows) */
+  /* Translucent OS panel (dock, top bar, popovers, windows) —
+     restrained blur so it reads like crafted material, not heavy frosting. */
   .glass {
-    background-color: rgb(var(--surface) / 0.72);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid rgb(var(--line) / 0.9);
+    background-color: rgb(var(--surface) / 0.7);
+    -webkit-backdrop-filter: blur(18px) saturate(125%);
+    backdrop-filter: blur(18px) saturate(125%);
+    border: 1px solid rgb(var(--line) / 0.8);
   }
   .glass-strong {
-    background-color: rgb(var(--surface) / 0.85);
-    -webkit-backdrop-filter: blur(28px) saturate(150%);
-    backdrop-filter: blur(28px) saturate(150%);
-    border: 1px solid rgb(var(--line) / 0.9);
+    background-color: rgb(var(--surface) / 0.86);
+    -webkit-backdrop-filter: blur(22px) saturate(130%);
+    backdrop-filter: blur(22px) saturate(130%);
+    border: 1px solid rgb(var(--line) / 0.85);
   }
 
-  /* Floating window elevation */
+  /* Floating window elevation — crisp hairline frame + layered ambient depth. */
   .shadow-window {
     box-shadow:
-      0 0 0 1px rgb(var(--shadow-color) / 0.04),
-      0 10px 30px -12px rgb(var(--shadow-color) / 0.28),
-      0 40px 80px -32px rgb(var(--shadow-color) / 0.36);
+      0 0 0 1px rgb(var(--line) / 0.7),
+      0 2px 6px -2px rgb(var(--shadow-color) / 0.1),
+      0 24px 50px -24px rgb(var(--shadow-color) / 0.34),
+      0 48px 90px -48px rgb(var(--shadow-color) / 0.4);
   }
 }
 
@@ -216,32 +218,39 @@ body {
     mask-image: linear-gradient(180deg, #000 70%, transparent);
   }
 
-  /* ---- Desktop wallpapers (work in light + dark via tokens) ---- */
+  /* Edge vignette for depth — sits above the wallpaper, below the UI. */
+  .vignette {
+    background:
+      radial-gradient(130% 100% at 50% 0%, transparent 55%, rgb(var(--shadow-color) / 0.05) 100%),
+      radial-gradient(100% 120% at 50% 120%, transparent 60%, rgb(var(--shadow-color) / 0.08) 100%);
+  }
+
+  /* ---- Desktop wallpapers — quiet, single-signal warm fields (no rainbow) ----
+     One soft bloom + a faint counter-glow. Subtle on purpose; depth comes from
+     the vignette and grain layered on top. */
   .wallpaper-aurora {
     background-color: rgb(var(--bg));
     background-image:
-      radial-gradient(60rem 44rem at 8% -6%, rgb(var(--blue) / 0.22), transparent 60%),
-      radial-gradient(52rem 40rem at 100% 0%, rgb(var(--violet) / 0.2), transparent 58%),
-      radial-gradient(58rem 46rem at 78% 112%, rgb(var(--mint) / 0.16), transparent 60%);
+      radial-gradient(120rem 70rem at 50% -28%, rgb(var(--accent) / 0.1), transparent 62%),
+      radial-gradient(80rem 60rem at 92% 118%, rgb(var(--amber) / 0.06), transparent 58%);
   }
   .wallpaper-dawn {
     background-color: rgb(var(--bg));
     background-image:
-      radial-gradient(58rem 44rem at 0% 0%, rgb(var(--amber) / 0.24), transparent 58%),
-      radial-gradient(54rem 42rem at 100% 10%, rgb(var(--accent) / 0.2), transparent 58%),
-      radial-gradient(56rem 46rem at 60% 120%, rgb(var(--violet) / 0.14), transparent 60%);
+      radial-gradient(110rem 64rem at 12% -18%, rgb(var(--amber) / 0.12), transparent 60%),
+      radial-gradient(90rem 60rem at 100% 110%, rgb(var(--accent) / 0.08), transparent 58%);
   }
   .wallpaper-mist {
     background-color: rgb(var(--bg));
     background-image:
-      radial-gradient(60rem 46rem at 12% 4%, rgb(var(--blue) / 0.18), transparent 60%),
-      radial-gradient(54rem 42rem at 96% 100%, rgb(var(--violet) / 0.14), transparent 60%);
+      radial-gradient(120rem 70rem at 50% -24%, rgb(var(--ink) / 0.05), transparent 62%),
+      radial-gradient(80rem 58rem at 90% 116%, rgb(var(--blue) / 0.05), transparent 58%);
   }
   .wallpaper-meadow {
     background-color: rgb(var(--bg));
     background-image:
-      radial-gradient(58rem 44rem at 6% 100%, rgb(var(--mint) / 0.22), transparent 60%),
-      radial-gradient(54rem 42rem at 100% 0%, rgb(var(--blue) / 0.18), transparent 58%);
+      radial-gradient(110rem 66rem at 16% 116%, rgb(var(--mint) / 0.1), transparent 60%),
+      radial-gradient(90rem 60rem at 96% -16%, rgb(var(--accent) / 0.06), transparent 58%);
   }
 }
 

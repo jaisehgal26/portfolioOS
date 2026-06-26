@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@/store/os-store";
 import { APPS, type AppId } from "@/data/apps";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useIsMobile } from "@/hooks/use-media-query";
+import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 
 const dockApps = APPS.filter((a) => a.inDock);
+const firstSystemAppId = dockApps.find((a) => a.category === "system")?.id;
 
 interface DockMenu {
   appId: AppId;
@@ -23,21 +25,22 @@ export function Dock() {
   const minimizeWindow = useOSStore((s) => s.minimizeWindow);
   const windows = useOSStore((s) => s.windows);
   const focusedId = useOSStore((s) => s.focusedId);
+
+  /** Taskbar-style toggle: focused window minimizes; otherwise open/restore/focus. */
+  function onDockClick(appId: AppId) {
+    const win = windows.find((w) => w.id === appId);
+    if (win && !win.minimized && focusedId === appId) {
+      minimizeWindow(appId);
+    } else {
+      openApp(appId);
+    }
+  }
   const reduced = usePrefersReducedMotion();
   const isMobile = useIsMobile();
   const [menu, setMenu] = useState<DockMenu | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useDismissOnOutside<HTMLDivElement>(menu !== null, () => setMenu(null));
 
   const openIds = new Set(windows.map((w) => w.id));
-
-  useEffect(() => {
-    if (!menu) return;
-    function onDoc(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenu(null);
-    }
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [menu]);
 
   return (
     <>
@@ -61,38 +64,44 @@ export function Dock() {
         >
           {dockApps.map((app) => {
             const isOpen = openIds.has(app.id);
+            const isFocused = focusedId === app.id;
             return (
-              <div key={app.id} className="group relative flex shrink-0 flex-col items-center">
-                {/* Tooltip */}
-                {!isMobile && (
-                  <span className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-lg border border-line bg-surface px-2 py-1 text-xs font-medium text-ink opacity-0 shadow-soft transition-opacity duration-150 group-hover:opacity-100">
-                    {app.name}
-                  </span>
+              <Fragment key={app.id}>
+                {!isMobile && app.id === firstSystemAppId && (
+                  <span aria-hidden className="mx-1 h-9 w-px self-center bg-line/70" />
                 )}
-                <button
-                  type="button"
-                  onClick={() => openApp(app.id)}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    setMenu({ appId: app.id, x: e.clientX, y: e.clientY });
-                  }}
-                  aria-label={`Open ${app.name}`}
-                  className={cn(
-                    "origin-bottom transition-transform duration-200 ease-spring",
-                    !reduced && "hover:-translate-y-1 hover:scale-110",
+                <div className="group relative flex shrink-0 flex-col items-center">
+                  {/* Tooltip */}
+                  {!isMobile && (
+                    <span className="pointer-events-none absolute -top-10 whitespace-nowrap rounded-lg border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink opacity-0 shadow-card transition-opacity duration-150 group-hover:opacity-100">
+                      {app.name}
+                    </span>
                   )}
-                >
-                  <AppIcon app={app} size={isMobile ? "sm" : "md"} />
-                </button>
-                {/* Active dot */}
-                <span
-                  className={cn(
-                    "mt-1 h-1 w-1 rounded-full transition-colors",
-                    isOpen ? (focusedId === app.id ? "bg-ink" : "bg-muted") : "bg-transparent",
-                  )}
-                  aria-hidden
-                />
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => onDockClick(app.id)}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      setMenu({ appId: app.id, x: e.clientX, y: e.clientY });
+                    }}
+                    aria-label={isOpen ? `${app.name} (open)` : `Open ${app.name}`}
+                    className={cn(
+                      "origin-bottom transition-transform duration-200 ease-spring",
+                      !reduced && "hover:-translate-y-1.5 hover:scale-110",
+                    )}
+                  >
+                    <AppIcon app={app} size={isMobile ? "sm" : "md"} active={isFocused} />
+                  </button>
+                  {/* Active dot */}
+                  <span
+                    className={cn(
+                      "mt-1 h-1 w-1 rounded-full transition-colors",
+                      isOpen ? (isFocused ? "bg-accent" : "bg-muted/60") : "bg-transparent",
+                    )}
+                    aria-hidden
+                  />
+                </div>
+              </Fragment>
             );
           })}
         </motion.nav>
@@ -148,11 +157,6 @@ export function Dock() {
                 </button>
               </>
             )}
-            <div className="my-1 h-px bg-line" />
-            <span className="flex items-center justify-between px-3 py-1 text-xs text-faint">
-              Pin to Dock
-              <span className="h-2 w-2 rounded-full bg-mint" />
-            </span>
           </motion.div>
         )}
       </AnimatePresence>

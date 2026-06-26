@@ -1,0 +1,30 @@
+---
+description: SDLC workflow and how the specialist subagents hand off context
+alwaysApply: true
+---
+
+# SDLC Workflow
+
+Non-trivial work flows through six phases, each owned by a dedicated subagent in `.cursor/agents/`:
+
+1. **scope-analyst** — understand WHAT is being asked and WHY (no code).
+2. **planner** — design the simplest plan to do it (no code).
+3. **implementer** — write the code, following `coding-principles`.
+4. **tester** — verify it works (lint, typecheck, build, manual checks).
+5. **impact-checker** — confirm nothing else broke (regressions).
+6. **shipper** — final review, summary, and prepare to ship.
+
+Skip phases only for trivial one-line changes. For anything touching multiple files or behavior, run the full chain.
+
+## Context handoff — the rule that makes this work
+
+All cross-agent context lives in **`.sdlc/<task-slug>.md`**, created from `.sdlc/TEMPLATE.md`.
+
+- Each agent **READS the whole handoff file first** to absorb prior context.
+- Each agent **WRITES only its own section** (and never deletes earlier sections).
+- The handoff file is the single source of truth between phases — do not rely on memory across agents.
+- Agents that aren't writing code (scope-analyst, planner) must edit ONLY the handoff file, never source code.
+
+If the handoff file for the current task does not exist, the first agent (scope-analyst) creates it from the template.
+
+See `.sdlc/README.md` for the full protocol.

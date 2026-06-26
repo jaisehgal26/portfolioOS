@@ -24,17 +24,4 @@ export const browserSites: BrowserSite[] = [
     url: links.portfolio,
     description: "This portfolio — live on Vercel.",
   },
-  // ── Add your deployed projects below (replace the examples) ──
-  // {
-  //   id: "agentic-ai-chat",
-  //   title: "Agentic AI Chat",
-  //   url: "https://your-ai-chat.vercel.app",
-  //   description: "Streaming AI chat interface.",
-  // },
-  // {
-  //   id: "payments",
-  //   title: "Payments Module",
-  //   url: "https://your-payments.vercel.app",
-  //   description: "Real-time payment tracking.",
-  // },
 ];

@@ -15,6 +15,10 @@ import { SettingsApp } from "@/components/apps/SettingsApp";
 import { UIStateGalleryApp } from "@/components/apps/UIStateGalleryApp";
 import { SystemMonitorApp } from "@/components/apps/SystemMonitorApp";
 import { ExperimentsApp } from "@/components/apps/ExperimentsApp";
+import { TextViewerApp } from "@/components/apps/TextViewerApp";
+import { TerminalApp } from "@/components/apps/TerminalApp";
+import { SnakeApp } from "@/components/apps/SnakeApp";
+import { SecretApp } from "@/components/apps/SecretApp";
 
 export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   "quick-hire": QuickHireApp,
@@ -32,4 +36,8 @@ export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   "ui-gallery": UIStateGalleryApp,
   "system-monitor": SystemMonitorApp,
   experiments: ExperimentsApp,
+  "text-viewer": TextViewerApp,
+  terminal: TerminalApp,
+  snake: SnakeApp,
+  secret: SecretApp,
 };

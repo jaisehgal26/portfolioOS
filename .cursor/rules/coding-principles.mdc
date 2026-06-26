@@ -1,0 +1,43 @@
+---
+description: Simplicity-first coding principles (KISS, DRY, YAGNI, SOLID) for all code
+alwaysApply: true
+---
+
+# Coding Principles — Simplicity First
+
+The #1 rule: **write the simplest code that fully solves the problem.** Always prefer the easy, obvious solution over the clever, complex one. If two approaches work, ship the one a junior dev can read in 10 seconds.
+
+## KISS — Keep It Simple
+- Solve the actual problem, nothing more. No speculative abstractions.
+- Prefer plain functions and early returns over deep nesting and clever one-liners.
+- A longer-but-clearer block beats a short-but-cryptic one.
+
+```ts
+// ❌ Too clever
+const r = items.reduce((a, i) => ({ ...a, [i.id]: i }), {});
+
+// ✅ Obvious
+const byId: Record<string, Item> = {};
+for (const item of items) byId[item.id] = item;
+```
+
+## DRY — Don't Repeat Yourself (within reason)
+- If the same logic appears 3+ times, extract it into a small named helper.
+- Do NOT over-DRY: a little duplication is better than the wrong abstraction.
+
+## YAGNI — You Aren't Gonna Need It
+- Don't add config, options, or layers "for the future." Build for today's requirement.
+- Delete dead code instead of commenting it out.
+
+## SOLID (lightweight)
+- **S**ingle responsibility: one function/component does one thing. If it needs "and" to describe it, split it.
+- **O**pen/closed: extend via new small pieces, avoid rewriting working code.
+- **D**ependency direction: depend on small interfaces/props, not on big concrete blobs.
+
+## Naming & readability
+- Names say intent: `getActiveUsers()` not `gau()`. Booleans read as questions: `isOpen`, `hasError`.
+- Keep functions short. If it scrolls off screen, split it.
+- Only comment the *why* (intent, trade-offs, constraints) — never narrate the *what*.
+
+## When in doubt
+Choose the option with fewer moving parts. Optimize for the next person reading the code, not for showing off.

@@ -13,7 +13,7 @@ import {
 import { AppScroll } from "@/components/ui/AppShell";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { useOSStore } from "@/store/os-store";
-import { profile, links } from "@/data/profile";
+import { links } from "@/data/profile";
 
 const snapshot = [
   { k: "Experience", v: "4.5+ years" },

@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Briefcase, Code2, Moon, Sun, Zap, ZapOff } from "lucide-react";
+import { Check, Moon, Sun, Zap, ZapOff } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { useOSStore } from "@/store/os-store";
 import { WALLPAPERS, ACCENTS } from "@/data/system";
 import { JaiLogo } from "@/components/os/JaiLogo";
 import { cn } from "@/lib/utils";
 
-const SECTIONS = ["Appearance", "Portfolio Mode", "Motion", "About JaiOS"] as const;
+const SECTIONS = ["Appearance", "Motion", "About JaiOS"] as const;
 type SectionId = (typeof SECTIONS)[number];
 
 export function SettingsApp() {
@@ -19,8 +19,6 @@ export function SettingsApp() {
   const setWallpaper = useOSStore((s) => s.setWallpaper);
   const accent = useOSStore((s) => s.accent);
   const setAccent = useOSStore((s) => s.setAccent);
-  const mode = useOSStore((s) => s.mode);
-  const setMode = useOSStore((s) => s.setMode);
   const reducedPref = useOSStore((s) => s.reducedMotionPref);
   const setReduced = useOSStore((s) => s.setReducedMotionPref);
 
@@ -98,27 +96,6 @@ export function SettingsApp() {
               </div>
             </Field>
           </div>
-        )}
-
-        {section === "Portfolio Mode" && (
-          <Field label="Content depth">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <OptionCard
-                active={mode === "recruiter"}
-                onClick={() => setMode("recruiter")}
-                icon={<Briefcase className="h-5 w-5" />}
-                label="Recruiter"
-                desc="Concise impact, experience and contact."
-              />
-              <OptionCard
-                active={mode === "engineer"}
-                onClick={() => setMode("engineer")}
-                icon={<Code2 className="h-5 w-5" />}
-                label="Engineer"
-                desc="Architecture, stack and implementation notes."
-              />
-            </div>
-          </Field>
         )}
 
         {section === "Motion" && (

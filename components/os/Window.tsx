@@ -147,8 +147,8 @@ export function Window({ win, isMobile, children }: WindowProps) {
       transition={{ duration: reduced ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
       style={style}
       className={cn(
-        "glass-strong pointer-events-auto absolute flex flex-col overflow-hidden rounded-2xl shadow-window",
-        focused ? "ring-1 ring-accent/25" : "ring-0",
+        "glass-strong pointer-events-auto absolute flex flex-col overflow-hidden rounded-2xl shadow-window transition-shadow",
+        focused ? "ring-1 ring-accent/20" : "opacity-[0.985] ring-0",
       )}
     >
       {/* Title bar */}
@@ -187,7 +187,7 @@ export function Window({ win, isMobile, children }: WindowProps) {
 
         <div className="pointer-events-none mx-auto flex items-center gap-2">
           <AppIcon app={app} size="xs" />
-          <span className="text-sm font-medium text-ink">{app.name}</span>
+          <span className="text-[13px] font-medium tracking-tight text-ink">{app.name}</span>
         </div>
         <div className="w-12" aria-hidden />
       </header>

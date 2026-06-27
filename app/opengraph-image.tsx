@@ -18,7 +18,7 @@ export default function OpengraphImage() {
           padding: "76px",
           background: "#FAF7F2",
           backgroundImage:
-            "radial-gradient(50rem 36rem at 0% -10%, rgba(234,158,74,0.20), transparent 60%), radial-gradient(44rem 34rem at 110% 120%, rgba(138,122,240,0.18), transparent 60%)",
+            "radial-gradient(50rem 36rem at 0% -10%, rgba(234,158,74,0.20), transparent 60%), radial-gradient(44rem 34rem at 110% 120%, rgba(226,106,78,0.16), transparent 60%)",
           fontFamily: "Georgia, serif",
         }}
       >
@@ -31,8 +31,8 @@ export default function OpengraphImage() {
               width: "56px",
               height: "56px",
               borderRadius: "16px",
-              background: "#1F1B18",
-              color: "#FAF7F2",
+              background: "linear-gradient(135deg, #F2854E, #DC4E2A)",
+              color: "#FFF7F0",
               fontSize: "30px",
               fontWeight: 700,
             }}

@@ -14,6 +14,31 @@ const TOP_BAR = 44;
 const MIN_W = 360;
 const MIN_H = 300;
 
+type SnapZone = "max" | "left" | "right" | null;
+
+/** Target rect for a snap zone (max / left-half / right-half). Client only. */
+function snapRect(zone: Exclude<SnapZone, null>) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const top = TOP_BAR + 8;
+  const h = vh - TOP_BAR - 16;
+  if (zone === "max") return { x: 8, y: top, w: vw - 16, h };
+  const w = Math.floor(vw / 2) - 12;
+  const x = zone === "left" ? 8 : Math.ceil(vw / 2) + 4;
+  return { x, y: top, w, h };
+}
+
+const RESIZE_HANDLES: { dir: string; className: string }[] = [
+  { dir: "n", className: "left-3 right-3 top-0 h-1.5 cursor-ns-resize" },
+  { dir: "s", className: "left-3 right-3 bottom-0 h-1.5 cursor-ns-resize" },
+  { dir: "e", className: "top-3 bottom-3 right-0 w-1.5 cursor-ew-resize" },
+  { dir: "w", className: "top-3 bottom-3 left-0 w-1.5 cursor-ew-resize" },
+  { dir: "ne", className: "top-0 right-0 h-3 w-3 cursor-nesw-resize" },
+  { dir: "nw", className: "top-0 left-0 h-3 w-3 cursor-nwse-resize" },
+  { dir: "se", className: "bottom-0 right-0 h-3 w-3 cursor-nwse-resize" },
+  { dir: "sw", className: "bottom-0 left-0 h-3 w-3 cursor-nesw-resize" },
+];
+
 interface WindowProps {
   win: OSWindow;
   isMobile: boolean;
@@ -32,10 +57,12 @@ export function Window({ win, isMobile, children }: WindowProps) {
 
   const [pos, setPos] = useState({ x: win.x, y: win.y });
   const [size, setSize] = useState({ w: win.w, h: win.h });
+  const [snap, setSnap] = useState<SnapZone>(null);
   const dragging = useRef(false);
   const resizing = useRef(false);
   const posRef = useRef(pos);
   const sizeRef = useRef(size);
+  const snapRef = useRef<SnapZone>(null);
   posRef.current = pos;
   sizeRef.current = size;
 
@@ -46,6 +73,17 @@ export function Window({ win, isMobile, children }: WindowProps) {
     if (!resizing.current) setSize({ w: win.w, h: win.h });
   }, [win.w, win.h]);
 
+  function applySnap(zone: Exclude<SnapZone, null>) {
+    const r = snapRect(zone);
+    if (zone === "max") {
+      if (!win.maximized) toggleMaximize(win.id);
+      return;
+    }
+    setPos({ x: r.x, y: r.y });
+    setSize({ w: r.w, h: r.h });
+    setWindowRect(win.id, r);
+  }
+
   function startDrag(e: React.PointerEvent) {
     if (win.maximized || isMobile) return;
     if ((e.target as HTMLElement).closest("[data-no-drag]")) return;
@@ -55,36 +93,66 @@ export function Window({ win, isMobile, children }: WindowProps) {
     const startY = e.clientY;
     const origin = { ...posRef.current };
     function move(ev: PointerEvent) {
-      const nx = clamp(origin.x + ev.clientX - startX, -size.w + 120, window.innerWidth - 120);
+      const nx = clamp(origin.x + ev.clientX - startX, -sizeRef.current.w + 120, window.innerWidth - 120);
       const ny = clamp(origin.y + ev.clientY - startY, TOP_BAR, window.innerHeight - 56);
       setPos({ x: nx, y: ny });
+      let zone: SnapZone = null;
+      if (ev.clientY <= TOP_BAR + 4) zone = "max";
+      else if (ev.clientX <= 6) zone = "left";
+      else if (ev.clientX >= window.innerWidth - 6) zone = "right";
+      snapRef.current = zone;
+      setSnap(zone);
     }
     function up() {
       dragging.current = false;
-      setWindowRect(win.id, { x: posRef.current.x, y: posRef.current.y });
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
+      const zone = snapRef.current;
+      snapRef.current = null;
+      setSnap(null);
+      if (zone) applySnap(zone);
+      else setWindowRect(win.id, { x: posRef.current.x, y: posRef.current.y });
     }
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
   }
 
-  function startResize(e: React.PointerEvent) {
+  function startResize(e: React.PointerEvent, dir: string) {
     if (win.maximized || isMobile) return;
     e.stopPropagation();
     focusWindow(win.id);
     resizing.current = true;
     const startX = e.clientX;
     const startY = e.clientY;
-    const origin = { ...sizeRef.current };
+    const o = { x: posRef.current.x, y: posRef.current.y, w: sizeRef.current.w, h: sizeRef.current.h };
     function move(ev: PointerEvent) {
-      const nw = clamp(origin.w + ev.clientX - startX, MIN_W, window.innerWidth - posRef.current.x - 16);
-      const nh = clamp(origin.h + ev.clientY - startY, MIN_H, window.innerHeight - posRef.current.y - 16);
-      setSize({ w: nw, h: nh });
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      let { x, y, w, h } = o;
+      if (dir.includes("e")) w = o.w + dx;
+      if (dir.includes("s")) h = o.h + dy;
+      if (dir.includes("w")) {
+        w = o.w - dx;
+        x = o.x + dx;
+      }
+      if (dir.includes("n")) {
+        h = o.h - dy;
+        y = o.y + dy;
+      }
+      if (w < MIN_W) {
+        if (dir.includes("w")) x = o.x + (o.w - MIN_W);
+        w = MIN_W;
+      }
+      if (h < MIN_H) {
+        if (dir.includes("n")) y = o.y + (o.h - MIN_H);
+        h = MIN_H;
+      }
+      setPos({ x, y });
+      setSize({ w, h });
     }
     function up() {
       resizing.current = false;
-      setWindowRect(win.id, { w: sizeRef.current.w, h: sizeRef.current.h });
+      setWindowRect(win.id, { x: posRef.current.x, y: posRef.current.y, w: sizeRef.current.w, h: sizeRef.current.h });
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
     }
@@ -137,20 +205,30 @@ export function Window({ win, isMobile, children }: WindowProps) {
     ? { left: 8, top: TOP_BAR + 8, width: "calc(100vw - 16px)", height: `calc(100vh - ${TOP_BAR + 16}px)`, zIndex: win.zIndex }
     : { left: pos.x, top: pos.y, width: size.w, height: size.h, zIndex: win.zIndex };
 
+  const preview = snap ? snapRect(snap) : null;
+
   return (
-    <motion.section
-      aria-label={app.name}
-      onPointerDown={() => focusWindow(win.id)}
-      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 8 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 8 }}
-      transition={{ duration: reduced ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
-      style={style}
-      className={cn(
-        "glass-strong pointer-events-auto absolute flex flex-col overflow-hidden rounded-2xl shadow-window transition-shadow",
-        focused ? "ring-1 ring-accent/20" : "opacity-[0.985] ring-0",
+    <>
+      {preview && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed rounded-2xl border-2 border-accent/50 bg-accent/10 backdrop-blur-sm transition-all duration-100"
+          style={{ left: preview.x, top: preview.y, width: preview.w, height: preview.h, zIndex: win.zIndex - 1 }}
+        />
       )}
-    >
+      <motion.section
+        aria-label={app.name}
+        onPointerDown={() => focusWindow(win.id)}
+        initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 28 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 28 }}
+        transition={{ duration: reduced ? 0 : 0.24, ease: [0.22, 1, 0.36, 1] }}
+        style={{ ...style, transformOrigin: "50% 120%" }}
+        className={cn(
+          "glass-strong pointer-events-auto absolute flex flex-col overflow-hidden rounded-2xl shadow-window transition-shadow",
+          focused ? "ring-1 ring-accent/20" : "opacity-[0.985] ring-0",
+        )}
+      >
       {/* Title bar */}
       <header
         onPointerDown={startDrag}
@@ -195,16 +273,22 @@ export function Window({ win, isMobile, children }: WindowProps) {
       {/* Content */}
       <div className="min-h-0 flex-1 overflow-hidden bg-surface/95">{children}</div>
 
-      {/* Resize handle */}
-      {!win.maximized && (
-        <div
-          onPointerDown={startResize}
-          role="presentation"
-          className="absolute bottom-0 right-0 h-5 w-5 cursor-nwse-resize"
-        >
-          <div className="absolute bottom-1.5 right-1.5 h-2 w-2 rounded-br-md border-b-2 border-r-2 border-line-strong" />
-        </div>
-      )}
-    </motion.section>
+      {/* Resize handles (all edges + corners) */}
+      {!win.maximized &&
+        RESIZE_HANDLES.map((h) => (
+          <div
+            key={h.dir}
+            role="presentation"
+            onPointerDown={(e) => startResize(e, h.dir)}
+            className={cn("absolute z-10", h.className)}
+          />
+        ))}
+
+        {/* Grip dot in the corner */}
+        {!win.maximized && (
+          <div className="pointer-events-none absolute bottom-1.5 right-1.5 h-2 w-2 rounded-br-md border-b-2 border-r-2 border-line-strong" />
+        )}
+      </motion.section>
+    </>
   );
 }

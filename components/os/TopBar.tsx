@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { BatteryMedium, Bell, Moon, Search, Sun, Wifi } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { getApp } from "@/data/apps";
+import { FINDER_SECTIONS } from "@/data/sections";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useCurrentTime } from "@/hooks/use-current-time";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
@@ -95,17 +96,23 @@ function MenuButton({
 
 export function TopBar() {
   const openApp = useOSStore((s) => s.openApp);
+  const openFinderAt = useOSStore((s) => s.openFinderAt);
   const restart = useOSStore((s) => s.restart);
+  const lock = useOSStore((s) => s.lock);
+  const toggleMissionControl = useOSStore((s) => s.toggleMissionControl);
   const theme = useOSStore((s) => s.theme);
   const toggleTheme = useOSStore((s) => s.toggleTheme);
   const setHelpOpen = useOSStore((s) => s.setHelpOpen);
   const pushToast = useOSStore((s) => s.pushToast);
   const toggleSpotlight = useOSStore((s) => s.toggleSpotlight);
   const toggleNC = useOSStore((s) => s.toggleNotificationCenter);
+  const toggleControlCenter = useOSStore((s) => s.toggleControlCenter);
+  const toggleCalendar = useOSStore((s) => s.toggleCalendar);
   const focusedId = useOSStore((s) => s.focusedId);
   const windows = useOSStore((s) => s.windows);
   const closeWindow = useOSStore((s) => s.closeWindow);
   const minimizeWindow = useOSStore((s) => s.minimizeWindow);
+  const toggleMaximize = useOSStore((s) => s.toggleMaximize);
   const focusWindow = useOSStore((s) => s.focusWindow);
   const notifications = useOSStore((s) => s.notifications);
   const now = useCurrentTime();
@@ -128,14 +135,15 @@ export function TopBar() {
             </span>
           }
           items={[
-            { label: "About JaiOS", onClick: () => openApp("about") },
-            { label: "Quick Hire", onClick: () => openApp("quick-hire") },
-            { label: "Resume", onClick: () => openApp("resume") },
-            { label: "Projects", onClick: () => openApp("projects") },
-            { label: "Contact", onClick: () => openApp("contact") },
+            { label: "About", onClick: () => openFinderAt("about") },
+            { label: "Quick Hire", onClick: () => openFinderAt("quick-hire") },
+            { label: "Resume", onClick: () => openFinderAt("resume") },
+            { label: "Work", onClick: () => openFinderAt("work") },
+            { label: "Contact", onClick: () => openFinderAt("contact") },
             { label: "—" },
             { label: "System Settings", onClick: () => openApp("settings") },
             { label: "—" },
+            { label: "Lock Screen", onClick: lock },
             { label: "Restart Experience", onClick: restart, danger: true },
           ]}
         />
@@ -144,26 +152,39 @@ export function TopBar() {
           <MenuButton
             bold
             label={focusedApp ? focusedApp.name : "Desktop"}
-            items={[
-              { label: focusedApp ? `Close ${focusedApp.shortName}` : "No window open", onClick: focusedId ? () => closeWindow(focusedId) : undefined, disabled: !focusedId },
-              { label: "Minimize", onClick: focusedId ? () => minimizeWindow(focusedId) : undefined, disabled: !focusedId },
-            ]}
+            items={
+              focusedId
+                ? [
+                    { label: `Close ${focusedApp?.shortName}`, onClick: () => closeWindow(focusedId) },
+                    { label: "Minimize", onClick: () => minimizeWindow(focusedId) },
+                    { label: "Maximize / Restore", onClick: () => toggleMaximize(focusedId) },
+                  ]
+                : [{ label: "No window open", disabled: true }]
+            }
           />
         </span>
 
         <span className="hidden md:flex items-center">
+          {focusedId === "finder" && (
+            <MenuButton
+              label="Go"
+              items={FINDER_SECTIONS.map((s) => ({ label: s.label, onClick: () => openFinderAt(s.id) }))}
+            />
+          )}
           <MenuButton
             label="Window"
-            items={
-              windows.length
+            items={[
+              { label: "Mission Control (F3)", onClick: toggleMissionControl },
+              { label: "—" },
+              ...(windows.length
                 ? windows.map((w) => ({ label: getApp(w.id).name, onClick: () => focusWindow(w.id) }))
-                : [{ label: "No open windows", disabled: true }]
-            }
+                : [{ label: "No open windows", disabled: true }]),
+            ]}
           />
           <MenuButton
             label="Help"
             items={[
-              { label: "About this portfolio", onClick: () => openApp("about") },
+              { label: "About this portfolio", onClick: () => openFinderAt("about") },
               { label: "Keyboard shortcuts", onClick: () => setHelpOpen(true) },
               { label: "Search (⌘K)", onClick: toggleSpotlight },
             ]}
@@ -192,8 +213,15 @@ export function TopBar() {
         >
           {theme === "dark" ? <Sun className="h-[15px] w-[15px]" /> : <Moon className="h-[15px] w-[15px]" />}
         </button>
-        <Wifi className="hidden h-[15px] w-[15px] sm:block" aria-hidden />
-        <BatteryMedium className="hidden h-[18px] w-[18px] sm:block" aria-hidden />
+        <button
+          type="button"
+          onClick={toggleControlCenter}
+          aria-label="Control center"
+          className="hidden items-center gap-1.5 rounded-md px-1.5 py-1 transition-colors hover:bg-ink/5 hover:text-ink sm:flex"
+        >
+          <Wifi className="h-[15px] w-[15px]" aria-hidden />
+          <BatteryMedium className="h-[18px] w-[18px]" aria-hidden />
+        </button>
         <button
           type="button"
           onClick={toggleNC}
@@ -207,8 +235,8 @@ export function TopBar() {
         </button>
         <button
           type="button"
-          onClick={toggleNC}
-          aria-label="Notifications and date"
+          onClick={toggleCalendar}
+          aria-label="Date and calendar"
           className="ml-1 flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-ink/5"
           suppressHydrationWarning
         >

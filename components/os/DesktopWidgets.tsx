@@ -31,7 +31,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 
 export function DesktopWidgets() {
-  const openApp = useOSStore((s) => s.openApp);
+  const openFinderAt = useOSStore((s) => s.openFinderAt);
   const now = useCurrentTime();
 
   const weekday = now ? now.toLocaleDateString([], { weekday: "long" }) : "";
@@ -54,7 +54,7 @@ export function DesktopWidgets() {
       <Widget delay={0.1}>
         <button
           type="button"
-          onClick={() => openApp("about")}
+          onClick={() => openFinderAt("about")}
           className="flex w-full items-center gap-3 text-left"
         >
           <Monogram size="sm" className="rounded-2xl" />

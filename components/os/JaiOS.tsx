@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@/store/os-store";
 import { getAccentPreset, getWallpaperClass } from "@/data/system";
@@ -15,6 +15,11 @@ import { Dock } from "./Dock";
 import { Spotlight } from "./Spotlight";
 import { ContextMenu } from "./ContextMenu";
 import { NotificationCenter } from "./NotificationCenter";
+import { ControlCenter } from "./ControlCenter";
+import { Calendar } from "./Calendar";
+import { MissionControl } from "./MissionControl";
+import { Screensaver } from "./Screensaver";
+import { AppSwitcher } from "./AppSwitcher";
 import { ShortcutsPanel } from "./ShortcutsPanel";
 import { ToastViewport } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
@@ -23,11 +28,14 @@ export function JaiOS() {
   const hasBooted = useOSStore((s) => s.hasBooted);
   const isLoggedIn = useOSStore((s) => s.isLoggedIn);
   const crashed = useOSStore((s) => s.crashed);
+  const brightness = useOSStore((s) => s.brightness);
   const hydrate = useOSStore((s) => s.hydrate);
   const theme = useOSStore((s) => s.theme);
   const accent = useOSStore((s) => s.accent);
   const wallpaper = useOSStore((s) => s.wallpaper);
   const reducedPref = useOSStore((s) => s.reducedMotionPref);
+  const addNotification = useOSStore((s) => s.addNotification);
+  const liveFired = useRef(false);
 
   useGlobalShortcuts();
 
@@ -48,11 +56,37 @@ export function JaiOS() {
     document.documentElement.classList.toggle("rm-off", reducedPref);
   }, [reducedPref]);
 
+  // A couple of notifications arrive over the session (once), so the OS feels live.
+  useEffect(() => {
+    if (!isLoggedIn || liveFired.current) return;
+    liveFired.current = true;
+    const t1 = setTimeout(
+      () => addNotification({ title: "Tip — Spotlight", body: "Press ⌘K / Ctrl K to jump anywhere.", icon: "search", time: "now" }),
+      9000,
+    );
+    const t2 = setTimeout(
+      () => addNotification({ title: "30-second pitch", body: "Open Quick Hire for the recruiter overview.", icon: "sparkles", time: "now" }),
+      24000,
+    );
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [isLoggedIn, addNotification]);
+
   return (
     <div className={cn("fixed inset-0 overflow-hidden", getWallpaperClass(wallpaper))}>
       {/* Depth + material: edge vignette and a faint film grain over the wallpaper. */}
       <div aria-hidden className="vignette pointer-events-none absolute inset-0" />
       <div aria-hidden className="noise pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-multiply dark:opacity-[0.05] dark:mix-blend-screen" />
+
+      {brightness < 1 && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 z-[55] bg-black transition-opacity duration-200"
+          style={{ opacity: (1 - brightness) * 0.7 }}
+        />
+      )}
 
       {crashed && <CrashScreen />}
 
@@ -79,6 +113,11 @@ export function JaiOS() {
             <Spotlight />
             <ContextMenu />
             <NotificationCenter />
+            <ControlCenter />
+            <Calendar />
+            <MissionControl />
+            <AppSwitcher />
+            <Screensaver />
             <ShortcutsPanel />
             <ToastViewport />
           </motion.div>

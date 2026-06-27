@@ -19,6 +19,7 @@ import { TextViewerApp } from "@/components/apps/TextViewerApp";
 import { TerminalApp } from "@/components/apps/TerminalApp";
 import { SnakeApp } from "@/components/apps/SnakeApp";
 import { SecretApp } from "@/components/apps/SecretApp";
+import { TrashApp } from "@/components/apps/TrashApp";
 
 export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   "quick-hire": QuickHireApp,
@@ -40,4 +41,5 @@ export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   terminal: TerminalApp,
   snake: SnakeApp,
   secret: SecretApp,
+  trash: TrashApp,
 };

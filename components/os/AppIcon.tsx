@@ -16,6 +16,7 @@ import {
   Settings,
   Sparkles,
   SquareTerminal,
+  Trash2,
   User,
   Zap,
   type LucideIcon,
@@ -43,6 +44,7 @@ const GLYPHS: Record<string, LucideIcon> = {
   gamepad2: Gamepad2,
   terminal: SquareTerminal,
   sparkles: Sparkles,
+  trash: Trash2,
 };
 
 const SIZES = {

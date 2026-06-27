@@ -19,7 +19,8 @@ export type AppId =
   | "text-viewer"
   | "terminal"
   | "snake"
-  | "secret";
+  | "secret"
+  | "trash";
 
 export type AppCategory = "favorites" | "career" | "case-studies" | "system" | "lab";
 
@@ -47,8 +48,8 @@ export const APPS: AppMeta[] = [
     category: "favorites",
     description: "Everything a recruiter needs in 30 seconds",
     defaultSize: { w: 860, h: 600 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "about",
@@ -59,8 +60,8 @@ export const APPS: AppMeta[] = [
     category: "favorites",
     description: "Who I am and what I build",
     defaultSize: { w: 760, h: 560 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "resume",
@@ -71,8 +72,8 @@ export const APPS: AppMeta[] = [
     category: "favorites",
     description: "Interactive resume — summary, experience, skills",
     defaultSize: { w: 820, h: 580 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "projects",
@@ -83,8 +84,8 @@ export const APPS: AppMeta[] = [
     category: "career",
     description: "Selected work with previews and details",
     defaultSize: { w: 880, h: 600 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "case-studies",
@@ -95,8 +96,8 @@ export const APPS: AppMeta[] = [
     category: "case-studies",
     description: "Deep dives into how the work was built",
     defaultSize: { w: 880, h: 600 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "skills",
@@ -107,8 +108,8 @@ export const APPS: AppMeta[] = [
     category: "career",
     description: "Tools grouped by how I use them",
     defaultSize: { w: 820, h: 580 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "experience",
@@ -119,8 +120,8 @@ export const APPS: AppMeta[] = [
     category: "career",
     description: "Career timeline and roles",
     defaultSize: { w: 840, h: 580 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "ui-gallery",
@@ -131,8 +132,8 @@ export const APPS: AppMeta[] = [
     category: "lab",
     description: "Real product UI states, polished",
     defaultSize: { w: 900, h: 600 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "contact",
@@ -143,20 +144,20 @@ export const APPS: AppMeta[] = [
     category: "favorites",
     description: "Get in touch",
     defaultSize: { w: 600, h: 520 },
-    inDock: true,
-    onDesktop: true,
+    inDock: false,
+    onDesktop: false,
   },
   {
     id: "finder",
-    name: "Portfolio Files",
-    shortName: "Files",
+    name: "Dossier",
+    shortName: "Dossier",
     icon: "folder",
-    accent: "amber",
+    accent: "accent",
     category: "system",
-    description: "Browse the portfolio as files and folders",
-    defaultSize: { w: 860, h: 560 },
+    description: "Browse everything — about, work, experience, skills and more",
+    defaultSize: { w: 960, h: 640 },
     inDock: true,
-    onDesktop: false,
+    onDesktop: true,
   },
   {
     id: "browser",
@@ -264,6 +265,18 @@ export const APPS: AppMeta[] = [
     description: "You found something hidden",
     defaultSize: { w: 560, h: 540 },
     inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "trash",
+    name: "Trash",
+    shortName: "Trash",
+    icon: "trash",
+    accent: "accent",
+    category: "system",
+    description: "Files you removed from the desktop",
+    defaultSize: { w: 560, h: 520 },
+    inDock: true,
     onDesktop: false,
   },
 ];

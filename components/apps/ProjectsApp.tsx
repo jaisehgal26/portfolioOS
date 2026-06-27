@@ -20,13 +20,7 @@ const TABS: TabItem[] = [
 ];
 
 export function ProjectsApp() {
-  const reduced = usePrefersReducedMotion();
   const [activeId, setActiveId] = useState(projects[0].id);
-  const [tab, setTab] = useState("overview");
-
-  const project = projects.find((p) => p.id === activeId) ?? projects[0];
-  const accent = ACCENT[project.accent];
-  const cs = project.caseStudy;
 
   return (
     <AppTwoPane
@@ -39,10 +33,7 @@ export function ProjectsApp() {
               <button
                 key={p.id}
                 type="button"
-                onClick={() => {
-                  setActiveId(p.id);
-                  setTab("overview");
-                }}
+                onClick={() => setActiveId(p.id)}
                 className={cn(
                   "flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-xl px-3 py-2.5 text-left transition-colors md:whitespace-normal",
                   isActive ? "bg-ink/[0.06]" : "hover:bg-ink/[0.04]",
@@ -59,6 +50,21 @@ export function ProjectsApp() {
         </div>
       }
     >
+      <ProjectDetail key={activeId} projectId={activeId} />
+    </AppTwoPane>
+  );
+}
+
+/** A single project's case study (header + tabs + panel). Reused by the Finder. */
+export function ProjectDetail({ projectId }: { projectId: string }) {
+  const reduced = usePrefersReducedMotion();
+  const [tab, setTab] = useState("overview");
+
+  const project = projects.find((p) => p.id === projectId) ?? projects[0];
+  const accent = ACCENT[project.accent];
+  const cs = project.caseStudy;
+
+  return (
       <div className="flex h-full flex-col">
         {/* Header */}
         <div className="border-b border-line px-5 py-4 sm:px-6">
@@ -165,7 +171,6 @@ export function ProjectsApp() {
           </AnimatePresence>
         </div>
       </div>
-    </AppTwoPane>
   );
 }
 

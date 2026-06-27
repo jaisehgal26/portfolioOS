@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { APPS, type AppId } from "@/data/apps";
 import { initialNotifications, type OSNotification } from "@/data/notifications";
+import { playSound } from "@/lib/sounds";
 
 export type { AppId, OSNotification };
 export type Theme = "light" | "dark";
@@ -40,13 +41,18 @@ interface ContextMenuState {
 }
 
 const STORAGE_KEY = "jaios-prefs";
+const SESSION_KEY = "jaios-session";
 const TOP_BAR = 44;
+const APP_IDS = new Set<AppId>(APPS.map((a) => a.id));
 
 interface Persisted {
   theme: Theme;
   wallpaper: string;
   accent: string;
   reducedMotionPref: boolean;
+  soundEnabled: boolean;
+  brightness: number;
+  dnd: boolean;
 }
 
 interface OSState extends Persisted {
@@ -62,6 +68,9 @@ interface OSState extends Persisted {
 
   spotlightOpen: boolean;
   notificationCenterOpen: boolean;
+  controlCenterOpen: boolean;
+  missionControlOpen: boolean;
+  calendarOpen: boolean;
   helpOpen: boolean;
   contextMenu: ContextMenuState;
 
@@ -71,11 +80,16 @@ interface OSState extends Persisted {
   browserUrl: string | null;
   /** A file requested to open in the Text Viewer (consumed by TextViewerApp). */
   openFileId: string | null;
+  /** A section requested in the Finder hub (consumed by FinderApp). */
+  finderSection: string | null;
   /** Files the user dragged onto the desktop (session only). */
   desktopFiles: DesktopFile[];
+  /** Files moved to the Trash (session only). */
+  trash: DesktopFile[];
 
   boot: () => void;
   login: () => void;
+  lock: () => void;
   restart: () => void;
   crash: () => void;
   reboot: () => void;
@@ -85,8 +99,13 @@ interface OSState extends Persisted {
   clearBrowserUrl: () => void;
   openFile: (id: string) => void;
   clearOpenFile: () => void;
+  openFinderAt: (section: string) => void;
+  setFinderSection: (section: string) => void;
   addDesktopFile: (id: string, x: number, y: number) => void;
   removeDesktopFile: (id: string) => void;
+  trashDesktopFile: (id: string) => void;
+  restoreFromTrash: (id: string) => void;
+  emptyTrash: () => void;
   closeWindow: (id: AppId) => void;
   minimizeWindow: (id: AppId) => void;
   toggleMaximize: (id: AppId) => void;
@@ -103,6 +122,15 @@ interface OSState extends Persisted {
   toggleSpotlight: () => void;
   toggleNotificationCenter: () => void;
   closeNotificationCenter: () => void;
+  toggleControlCenter: () => void;
+  closeControlCenter: () => void;
+  toggleMissionControl: () => void;
+  closeMissionControl: () => void;
+  toggleCalendar: () => void;
+  closeCalendar: () => void;
+  setSoundEnabled: (on: boolean) => void;
+  setBrightness: (v: number) => void;
+  toggleDnd: () => void;
   setHelpOpen: (open: boolean) => void;
   openContextMenu: (x: number, y: number) => void;
   closeContextMenu: () => void;
@@ -126,8 +154,34 @@ function persist(state: OSState) {
       wallpaper: state.wallpaper,
       accent: state.accent,
       reducedMotionPref: state.reducedMotionPref,
+      soundEnabled: state.soundEnabled,
+      brightness: state.brightness,
+      dnd: state.dnd,
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    /* ignore */
+  }
+}
+
+interface SessionData {
+  windows: OSWindow[];
+  focusedId: AppId | null;
+  zCounter: number;
+  finderSection: string | null;
+}
+
+/** Persist the live desktop so a reload resumes open windows + section. */
+function persistSession(state: OSState) {
+  if (typeof window === "undefined") return;
+  try {
+    const data: SessionData = {
+      windows: state.windows,
+      focusedId: state.focusedId,
+      zCounter: state.zCounter,
+      finderSection: state.finderSection,
+    };
+    window.localStorage.setItem(SESSION_KEY, JSON.stringify(data));
   } catch {
     /* ignore */
   }
@@ -156,6 +210,9 @@ export const useOSStore = create<OSState>((set, get) => ({
   wallpaper: "aurora",
   accent: "terracotta",
   reducedMotionPref: false,
+  soundEnabled: true,
+  brightness: 1,
+  dnd: false,
 
   windows: [],
   focusedId: null,
@@ -163,6 +220,9 @@ export const useOSStore = create<OSState>((set, get) => ({
 
   spotlightOpen: false,
   notificationCenterOpen: false,
+  controlCenterOpen: false,
+  missionControlOpen: false,
+  calendarOpen: false,
   helpOpen: false,
   contextMenu: { open: false, x: 0, y: 0 },
 
@@ -170,13 +230,21 @@ export const useOSStore = create<OSState>((set, get) => ({
   toasts: [],
   browserUrl: null,
   openFileId: null,
+  finderSection: null,
   desktopFiles: [],
+  trash: [],
 
   boot: () => set({ hasBooted: true }),
 
-  login: () => set({ isLoggedIn: true }),
+  login: () => {
+    set({ isLoggedIn: true });
+    if (get().soundEnabled) playSound("boot");
+  },
 
-  restart: () =>
+  lock: () =>
+    set({ isLoggedIn: false, spotlightOpen: false, missionControlOpen: false, controlCenterOpen: false }),
+
+  restart: () => {
     set({
       hasBooted: false,
       isLoggedIn: false,
@@ -184,15 +252,21 @@ export const useOSStore = create<OSState>((set, get) => ({
       focusedId: null,
       spotlightOpen: false,
       notificationCenterOpen: false,
-    }),
+    });
+    persistSession(get());
+  },
 
-  crash: () => set({ crashed: true }),
+  crash: () => {
+    set({ crashed: true });
+    if (get().soundEnabled) playSound("error");
+  },
   reboot: () => {
     set({ crashed: false });
     get().restart();
   },
 
-  openApp: (appId) =>
+  openApp: (appId) => {
+    if (get().soundEnabled) playSound("open");
     set((s) => {
       const z = s.zCounter + 1;
       const existing = s.windows.find((w) => w.id === appId);
@@ -214,7 +288,9 @@ export const useOSStore = create<OSState>((set, get) => ({
         zCounter: z,
         spotlightOpen: false,
       };
-    }),
+    });
+    persistSession(get());
+  },
 
   openUrlInBrowser: (url) => {
     set({ browserUrl: url });
@@ -227,14 +303,42 @@ export const useOSStore = create<OSState>((set, get) => ({
     get().openApp("text-viewer");
   },
   clearOpenFile: () => set({ openFileId: null }),
+  openFinderAt: (section) => {
+    set({ finderSection: section });
+    get().openApp("finder");
+  },
+  setFinderSection: (section) => {
+    set({ finderSection: section });
+    persistSession(get());
+  },
   addDesktopFile: (id, x, y) =>
     set((s) => ({
       desktopFiles: [...s.desktopFiles.filter((f) => f.id !== id), { id, x, y }],
     })),
   removeDesktopFile: (id) =>
     set((s) => ({ desktopFiles: s.desktopFiles.filter((f) => f.id !== id) })),
+  trashDesktopFile: (id) =>
+    set((s) => {
+      const file = s.desktopFiles.find((f) => f.id === id);
+      return {
+        desktopFiles: s.desktopFiles.filter((f) => f.id !== id),
+        trash: file ? [...s.trash.filter((t) => t.id !== id), file] : s.trash,
+      };
+    }),
+  restoreFromTrash: (id) =>
+    set((s) => {
+      const file = s.trash.find((t) => t.id === id);
+      return {
+        trash: s.trash.filter((t) => t.id !== id),
+        desktopFiles: file
+          ? [...s.desktopFiles.filter((f) => f.id !== id), { ...file, x: 40, y: 80 }]
+          : s.desktopFiles,
+      };
+    }),
+  emptyTrash: () => set({ trash: [] }),
 
-  closeWindow: (id) =>
+  closeWindow: (id) => {
+    if (get().soundEnabled) playSound("close");
     set((s) => {
       const windows = s.windows.filter((w) => w.id !== id);
       const focusedId =
@@ -242,9 +346,12 @@ export const useOSStore = create<OSState>((set, get) => ({
           ? windows.filter((w) => !w.minimized).sort((a, b) => b.zIndex - a.zIndex)[0]?.id ?? null
           : s.focusedId;
       return { windows, focusedId };
-    }),
+    });
+    persistSession(get());
+  },
 
-  minimizeWindow: (id) =>
+  minimizeWindow: (id) => {
+    if (get().soundEnabled) playSound("minimize");
     set((s) => {
       const windows = s.windows.map((w) => (w.id === id ? { ...w, minimized: true } : w));
       const focusedId =
@@ -252,9 +359,11 @@ export const useOSStore = create<OSState>((set, get) => ({
           ? windows.filter((w) => !w.minimized).sort((a, b) => b.zIndex - a.zIndex)[0]?.id ?? null
           : s.focusedId;
       return { windows, focusedId };
-    }),
+    });
+    persistSession(get());
+  },
 
-  toggleMaximize: (id) =>
+  toggleMaximize: (id) => {
     set((s) => {
       const z = s.zCounter + 1;
       return {
@@ -264,9 +373,11 @@ export const useOSStore = create<OSState>((set, get) => ({
         focusedId: id,
         zCounter: z,
       };
-    }),
+    });
+    persistSession(get());
+  },
 
-  focusWindow: (id) =>
+  focusWindow: (id) => {
     set((s) => {
       if (s.focusedId === id && !s.windows.find((w) => w.id === id)?.minimized) return {};
       const z = s.zCounter + 1;
@@ -275,12 +386,16 @@ export const useOSStore = create<OSState>((set, get) => ({
         focusedId: id,
         zCounter: z,
       };
-    }),
+    });
+    persistSession(get());
+  },
 
-  setWindowRect: (id, rect) =>
+  setWindowRect: (id, rect) => {
     set((s) => ({
       windows: s.windows.map((w) => (w.id === id ? { ...w, ...rect } : w)),
-    })),
+    }));
+    persistSession(get());
+  },
 
   setTheme: (theme) => {
     set({ theme });
@@ -289,14 +404,17 @@ export const useOSStore = create<OSState>((set, get) => ({
   toggleTheme: () => {
     set((s) => ({ theme: s.theme === "dark" ? "light" : "dark" }));
     persist(get());
+    if (get().soundEnabled) playSound("toggle");
   },
   setWallpaper: (wallpaper) => {
     set({ wallpaper });
     persist(get());
+    if (get().soundEnabled) playSound("toggle");
   },
   setAccent: (accent) => {
     set({ accent });
     persist(get());
+    if (get().soundEnabled) playSound("toggle");
   },
   setReducedMotionPref: (reducedMotionPref) => {
     set({ reducedMotionPref });
@@ -308,48 +426,99 @@ export const useOSStore = create<OSState>((set, get) => ({
   toggleNotificationCenter: () =>
     set((s) => ({ notificationCenterOpen: !s.notificationCenterOpen })),
   closeNotificationCenter: () => set({ notificationCenterOpen: false }),
+  toggleControlCenter: () => set((s) => ({ controlCenterOpen: !s.controlCenterOpen })),
+  closeControlCenter: () => set({ controlCenterOpen: false }),
+  toggleMissionControl: () => set((s) => ({ missionControlOpen: !s.missionControlOpen })),
+  closeMissionControl: () => set({ missionControlOpen: false }),
+  toggleCalendar: () => set((s) => ({ calendarOpen: !s.calendarOpen })),
+  closeCalendar: () => set({ calendarOpen: false }),
+  setSoundEnabled: (on) => {
+    set({ soundEnabled: on });
+    persist(get());
+    if (on) playSound("toggle");
+  },
+  setBrightness: (v) => {
+    set({ brightness: v });
+    persist(get());
+  },
+  toggleDnd: () => {
+    set((s) => ({ dnd: !s.dnd }));
+    persist(get());
+  },
   setHelpOpen: (open) => set({ helpOpen: open }),
   openContextMenu: (x, y) => set({ contextMenu: { open: true, x, y } }),
   closeContextMenu: () => set((s) => ({ contextMenu: { ...s.contextMenu, open: false } })),
 
-  addNotification: (n) =>
+  addNotification: (n) => {
+    const st = get();
+    if (st.soundEnabled && !st.dnd) playSound("notify");
     set((s) => ({
       notifications: [
         { id: n.id ?? `n-${s.zCounter}-${s.notifications.length}`, read: false, time: "now", ...n },
         ...s.notifications,
       ],
-    })),
+    }));
+  },
   markNotificationsRead: () =>
     set((s) => ({ notifications: s.notifications.map((n) => ({ ...n, read: true })) })),
   removeNotification: (id) =>
     set((s) => ({ notifications: s.notifications.filter((n) => n.id !== id) })),
   clearNotifications: () => set({ notifications: [] }),
 
-  pushToast: (message) =>
+  pushToast: (message) => {
+    const st = get();
+    if (st.soundEnabled && !st.dnd) playSound("notify");
     set((s) => {
       const id = `t-${Date.now()}-${s.toasts.length}`;
       return { toasts: [...s.toasts, { id, message }] };
-    }),
+    });
+  },
   removeToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 
   hydrate: () => {
     if (typeof window === "undefined" || get().hydrated) return;
+    const patch: Partial<OSState> = { hydrated: true };
+
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const p = JSON.parse(raw) as Partial<Persisted>;
-        set({
-          theme: p.theme === "dark" ? "dark" : "light",
-          wallpaper: typeof p.wallpaper === "string" ? p.wallpaper : "aurora",
-          accent: typeof p.accent === "string" ? p.accent : "terracotta",
-          reducedMotionPref: Boolean(p.reducedMotionPref),
-          hydrated: true,
-        });
-        return;
+        patch.theme = p.theme === "dark" ? "dark" : "light";
+        patch.wallpaper = typeof p.wallpaper === "string" ? p.wallpaper : "aurora";
+        patch.accent = typeof p.accent === "string" ? p.accent : "terracotta";
+        patch.reducedMotionPref = Boolean(p.reducedMotionPref);
+        patch.soundEnabled = p.soundEnabled !== false;
+        patch.brightness = typeof p.brightness === "number" ? Math.min(1, Math.max(0.4, p.brightness)) : 1;
+        patch.dnd = Boolean(p.dnd);
       }
     } catch {
-      /* ignore malformed storage */
+      /* ignore malformed prefs */
     }
-    set({ hydrated: true });
+
+    try {
+      const rawSession = window.localStorage.getItem(SESSION_KEY);
+      if (rawSession) {
+        const s = JSON.parse(rawSession) as Partial<SessionData>;
+        if (Array.isArray(s.windows)) {
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          const wins = s.windows
+            .filter((w): w is OSWindow => !!w && APP_IDS.has(w.id as AppId))
+            .map((w) => ({
+              ...w,
+              x: Math.min(Math.max(-w.w + 120, w.x), vw - 120),
+              y: Math.min(Math.max(TOP_BAR, w.y), vh - 80),
+            }));
+          patch.windows = wins;
+          patch.zCounter = wins.reduce((m, w) => Math.max(m, w.zIndex), 10);
+          patch.focusedId = wins.some((w) => w.id === s.focusedId) ? (s.focusedId as AppId) : null;
+        }
+        if (typeof s.finderSection === "string") patch.finderSection = s.finderSection;
+      }
+    } catch {
+      /* ignore malformed session */
+    }
+
+    set(patch);
   },
 }));

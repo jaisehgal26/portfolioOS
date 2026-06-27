@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { FileText, Sparkles, X } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { APPS } from "@/data/apps";
@@ -9,7 +10,7 @@ import { useIsMobile } from "@/hooks/use-media-query";
 import { AppIcon } from "./AppIcon";
 import { Monogram } from "./Monogram";
 import { DesktopWidgets } from "./DesktopWidgets";
-import { clamp } from "@/lib/utils";
+import { clamp, cn } from "@/lib/utils";
 
 const desktopApps = APPS.filter((a) => a.onDesktop);
 
@@ -20,7 +21,67 @@ export function Desktop() {
   const desktopFiles = useOSStore((s) => s.desktopFiles);
   const addDesktopFile = useOSStore((s) => s.addDesktopFile);
   const removeDesktopFile = useOSStore((s) => s.removeDesktopFile);
+  const trashDesktopFile = useOSStore((s) => s.trashDesktopFile);
   const isMobile = useIsMobile();
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [marquee, setMarquee] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const marqueeStart = useRef<{ x: number; y: number } | null>(null);
+
+  function onDeskPointerDown(e: React.PointerEvent) {
+    if (e.target !== e.currentTarget || e.button !== 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    marqueeStart.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    setSelected(new Set());
+    setMarquee({ ...marqueeStart.current, w: 0, h: 0 });
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }
+  function onDeskPointerMove(e: React.PointerEvent) {
+    if (!marqueeStart.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const x = Math.min(marqueeStart.current.x, cx);
+    const y = Math.min(marqueeStart.current.y, cy);
+    const w = Math.abs(cx - marqueeStart.current.x);
+    const h = Math.abs(cy - marqueeStart.current.y);
+    setMarquee({ x, y, w, h });
+    const boxLeft = rect.left + x;
+    const boxTop = rect.top + y;
+    const sel = new Set<string>();
+    e.currentTarget.querySelectorAll<HTMLElement>("[data-deskfile]").forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.left < boxLeft + w && r.right > boxLeft && r.top < boxTop + h && r.bottom > boxTop) {
+        const id = el.getAttribute("data-deskfile");
+        if (id) sel.add(id);
+      }
+    });
+    setSelected(sel);
+  }
+  function onDeskPointerUp(e: React.PointerEvent) {
+    marqueeStart.current = null;
+    setMarquee(null);
+    try {
+      (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  // Delete / Backspace sends selected desktop files to the Trash.
+  useEffect(() => {
+    if (selected.size === 0) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Delete" || e.key === "Backspace") {
+        const target = e.target as HTMLElement;
+        if (target.closest("input, textarea, [contenteditable]")) return;
+        e.preventDefault();
+        selected.forEach((id) => trashDesktopFile(id));
+        setSelected(new Set());
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected, trashDesktopFile]);
 
   function onDrop(e: React.DragEvent) {
     const id = e.dataTransfer.getData(FILE_DRAG_TYPE) || e.dataTransfer.getData("text/plain");
@@ -44,7 +105,7 @@ export function Desktop() {
         </div>
 
         <div className="grid grid-cols-4 gap-x-2 gap-y-5">
-          {APPS.map((app) => (
+          {APPS.filter((a) => a.inDock || a.onDesktop).map((app) => (
             <button
               key={app.id}
               type="button"
@@ -82,7 +143,20 @@ export function Desktop() {
         e.dataTransfer.dropEffect = "copy";
       }}
       onDrop={onDrop}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setSelected(new Set());
+      }}
+      onPointerDown={onDeskPointerDown}
+      onPointerMove={onDeskPointerMove}
+      onPointerUp={onDeskPointerUp}
     >
+      {marquee && (marquee.w > 2 || marquee.h > 2) && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute z-[5] rounded-sm border border-accent/50 bg-accent/10"
+          style={{ left: marquee.x, top: marquee.y, width: marquee.w, height: marquee.h }}
+        />
+      )}
       {/* Files dragged onto the desktop */}
       {desktopFiles.map((df) => {
         const file = getFile(df.id);
@@ -90,16 +164,33 @@ export function Desktop() {
         return (
           <div
             key={df.id}
+            data-deskfile={df.id}
             className="group absolute z-10 w-20"
             style={{ left: df.x, top: df.y }}
           >
             <button
               type="button"
-              onClick={() => openFile(df.id)}
-              className="flex w-full flex-col items-center gap-1.5 rounded-2xl p-1.5 transition-colors hover:bg-ink/5"
-              aria-label={`Open ${file.title}`}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData(FILE_DRAG_TYPE, df.id);
+                e.dataTransfer.setData("text/plain", df.id);
+                e.dataTransfer.effectAllowed = "move";
+              }}
+              onClick={() => setSelected(new Set([df.id]))}
+              onDoubleClick={() => openFile(df.id)}
+              title="Click to select · double-click to open · drag to move or Trash"
+              className={cn(
+                "flex w-full cursor-grab flex-col items-center gap-1.5 rounded-2xl p-1.5 transition-colors active:cursor-grabbing",
+                selected.has(df.id) ? "bg-accent/15" : "hover:bg-ink/5",
+              )}
+              aria-label={`${file.title} file`}
             >
-              <span className="grid h-11 w-11 place-items-center rounded-[14px] bg-gradient-to-b from-surface to-surface-2 text-ink/70 shadow-soft ring-1 ring-line">
+              <span
+                className={cn(
+                  "grid h-11 w-11 place-items-center rounded-[14px] bg-gradient-to-b from-surface to-surface-2 text-ink/70 shadow-soft ring-1",
+                  selected.has(df.id) ? "ring-accent/60" : "ring-line",
+                )}
+              >
                 <FileText className="h-[22px] w-[22px]" />
               </span>
               <span className="line-clamp-1 text-center text-[11px] font-medium text-ink drop-shadow-sm">

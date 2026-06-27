@@ -10,19 +10,20 @@ export function ContextMenu() {
   const ctx = useOSStore((s) => s.contextMenu);
   const close = useOSStore((s) => s.closeContextMenu);
   const openApp = useOSStore((s) => s.openApp);
+  const openFinderAt = useOSStore((s) => s.openFinderAt);
   const toggleTheme = useOSStore((s) => s.toggleTheme);
   const reduced = usePrefersReducedMotion();
   const menuRef = useDismissOnOutside<HTMLDivElement>(ctx.open, close);
 
   const items = [
-    { label: "Open Projects", icon: FolderKanban, onClick: () => openApp("projects") },
-    { label: "Open Resume", icon: FileText, onClick: () => openApp("resume") },
-    { label: "Open Contact", icon: Mail, onClick: () => openApp("contact") },
+    { label: "Open Work", icon: FolderKanban, onClick: () => openFinderAt("work") },
+    { label: "Open Resume", icon: FileText, onClick: () => openFinderAt("resume") },
+    { label: "Open Contact", icon: Mail, onClick: () => openFinderAt("contact") },
     { sep: true as const },
     { label: "Change Wallpaper", icon: Image, onClick: () => openApp("settings") },
     { label: "Toggle Dark Mode", icon: MoonStar, onClick: toggleTheme },
     { sep: true as const },
-    { label: "About JaiOS", icon: Info, onClick: () => openApp("about") },
+    { label: "About", icon: Info, onClick: () => openFinderAt("about") },
   ];
 
   const x = Math.min(ctx.x, (typeof window !== "undefined" ? window.innerWidth : 9999) - 220);

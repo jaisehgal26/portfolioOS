@@ -22,8 +22,26 @@ import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 
-type Group = "Apps" | "Case Studies" | "Actions" | "Links" | "View";
-const GROUP_ORDER: Group[] = ["Apps", "Case Studies", "Actions", "Links", "View"];
+type Group = "Sections" | "Apps" | "Actions" | "Links" | "View";
+const GROUP_ORDER: Group[] = ["Sections", "Apps", "Actions", "Links", "View"];
+
+/** Apps now folded into the Finder hub (not launchable on their own). */
+const FOLDED = new Set([
+  "about", "projects", "case-studies", "skills", "experience", "resume",
+  "quick-hire", "ui-gallery", "contact", "notes", "text-viewer", "secret",
+]);
+
+const SECTIONS: { id: string; label: string; keywords: string }[] = [
+  { id: "about", label: "About", keywords: "bio who" },
+  { id: "work", label: "Work", keywords: "projects case studies portfolio" },
+  { id: "experience", label: "Experience", keywords: "career roles jobs" },
+  { id: "skills", label: "Skills", keywords: "tech stack tools" },
+  { id: "notes", label: "Notes", keywords: "writing frontend" },
+  { id: "resume", label: "Resume", keywords: "cv pdf" },
+  { id: "quick-hire", label: "Quick Hire", keywords: "recruiter hire" },
+  { id: "ui-gallery", label: "UI Gallery", keywords: "states ui" },
+  { id: "contact", label: "Contact", keywords: "email reach" },
+];
 
 interface Command {
   id: string;
@@ -41,6 +59,7 @@ export function Spotlight() {
   const open = useOSStore((s) => s.spotlightOpen);
   const close = useOSStore((s) => s.closeSpotlight);
   const openApp = useOSStore((s) => s.openApp);
+  const openFinderAt = useOSStore((s) => s.openFinderAt);
   const toggleTheme = useOSStore((s) => s.toggleTheme);
   const pushToast = useOSStore((s) => s.pushToast);
   const addNotification = useOSStore((s) => s.addNotification);
@@ -61,7 +80,16 @@ export function Spotlight() {
   );
 
   const commands = useMemo<Command[]>(() => {
-    const appCmds: Command[] = APPS.map((app) => ({
+    const sectionCmds: Command[] = SECTIONS.map((s) => ({
+      id: `section-${s.id}`,
+      label: s.label,
+      group: "Sections",
+      keywords: s.keywords,
+      icon: <BookOpen className={iconCls} />,
+      run: () => openFinderAt(s.id),
+    }));
+
+    const appCmds: Command[] = APPS.filter((app) => !FOLDED.has(app.id)).map((app) => ({
       id: `app-${app.id}`,
       label: `Open ${app.name}`,
       hint: app.description,
@@ -71,20 +99,9 @@ export function Spotlight() {
       run: () => openApp(app.id),
     }));
 
-    const caseStudies: Command[] = [
-      { id: "cs-ai", label: "Open AI Chat case study", hint: "Streaming AI interface", keywords: "agentic llm sse" },
-      { id: "cs-pay", label: "Open Payments case study", hint: "Real-time transactions", keywords: "payments sse redux" },
-      { id: "cs-health", label: "Open Healthcare dashboard case study", hint: "ICU / OT system", keywords: "icu vitals rbac" },
-    ].map((c) => ({
-      ...c,
-      group: "Case Studies" as const,
-      icon: <BookOpen className={iconCls} />,
-      run: () => openApp("case-studies"),
-    }));
-
     return [
+      ...sectionCmds,
       ...appCmds,
-      ...caseStudies,
       {
         id: "download-resume",
         label: "Download Resume",
@@ -131,7 +148,7 @@ export function Spotlight() {
         run: toggleTheme,
       },
     ];
-  }, [openApp, toggleTheme, doCopy]);
+  }, [openApp, openFinderAt, toggleTheme, doCopy]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

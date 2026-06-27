@@ -1,12 +1,13 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@/store/os-store";
 import { APPS, type AppId } from "@/data/apps";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useIsMobile } from "@/hooks/use-media-query";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
+import { FILE_DRAG_TYPE } from "@/data/files";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ export function Dock() {
   const openApp = useOSStore((s) => s.openApp);
   const closeWindow = useOSStore((s) => s.closeWindow);
   const minimizeWindow = useOSStore((s) => s.minimizeWindow);
+  const trashDesktopFile = useOSStore((s) => s.trashDesktopFile);
   const windows = useOSStore((s) => s.windows);
   const focusedId = useOSStore((s) => s.focusedId);
 
@@ -39,8 +41,24 @@ export function Dock() {
   const isMobile = useIsMobile();
   const [menu, setMenu] = useState<DockMenu | null>(null);
   const menuRef = useDismissOnOutside<HTMLDivElement>(menu !== null, () => setMenu(null));
+  const iconRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const openIds = new Set(windows.map((w) => w.id));
+
+  // macOS-style magnification: scale icons by cursor proximity.
+  function onDockMove(e: React.MouseEvent) {
+    if (reduced || isMobile) return;
+    const mx = e.clientX;
+    for (const el of iconRefs.current) {
+      if (!el) continue;
+      const r = el.getBoundingClientRect();
+      const f = Math.max(0, 1 - Math.abs(mx - (r.left + r.width / 2)) / 110);
+      el.style.transform = `translateY(${-12 * f}px) scale(${1 + 0.5 * f})`;
+    }
+  }
+  function onDockLeave() {
+    for (const el of iconRefs.current) if (el) el.style.transform = "";
+  }
 
   return (
     <>
@@ -52,6 +70,8 @@ export function Dock() {
       >
         <motion.nav
           aria-label="Dock"
+          onMouseMove={onDockMove}
+          onMouseLeave={onDockLeave}
           initial={reduced ? false : { y: 24, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: reduced ? 0 : 0.5, ease: [0.22, 1, 0.36, 1], delay: reduced ? 0 : 0.2 }}
@@ -62,7 +82,7 @@ export function Dock() {
               : "rounded-3xl py-2",
           )}
         >
-          {dockApps.map((app) => {
+          {dockApps.map((app, i) => {
             const isOpen = openIds.has(app.id);
             const isFocused = focusedId === app.id;
             return (
@@ -78,16 +98,34 @@ export function Dock() {
                     </span>
                   )}
                   <button
+                    ref={(el) => {
+                      iconRefs.current[i] = el;
+                    }}
                     type="button"
                     onClick={() => onDockClick(app.id)}
                     onContextMenu={(e) => {
                       e.preventDefault();
                       setMenu({ appId: app.id, x: e.clientX, y: e.clientY });
                     }}
+                    {...(app.id === "trash"
+                      ? {
+                          onDragOver: (e: React.DragEvent) => {
+                            e.preventDefault();
+                            e.dataTransfer.dropEffect = "move";
+                          },
+                          onDrop: (e: React.DragEvent) => {
+                            const fid = e.dataTransfer.getData(FILE_DRAG_TYPE) || e.dataTransfer.getData("text/plain");
+                            if (fid) {
+                              e.preventDefault();
+                              trashDesktopFile(fid);
+                            }
+                          },
+                        }
+                      : {})}
                     aria-label={isOpen ? `${app.name} (open)` : `Open ${app.name}`}
                     className={cn(
-                      "origin-bottom transition-transform duration-200 ease-spring",
-                      !reduced && "hover:-translate-y-1.5 hover:scale-110",
+                      "origin-bottom transition-transform duration-100 ease-out",
+                      !reduced && isMobile && "hover:-translate-y-1.5 hover:scale-110",
                     )}
                   >
                     <AppIcon app={app} size={isMobile ? "sm" : "md"} active={isFocused} />

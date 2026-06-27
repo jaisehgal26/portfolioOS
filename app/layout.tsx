@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { site } from "@/data/profile";
 
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-bg font-sans text-ink antialiased">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {children}
+        <Analytics />
       </body>
     </html>
   );

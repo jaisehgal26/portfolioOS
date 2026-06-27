@@ -1,12 +1,10 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useOSStore } from "@/store/os-store";
-import { profile, links } from "@/data/profile";
-import { CopyButton } from "@/components/ui/CopyButton";
+import { Quote as QuoteIcon, RefreshCw } from "lucide-react";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useCurrentTime } from "@/hooks/use-current-time";
-import { Monogram } from "./Monogram";
 import { WatchDial } from "./WatchDial";
 import { cn } from "@/lib/utils";
 
@@ -30,64 +28,108 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function DesktopWidgets() {
-  const openFinderAt = useOSStore((s) => s.openFinderAt);
+export function ClockWidget({ delay = 0 }: { delay?: number }) {
   const now = useCurrentTime();
-
   const weekday = now ? now.toLocaleDateString([], { weekday: "long" }) : "";
   const month = now ? now.toLocaleDateString([], { month: "long" }) : "";
 
   return (
-    <div className="flex w-64 flex-col gap-3">
-      <Widget delay={0.04}>
-        <div className="flex flex-col items-center gap-3 py-1" suppressHydrationWarning>
-          <WatchDial brand className="h-28 w-28 drop-shadow-[0_6px_16px_rgb(var(--shadow-color)/0.18)]" />
-          <div className="text-center">
-            <Eyebrow>{weekday}</Eyebrow>
-            <p className="mt-1 font-display text-base font-semibold tracking-tight text-ink">
-              {month} {now ? now.getDate() : ""}
-            </p>
-          </div>
+    <Widget delay={delay}>
+      <div className="flex flex-col items-center gap-3 py-1" suppressHydrationWarning>
+        <WatchDial brand className="h-28 w-28 drop-shadow-[0_6px_16px_rgb(var(--shadow-color)/0.18)]" />
+        <div className="text-center">
+          <Eyebrow>{weekday}</Eyebrow>
+          <p className="mt-1 font-display text-base font-semibold tracking-tight text-ink">
+            {month} {now ? now.getDate() : ""}
+          </p>
         </div>
-      </Widget>
+      </div>
+    </Widget>
+  );
+}
 
-      <Widget delay={0.1}>
+export function DesktopWidgets() {
+  return (
+    <div className="flex w-64 flex-col gap-3">
+      <ClockWidget delay={0.04} />
+      <QuoteWidget delay={0.1} />
+    </div>
+  );
+}
+
+interface Quote {
+  content: string;
+  author: string;
+}
+
+/** Shown when the API is unreachable so the widget always has something. */
+const FALLBACK_QUOTES: Quote[] = [
+  { content: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+  { content: "Make it work, make it right, make it fast.", author: "Kent Beck" },
+  { content: "The details are not the details. They make the design.", author: "Charles Eames" },
+  { content: "Programs must be written for people to read.", author: "Harold Abelson" },
+  { content: "Any sufficiently advanced technology is indistinguishable from magic.", author: "Arthur C. Clarke" },
+];
+
+export function QuoteWidget({ delay = 0 }: { delay?: number }) {
+  const [quote, setQuote] = useState<Quote | null>(null);
+  const [loading, setLoading] = useState(true);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const load = useCallback(async () => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+    setLoading(true);
+    try {
+      const res = await fetch("https://api.quotable.io/random?maxLength=120", {
+        signal: controller.signal,
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as Quote;
+      setQuote({ content: data.content, author: data.author });
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
+      setQuote(FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]);
+    } finally {
+      if (!controller.signal.aborted) setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+    return () => abortRef.current?.abort();
+  }, [load]);
+
+  return (
+    <Widget delay={delay}>
+      <div className="flex items-center justify-between">
+        <Eyebrow>Thought of the day</Eyebrow>
         <button
           type="button"
-          onClick={() => openFinderAt("about")}
-          className="flex w-full items-center gap-3 text-left"
+          onClick={load}
+          disabled={loading}
+          aria-label="New quote"
+          className="grid h-6 w-6 place-items-center rounded-md text-faint transition-colors hover:bg-ink/5 hover:text-ink disabled:opacity-50"
         >
-          <Monogram size="sm" className="rounded-2xl" />
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-ink">{profile.name}</p>
-            <p className="truncate text-xs text-muted">{profile.role} · {profile.experience}</p>
-          </div>
+          <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
         </button>
-        <div className="mt-3 flex items-center gap-2 border-t border-line/70 pt-3">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent/50" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-          </span>
-          <span className="text-xs font-medium text-muted">{profile.available}</span>
-        </div>
-      </Widget>
+      </div>
 
-      <Widget delay={0.16}>
-        <Eyebrow>Latest focus</Eyebrow>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink">
-          Building real-time, AI-assisted frontend systems.
-        </p>
-      </Widget>
+      <QuoteIcon className="mt-2 h-4 w-4 text-accent/70" aria-hidden />
 
-      <Widget delay={0.22}>
-        <div className="flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <Eyebrow>Get in touch</Eyebrow>
-            <p className="mt-1.5 truncate text-sm text-ink">{links.email}</p>
-          </div>
-          <CopyButton value={links.email} label="Copy email" toast="Email copied" />
+      {loading && !quote ? (
+        <div className="mt-2 space-y-2">
+          <div className="h-3 w-full animate-pulse rounded bg-ink/10" />
+          <div className="h-3 w-4/5 animate-pulse rounded bg-ink/10" />
+          <div className="mt-3 h-2.5 w-1/3 animate-pulse rounded bg-ink/10" />
         </div>
-      </Widget>
-    </div>
+      ) : quote ? (
+        <figure className="mt-1.5">
+          <blockquote className="text-sm leading-relaxed text-ink">{quote.content}</blockquote>
+          <figcaption className="mt-2 text-xs font-medium text-muted">— {quote.author}</figcaption>
+        </figure>
+      ) : null}
+    </Widget>
   );
 }

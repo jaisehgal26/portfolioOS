@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useOSStore } from "@/store/os-store";
 
 const NUMBER_SECTIONS: Record<string, string> = {
-  "1": "quick-hire",
+  "1": "about",
   "2": "work",
   "3": "resume",
   "4": "contact",

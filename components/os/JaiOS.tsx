@@ -56,7 +56,7 @@ export function JaiOS() {
     document.documentElement.classList.toggle("rm-off", reducedPref);
   }, [reducedPref]);
 
-  // A couple of notifications arrive over the session (once), so the OS feels live.
+  // A notification arrives over the session (once), so the OS feels live.
   useEffect(() => {
     if (!isLoggedIn || liveFired.current) return;
     liveFired.current = true;
@@ -64,14 +64,7 @@ export function JaiOS() {
       () => addNotification({ title: "Tip — Spotlight", body: "Press ⌘K / Ctrl K to jump anywhere.", icon: "search", time: "now" }),
       9000,
     );
-    const t2 = setTimeout(
-      () => addNotification({ title: "30-second pitch", body: "Open Quick Hire for the recruiter overview.", icon: "sparkles", time: "now" }),
-      24000,
-    );
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    return () => clearTimeout(t1);
   }, [isLoggedIn, addNotification]);
 
   return (

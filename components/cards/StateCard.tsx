@@ -16,7 +16,7 @@ import {
 import type { StateKind, UIStateItem } from "@/data/ui-states";
 import { Card } from "@/components/ui/Card";
 
-/** Renders the small live demo for a given UI state. Reused in UI Gallery + Experiments. */
+/** Renders the small live demo for a given UI state. Used in Experiments. */
 export function StateDemo({ kind }: { kind: StateKind }) {
   switch (kind) {
     case "empty":

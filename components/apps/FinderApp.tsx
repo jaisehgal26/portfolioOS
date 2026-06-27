@@ -8,9 +8,7 @@ import {
   FolderKanban,
   Mail,
   Notebook,
-  Palette,
   User,
-  Zap,
   type LucideIcon,
 } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
@@ -18,13 +16,11 @@ import { FINDER_SECTIONS } from "@/data/sections";
 import { AboutApp } from "./AboutApp";
 import { SkillsApp } from "./SkillsApp";
 import { ResumeDocument } from "./ResumeApp";
-import { QuickHireApp } from "./QuickHireApp";
-import { UIStateGalleryApp } from "./UIStateGalleryApp";
 import { ContactApp } from "./ContactApp";
 import { WorkSection, ExperienceSection, NotesSection } from "./finderSections";
 import { cn } from "@/lib/utils";
 
-const ROOT = "Dossier";
+const ROOT = "Finder";
 
 const ICONS: Record<string, LucideIcon> = {
   about: User,
@@ -33,8 +29,6 @@ const ICONS: Record<string, LucideIcon> = {
   skills: Blocks,
   notes: Notebook,
   resume: FileText,
-  "quick-hire": Zap,
-  "ui-gallery": Palette,
   contact: Mail,
 };
 
@@ -52,10 +46,6 @@ function Content({ id }: { id: string }) {
       return <NotesSection />;
     case "resume":
       return <ResumeDocument />;
-    case "quick-hire":
-      return <QuickHireApp />;
-    case "ui-gallery":
-      return <UIStateGalleryApp />;
     case "contact":
       return <ContactApp />;
     default:
@@ -94,14 +84,14 @@ export function FinderApp() {
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1 border-b border-line px-4 py-2 text-sm">
-          <span className="text-muted">{ROOT}</span>
-          <ChevronRight className="h-3.5 w-3.5 text-faint" />
-          <span className="font-medium text-ink">{current.label}</span>
-        </nav>
         <div className="min-h-0 flex-1 overflow-hidden">
           <Content id={selected} />
         </div>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1 border-t border-line px-4 py-1.5 text-[11px]">
+          <span className="text-muted">{ROOT}</span>
+          <ChevronRight className="h-3 w-3 text-faint" />
+          <span className="font-medium text-ink">{current.label}</span>
+        </nav>
       </div>
     </div>
   );

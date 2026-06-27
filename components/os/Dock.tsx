@@ -7,12 +7,13 @@ import { APPS, type AppId } from "@/data/apps";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useIsMobile } from "@/hooks/use-media-query";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
-import { FILE_DRAG_TYPE } from "@/data/files";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 
-const dockApps = APPS.filter((a) => a.inDock);
-const firstSystemAppId = dockApps.find((a) => a.category === "system")?.id;
+// Apps launcher always leads the dock; the rest follow their natural order.
+const dockApps = APPS.filter((a) => a.inDock).sort(
+  (a, b) => (b.id === "launchpad" ? 1 : 0) - (a.id === "launchpad" ? 1 : 0),
+);
 
 interface DockMenu {
   appId: AppId;
@@ -24,7 +25,6 @@ export function Dock() {
   const openApp = useOSStore((s) => s.openApp);
   const closeWindow = useOSStore((s) => s.closeWindow);
   const minimizeWindow = useOSStore((s) => s.minimizeWindow);
-  const trashDesktopFile = useOSStore((s) => s.trashDesktopFile);
   const windows = useOSStore((s) => s.windows);
   const focusedId = useOSStore((s) => s.focusedId);
 
@@ -42,44 +42,60 @@ export function Dock() {
   const [menu, setMenu] = useState<DockMenu | null>(null);
   const menuRef = useDismissOnOutside<HTMLDivElement>(menu !== null, () => setMenu(null));
   const iconRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  /** True icon centers captured before any transform, so magnification doesn't feed back on itself. */
+  const baseCentersRef = useRef<number[]>([]);
 
   const openIds = new Set(windows.map((w) => w.id));
 
-  // macOS-style magnification: scale icons by cursor proximity.
+  function captureBases() {
+    baseCentersRef.current = iconRefs.current.map((el) => {
+      if (!el) return 0;
+      const r = el.getBoundingClientRect();
+      return r.left + r.width / 2;
+    });
+  }
+
+  // macOS-style magnification: scale icons by cursor proximity (smooth falloff).
   function onDockMove(e: React.MouseEvent) {
     if (reduced || isMobile) return;
+    if (baseCentersRef.current.length === 0) captureBases();
     const mx = e.clientX;
-    for (const el of iconRefs.current) {
-      if (!el) continue;
-      const r = el.getBoundingClientRect();
-      const f = Math.max(0, 1 - Math.abs(mx - (r.left + r.width / 2)) / 110);
-      el.style.transform = `translateY(${-12 * f}px) scale(${1 + 0.5 * f})`;
-    }
+    iconRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const center = baseCentersRef.current[i] || el.getBoundingClientRect().left + el.offsetWidth / 2;
+      const d = Math.abs(mx - center);
+      let f = Math.max(0, 1 - d / 95);
+      f = f * f * (3 - 2 * f); // smoothstep for a soft bell curve
+      el.style.transform = `translateY(${-8 * f}px) scale(${1 + 0.3 * f})`;
+    });
   }
   function onDockLeave() {
+    baseCentersRef.current = [];
     for (const el of iconRefs.current) if (el) el.style.transform = "";
   }
+
+  // On mobile, apps live on the home grid — the dock is redundant.
+  if (isMobile) return null;
 
   return (
     <>
       <div
         className={cn(
           "fixed inset-x-0 z-30 flex justify-center",
-          isMobile ? "bottom-0" : "bottom-2.5",
+          isMobile ? "bottom-1.5" : "bottom-1",
         )}
       >
         <motion.nav
           aria-label="Dock"
+          onMouseEnter={captureBases}
           onMouseMove={onDockMove}
           onMouseLeave={onDockLeave}
           initial={reduced ? false : { y: 24, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: reduced ? 0 : 0.5, ease: [0.22, 1, 0.36, 1], delay: reduced ? 0 : 0.2 }}
           className={cn(
-            "glass-strong flex items-end gap-1.5 px-2.5 shadow-card",
-            isMobile
-              ? "w-full max-w-full justify-start overflow-x-auto rounded-none border-x-0 border-b-0 py-2"
-              : "rounded-3xl py-2",
+            "flex items-end gap-3 rounded-2xl border border-line/60 bg-surface/55 px-3 py-1.5 shadow-soft backdrop-blur-xl",
+            isMobile && "max-w-[calc(100vw-1.5rem)] overflow-x-auto",
           )}
         >
           {dockApps.map((app, i) => {
@@ -87,9 +103,6 @@ export function Dock() {
             const isFocused = focusedId === app.id;
             return (
               <Fragment key={app.id}>
-                {!isMobile && app.id === firstSystemAppId && (
-                  <span aria-hidden className="mx-1 h-9 w-px self-center bg-line/70" />
-                )}
                 <div className="group relative flex shrink-0 flex-col items-center">
                   {/* Tooltip */}
                   {!isMobile && (
@@ -107,24 +120,9 @@ export function Dock() {
                       e.preventDefault();
                       setMenu({ appId: app.id, x: e.clientX, y: e.clientY });
                     }}
-                    {...(app.id === "trash"
-                      ? {
-                          onDragOver: (e: React.DragEvent) => {
-                            e.preventDefault();
-                            e.dataTransfer.dropEffect = "move";
-                          },
-                          onDrop: (e: React.DragEvent) => {
-                            const fid = e.dataTransfer.getData(FILE_DRAG_TYPE) || e.dataTransfer.getData("text/plain");
-                            if (fid) {
-                              e.preventDefault();
-                              trashDesktopFile(fid);
-                            }
-                          },
-                        }
-                      : {})}
                     aria-label={isOpen ? `${app.name} (open)` : `Open ${app.name}`}
                     className={cn(
-                      "origin-bottom transition-transform duration-100 ease-out",
+                      "origin-bottom transition-transform duration-200 ease-out [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
                       !reduced && isMobile && "hover:-translate-y-1.5 hover:scale-110",
                     )}
                   >

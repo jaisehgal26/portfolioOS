@@ -4,7 +4,6 @@ import { MapPin } from "lucide-react";
 import { projects } from "@/data/projects";
 import { experience } from "@/data/experience";
 import { notes } from "@/data/notes";
-import { FILE_DRAG_TYPE } from "@/data/files";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
 import { ACCENT } from "@/lib/accent";
 import { cn } from "@/lib/utils";
@@ -67,10 +66,10 @@ export function WorkSection() {
                 </div>
                 <div>
                   <p className="text-sm leading-relaxed text-muted">{cs.overview}</p>
-                  <p className="mt-3 text-sm text-ink">
-                    <span className="font-semibold">My role · </span>
-                    {p.contribution}
-                  </p>
+                  <div className="mt-4">
+                    <Head>My role</Head>
+                    <Bullets items={cs.role} dot={a.dot} />
+                  </div>
                 </div>
               </div>
 
@@ -150,19 +149,12 @@ export function ExperienceSection() {
 
 export function NotesSection() {
   return (
-    <SectionDoc title="Notes" subtitle="How I think about frontend. Tip: drag a note onto the desktop.">
+    <SectionDoc title="Notes" subtitle="How I think about frontend.">
       <div className="space-y-4">
         {notes.map((n) => (
           <article
             key={n.id}
-            draggable
-            onDragStart={(e) => {
-              e.dataTransfer.setData(FILE_DRAG_TYPE, `note-${n.id}`);
-              e.dataTransfer.setData("text/plain", `note-${n.id}`);
-              e.dataTransfer.effectAllowed = "copy";
-            }}
-            title="Drag to the desktop"
-            className="cursor-grab rounded-2xl border border-line bg-surface p-5 shadow-soft active:cursor-grabbing"
+            className="rounded-2xl border border-line bg-surface p-5 shadow-soft"
           >
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-faint">{n.updated}</p>
             <h2 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">{n.title}</h2>

@@ -17,6 +17,7 @@ import {
 import { useOSStore } from "@/store/os-store";
 import { APPS } from "@/data/apps";
 import { links } from "@/data/profile";
+import { downloadResume } from "@/lib/download";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { AppIcon } from "./AppIcon";
@@ -28,7 +29,7 @@ const GROUP_ORDER: Group[] = ["Sections", "Apps", "Actions", "Links", "View"];
 /** Apps now folded into the Finder hub (not launchable on their own). */
 const FOLDED = new Set([
   "about", "projects", "case-studies", "skills", "experience", "resume",
-  "quick-hire", "ui-gallery", "contact", "notes", "text-viewer", "secret",
+  "contact", "notes", "text-viewer", "secret",
 ]);
 
 const SECTIONS: { id: string; label: string; keywords: string }[] = [
@@ -38,8 +39,6 @@ const SECTIONS: { id: string; label: string; keywords: string }[] = [
   { id: "skills", label: "Skills", keywords: "tech stack tools" },
   { id: "notes", label: "Notes", keywords: "writing frontend" },
   { id: "resume", label: "Resume", keywords: "cv pdf" },
-  { id: "quick-hire", label: "Quick Hire", keywords: "recruiter hire" },
-  { id: "ui-gallery", label: "UI Gallery", keywords: "states ui" },
   { id: "contact", label: "Contact", keywords: "email reach" },
 ];
 
@@ -62,7 +61,6 @@ export function Spotlight() {
   const openFinderAt = useOSStore((s) => s.openFinderAt);
   const toggleTheme = useOSStore((s) => s.toggleTheme);
   const pushToast = useOSStore((s) => s.pushToast);
-  const addNotification = useOSStore((s) => s.addNotification);
   const reduced = usePrefersReducedMotion();
   const { copy } = useCopyToClipboard();
 
@@ -106,9 +104,9 @@ export function Spotlight() {
         id: "download-resume",
         label: "Download Resume",
         group: "Actions",
-        keywords: "cv pdf print",
+        keywords: "cv pdf cover letter",
         icon: <Download className={iconCls} />,
-        run: () => window.open(links.resume, "_blank", "noopener,noreferrer"),
+        run: () => downloadResume(),
       },
       {
         id: "copy-email",
@@ -167,17 +165,6 @@ export function Spotlight() {
   }, [filtered]);
 
   useEffect(() => setActive(0), [query]);
-
-  // Easter egg: typing "hire jai" jumps straight to Quick Hire.
-  useEffect(() => {
-    if (!open) return;
-    if (query.trim().toLowerCase().replace(/\s+/g, " ") === "hire jai") {
-      openApp("quick-hire");
-      pushToast("Good choice. Opening Quick Hire.");
-      addNotification({ title: "Quick Hire", body: "Good choice — opening Quick Hire.", icon: "sparkles" });
-      close();
-    }
-  }, [query, open, openApp, pushToast, addNotification, close]);
 
   useEffect(() => {
     if (open) {

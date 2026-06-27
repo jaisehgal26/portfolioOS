@@ -16,13 +16,6 @@ export const initialNotifications: OSNotification[] = [
     time: "Just now",
   },
   {
-    id: "quick-hire",
-    title: "Tip — for recruiters",
-    body: "Open Quick Hire for a 30-second overview of my profile.",
-    icon: "sparkles",
-    time: "Just now",
-  },
-  {
     id: "search-tip",
     title: "Tip — quick search",
     body: "Press ⌘K / Ctrl K anytime to open Spotlight and jump anywhere.",

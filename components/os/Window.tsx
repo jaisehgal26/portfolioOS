@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 const TOP_BAR = 44;
 const MIN_W = 360;
 const MIN_H = 300;
+/** Space kept clear at the bottom for the dock, so windows never slip under it. */
+const DOCK_RESERVE = 74;
 
 type SnapZone = "max" | "left" | "right" | null;
 
@@ -21,7 +23,7 @@ function snapRect(zone: Exclude<SnapZone, null>) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const top = TOP_BAR + 8;
-  const h = vh - TOP_BAR - 16;
+  const h = vh - top - DOCK_RESERVE;
   if (zone === "max") return { x: 8, y: top, w: vw - 16, h };
   const w = Math.floor(vw / 2) - 12;
   const x = zone === "left" ? 8 : Math.ceil(vw / 2) + 4;
@@ -94,7 +96,8 @@ export function Window({ win, isMobile, children }: WindowProps) {
     const origin = { ...posRef.current };
     function move(ev: PointerEvent) {
       const nx = clamp(origin.x + ev.clientX - startX, -sizeRef.current.w + 120, window.innerWidth - 120);
-      const ny = clamp(origin.y + ev.clientY - startY, TOP_BAR, window.innerHeight - 56);
+      const maxY = Math.max(TOP_BAR, window.innerHeight - DOCK_RESERVE - sizeRef.current.h);
+      const ny = clamp(origin.y + ev.clientY - startY, TOP_BAR, maxY);
       setPos({ x: nx, y: ny });
       let zone: SnapZone = null;
       if (ev.clientY <= TOP_BAR + 4) zone = "max";
@@ -147,6 +150,25 @@ export function Window({ win, isMobile, children }: WindowProps) {
         if (dir.includes("n")) y = o.y + (o.h - MIN_H);
         h = MIN_H;
       }
+
+      // Keep every edge inside the viewport (top bar above, dock below, 8px sides).
+      const minX = 8;
+      const minY = TOP_BAR;
+      const maxRight = window.innerWidth - 8;
+      const maxBottom = window.innerHeight - DOCK_RESERVE;
+      if (dir.includes("w") && x < minX) {
+        w += x - minX;
+        x = minX;
+      }
+      if (dir.includes("n") && y < minY) {
+        h += y - minY;
+        y = minY;
+      }
+      if (x + w > maxRight) w = maxRight - x;
+      if (y + h > maxBottom) h = maxBottom - y;
+      w = Math.max(MIN_W, w);
+      h = Math.max(MIN_H, h);
+
       setPos({ x, y });
       setSize({ w, h });
     }
@@ -202,7 +224,13 @@ export function Window({ win, isMobile, children }: WindowProps) {
 
   // ---- Desktop: floating window ----
   const style = win.maximized
-    ? { left: 8, top: TOP_BAR + 8, width: "calc(100vw - 16px)", height: `calc(100vh - ${TOP_BAR + 16}px)`, zIndex: win.zIndex }
+    ? {
+        left: 8,
+        top: TOP_BAR + 8,
+        width: "calc(100vw - 16px)",
+        height: `calc(100vh - ${TOP_BAR + 8 + DOCK_RESERVE}px)`,
+        zIndex: win.zIndex,
+      }
     : { left: pos.x, top: pos.y, width: size.w, height: size.h, zIndex: win.zIndex };
 
   const preview = snap ? snapRect(snap) : null;

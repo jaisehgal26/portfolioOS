@@ -3,14 +3,15 @@
 import { Check, Download, MapPin, Sparkles } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
 import { Monogram } from "@/components/os/Monogram";
-import { profile, links } from "@/data/profile";
+import { profile } from "@/data/profile";
+import { downloadResume } from "@/lib/download";
 
 export function AboutApp() {
   const stats = [
     { k: "Experience", v: profile.experience },
     { k: "Current", v: "Velotio Technologies" },
     { k: "Location", v: profile.location },
-    { k: "Focus", v: "Real-time & AI UI" },
+    { k: "Focus", v: "Real-time Agentic UIs" },
   ];
 
   return (
@@ -24,9 +25,6 @@ export function AboutApp() {
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-sm text-muted sm:justify-start">
             <span className="inline-flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5" /> {profile.location}
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/12 px-2.5 py-0.5 text-xs font-medium text-mint">
-              <span className="h-1.5 w-1.5 rounded-full bg-mint" /> {profile.available}
             </span>
           </div>
         </div>
@@ -68,25 +66,25 @@ export function AboutApp() {
         ))}
       </div>
 
-      <div className="mt-7 flex items-start gap-3 rounded-2xl border border-violet/25 bg-violet/[0.06] p-4">
-        <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-violet" />
-        <p className="text-sm leading-relaxed text-ink">
-          <span className="font-semibold">Engineer note · </span>
-          I model real-time UI as ordered event streams folded into a keyed view model, with each
-          node owning a small state machine (pending → streaming → done → error). It keeps the tree
-          stable under heavy updates and makes reconnects and retries first-class.
-        </p>
-      </div>
+      <figure className="mt-7 border-l-2 border-accent/40 pl-4">
+        <blockquote className="text-pretty font-display text-base leading-relaxed text-muted">
+          “An interface is a promise. Every skeleton, every optimistic update, every quiet retry is
+          you telling the user I&apos;ve got this — and engineering is just keeping that promise at
+          sixty frames a second.”
+        </blockquote>
+        <figcaption className="mt-2 text-[11px] text-faint">
+          On building interfaces — {profile.name}
+        </figcaption>
+      </figure>
 
-      <a
-        href={links.resume}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
+        onClick={downloadResume}
         className="mt-7 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-transform hover:-translate-y-0.5"
       >
         <Download className="h-4 w-4" />
         Download Resume
-      </a>
+      </button>
     </AppScroll>
   );
 }

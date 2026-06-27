@@ -65,14 +65,6 @@ export function BootScreen() {
           ))}
         </div>
       </motion.div>
-
-      <button
-        type="button"
-        onClick={boot}
-        className="absolute bottom-8 rounded-full border border-line bg-surface/70 px-4 py-1.5 text-xs font-medium text-muted backdrop-blur transition-colors hover:text-ink"
-      >
-        Skip
-      </button>
     </div>
   );
 }

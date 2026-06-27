@@ -1,7 +1,6 @@
 import type { Accent } from "./projects";
 
 export type AppId =
-  | "quick-hire"
   | "about"
   | "resume"
   | "projects"
@@ -13,16 +12,20 @@ export type AppId =
   | "browser"
   | "notes"
   | "settings"
-  | "ui-gallery"
   | "system-monitor"
   | "experiments"
   | "text-viewer"
   | "terminal"
   | "snake"
   | "secret"
-  | "trash";
+  | "launchpad"
+  | "calculator"
+  | "todo"
+  | "notepad"
+  | "clock"
+  | "unit-converter";
 
-export type AppCategory = "favorites" | "career" | "case-studies" | "system" | "lab";
+export type AppCategory = "favorites" | "career" | "case-studies" | "system" | "lab" | "utility";
 
 export interface AppMeta {
   id: AppId;
@@ -39,18 +42,6 @@ export interface AppMeta {
 }
 
 export const APPS: AppMeta[] = [
-  {
-    id: "quick-hire",
-    name: "Quick Hire",
-    shortName: "Quick Hire",
-    icon: "zap",
-    accent: "accent",
-    category: "favorites",
-    description: "Everything a recruiter needs in 30 seconds",
-    defaultSize: { w: 860, h: 600 },
-    inDock: false,
-    onDesktop: false,
-  },
   {
     id: "about",
     name: "About Jai",
@@ -124,18 +115,6 @@ export const APPS: AppMeta[] = [
     onDesktop: false,
   },
   {
-    id: "ui-gallery",
-    name: "UI Gallery",
-    shortName: "UI Gallery",
-    icon: "palette",
-    accent: "violet",
-    category: "lab",
-    description: "Real product UI states, polished",
-    defaultSize: { w: 900, h: 600 },
-    inDock: false,
-    onDesktop: false,
-  },
-  {
     id: "contact",
     name: "Contact",
     shortName: "Contact",
@@ -149,15 +128,15 @@ export const APPS: AppMeta[] = [
   },
   {
     id: "finder",
-    name: "Dossier",
-    shortName: "Dossier",
+    name: "Finder",
+    shortName: "Finder",
     icon: "folder",
     accent: "accent",
     category: "system",
     description: "Browse everything — about, work, experience, skills and more",
     defaultSize: { w: 960, h: 640 },
     inDock: true,
-    onDesktop: true,
+    onDesktop: false,
   },
   {
     id: "browser",
@@ -268,15 +247,75 @@ export const APPS: AppMeta[] = [
     onDesktop: false,
   },
   {
-    id: "trash",
-    name: "Trash",
-    shortName: "Trash",
-    icon: "trash",
+    id: "launchpad",
+    name: "Apps",
+    shortName: "Apps",
+    icon: "grid",
     accent: "accent",
     category: "system",
-    description: "Files you removed from the desktop",
-    defaultSize: { w: 560, h: 520 },
+    description: "All the little built-in apps",
+    defaultSize: { w: 720, h: 560 },
     inDock: true,
+    onDesktop: false,
+  },
+  {
+    id: "calculator",
+    name: "Calculator",
+    shortName: "Calculator",
+    icon: "calculator",
+    accent: "blue",
+    category: "utility",
+    description: "A simple calculator",
+    defaultSize: { w: 340, h: 480 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "todo",
+    name: "Reminders",
+    shortName: "Reminders",
+    icon: "listChecks",
+    accent: "accent",
+    category: "utility",
+    description: "Keep a quick to-do list",
+    defaultSize: { w: 460, h: 560 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "notepad",
+    name: "Notepad",
+    shortName: "Notepad",
+    icon: "notepadText",
+    accent: "amber",
+    category: "utility",
+    description: "A scratchpad that saves itself",
+    defaultSize: { w: 560, h: 520 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "clock",
+    name: "Clock",
+    shortName: "Clock",
+    icon: "clock",
+    accent: "violet",
+    category: "utility",
+    description: "Clock, stopwatch and timer",
+    defaultSize: { w: 460, h: 520 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "unit-converter",
+    name: "Converter",
+    shortName: "Converter",
+    icon: "ruler",
+    accent: "mint",
+    category: "utility",
+    description: "Convert length, weight and temperature",
+    defaultSize: { w: 460, h: 520 },
+    inDock: false,
     onDesktop: false,
   },
 ];

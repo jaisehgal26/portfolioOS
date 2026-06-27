@@ -28,7 +28,7 @@ export interface UIStateItem {
 
 /**
  * The states most frontend devs never show. Each renders as a tiny, real
- * component in the UI Gallery — that's the point of the section.
+ * component in the Experiments app — that's the point.
  */
 export const uiStates: UIStateItem[] = [
   { kind: "empty", label: "Empty", caption: "Guide the first action.", usedIn: "Dashboards & lists before data exists." },

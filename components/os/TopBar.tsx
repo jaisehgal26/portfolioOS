@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { BatteryMedium, Bell, Moon, Search, Sun, Wifi } from "lucide-react";
+import { Bell, Search, SlidersHorizontal } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { getApp } from "@/data/apps";
 import { FINDER_SECTIONS } from "@/data/sections";
@@ -10,7 +10,6 @@ import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useCurrentTime } from "@/hooks/use-current-time";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { JaiLogo } from "./JaiLogo";
-import { WatchDial } from "./WatchDial";
 import { cn } from "@/lib/utils";
 
 interface MenuEntry {
@@ -97,13 +96,9 @@ function MenuButton({
 export function TopBar() {
   const openApp = useOSStore((s) => s.openApp);
   const openFinderAt = useOSStore((s) => s.openFinderAt);
-  const restart = useOSStore((s) => s.restart);
   const lock = useOSStore((s) => s.lock);
   const toggleMissionControl = useOSStore((s) => s.toggleMissionControl);
-  const theme = useOSStore((s) => s.theme);
-  const toggleTheme = useOSStore((s) => s.toggleTheme);
   const setHelpOpen = useOSStore((s) => s.setHelpOpen);
-  const pushToast = useOSStore((s) => s.pushToast);
   const toggleSpotlight = useOSStore((s) => s.toggleSpotlight);
   const toggleNC = useOSStore((s) => s.toggleNotificationCenter);
   const toggleControlCenter = useOSStore((s) => s.toggleControlCenter);
@@ -115,12 +110,16 @@ export function TopBar() {
   const toggleMaximize = useOSStore((s) => s.toggleMaximize);
   const focusWindow = useOSStore((s) => s.focusWindow);
   const notifications = useOSStore((s) => s.notifications);
-  const now = useCurrentTime();
+  const hour12 = useOSStore((s) => s.hour12);
+  const now = useCurrentTime(1000);
 
   const focusedApp = focusedId ? getApp(focusedId) : null;
   const unread = notifications.filter((n) => !n.read).length;
 
   const date = now ? now.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) : "";
+  const time = now
+    ? now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12 })
+    : "";
 
   return (
     <div className="glass fixed inset-x-0 top-0 z-40 flex h-11 items-center justify-between px-2.5 sm:px-3.5">
@@ -136,15 +135,10 @@ export function TopBar() {
           }
           items={[
             { label: "About", onClick: () => openFinderAt("about") },
-            { label: "Quick Hire", onClick: () => openFinderAt("quick-hire") },
-            { label: "Resume", onClick: () => openFinderAt("resume") },
-            { label: "Work", onClick: () => openFinderAt("work") },
-            { label: "Contact", onClick: () => openFinderAt("contact") },
             { label: "—" },
             { label: "System Settings", onClick: () => openApp("settings") },
             { label: "—" },
-            { label: "Lock Screen", onClick: lock },
-            { label: "Restart Experience", onClick: restart, danger: true },
+            { label: "Lock Screen", onClick: lock, danger: true },
           ]}
         />
 
@@ -184,7 +178,6 @@ export function TopBar() {
           <MenuButton
             label="Help"
             items={[
-              { label: "About this portfolio", onClick: () => openFinderAt("about") },
               { label: "Keyboard shortcuts", onClick: () => setHelpOpen(true) },
               { label: "Search (⌘K)", onClick: toggleSpotlight },
             ]}
@@ -204,23 +197,11 @@ export function TopBar() {
         </button>
         <button
           type="button"
-          onClick={() => {
-            toggleTheme();
-            pushToast(theme === "dark" ? "Light theme" : "Dark theme");
-          }}
-          aria-label="Toggle theme"
-          className="grid h-7 w-7 place-items-center rounded-md transition-colors hover:bg-ink/5 hover:text-ink"
-        >
-          {theme === "dark" ? <Sun className="h-[15px] w-[15px]" /> : <Moon className="h-[15px] w-[15px]" />}
-        </button>
-        <button
-          type="button"
           onClick={toggleControlCenter}
           aria-label="Control center"
-          className="hidden items-center gap-1.5 rounded-md px-1.5 py-1 transition-colors hover:bg-ink/5 hover:text-ink sm:flex"
+          className="grid h-7 w-7 place-items-center rounded-md transition-colors hover:bg-ink/5 hover:text-ink"
         >
-          <Wifi className="h-[15px] w-[15px]" aria-hidden />
-          <BatteryMedium className="h-[18px] w-[18px]" aria-hidden />
+          <SlidersHorizontal className="h-[15px] w-[15px]" aria-hidden />
         </button>
         <button
           type="button"
@@ -237,11 +218,11 @@ export function TopBar() {
           type="button"
           onClick={toggleCalendar}
           aria-label="Date and calendar"
-          className="ml-1 flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-ink/5"
+          className="ml-1 flex items-center gap-2 rounded-md px-2 py-1 text-xs font-medium text-ink transition-colors hover:bg-ink/5"
           suppressHydrationWarning
         >
-          <span className="hidden text-xs font-medium text-ink sm:inline">{date}</span>
-          <WatchDial className="h-6 w-6" />
+          <span className="hidden sm:inline">{date}</span>
+          <span className="tabular-nums">{time}</span>
         </button>
       </div>
     </div>

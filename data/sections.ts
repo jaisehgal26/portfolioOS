@@ -6,7 +6,5 @@ export const FINDER_SECTIONS: { id: string; label: string }[] = [
   { id: "skills", label: "Skills" },
   { id: "notes", label: "Notes" },
   { id: "resume", label: "Resume" },
-  { id: "quick-hire", label: "Quick Hire" },
-  { id: "ui-gallery", label: "UI Gallery" },
   { id: "contact", label: "Contact" },
 ];

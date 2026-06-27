@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Moon, Sun, Zap, ZapOff } from "lucide-react";
+import { Check, Clock, Moon, Sun, Zap, ZapOff } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { useOSStore } from "@/store/os-store";
 import { WALLPAPERS, ACCENTS } from "@/data/system";
@@ -21,6 +21,8 @@ export function SettingsApp() {
   const setAccent = useOSStore((s) => s.setAccent);
   const reducedPref = useOSStore((s) => s.reducedMotionPref);
   const setReduced = useOSStore((s) => s.setReducedMotionPref);
+  const hour12 = useOSStore((s) => s.hour12);
+  const setHour12 = useOSStore((s) => s.setHour12);
 
   return (
     <AppTwoPane
@@ -72,6 +74,13 @@ export function SettingsApp() {
                     </span>
                   </button>
                 ))}
+              </div>
+            </Field>
+
+            <Field label="Clock">
+              <div className="grid grid-cols-2 gap-3">
+                <OptionCard active={hour12} onClick={() => setHour12(true)} icon={<Clock className="h-5 w-5" />} label="12-hour" desc="e.g. 09:41:30 PM" />
+                <OptionCard active={!hour12} onClick={() => setHour12(false)} icon={<Clock className="h-5 w-5" />} label="24-hour" desc="e.g. 21:41:30" />
               </div>
             </Field>
 

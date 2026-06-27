@@ -27,13 +27,6 @@ export interface Toast {
   message: string;
 }
 
-/** A file the user dragged onto the desktop (positioned at the drop point). */
-export interface DesktopFile {
-  id: string;
-  x: number;
-  y: number;
-}
-
 interface ContextMenuState {
   open: boolean;
   x: number;
@@ -53,6 +46,8 @@ interface Persisted {
   soundEnabled: boolean;
   brightness: number;
   dnd: boolean;
+  /** Clock format: true = 12-hour (AM/PM), false = 24-hour. */
+  hour12: boolean;
 }
 
 interface OSState extends Persisted {
@@ -82,10 +77,6 @@ interface OSState extends Persisted {
   openFileId: string | null;
   /** A section requested in the Finder hub (consumed by FinderApp). */
   finderSection: string | null;
-  /** Files the user dragged onto the desktop (session only). */
-  desktopFiles: DesktopFile[];
-  /** Files moved to the Trash (session only). */
-  trash: DesktopFile[];
 
   boot: () => void;
   login: () => void;
@@ -101,11 +92,6 @@ interface OSState extends Persisted {
   clearOpenFile: () => void;
   openFinderAt: (section: string) => void;
   setFinderSection: (section: string) => void;
-  addDesktopFile: (id: string, x: number, y: number) => void;
-  removeDesktopFile: (id: string) => void;
-  trashDesktopFile: (id: string) => void;
-  restoreFromTrash: (id: string) => void;
-  emptyTrash: () => void;
   closeWindow: (id: AppId) => void;
   minimizeWindow: (id: AppId) => void;
   toggleMaximize: (id: AppId) => void;
@@ -117,6 +103,7 @@ interface OSState extends Persisted {
   setWallpaper: (w: string) => void;
   setAccent: (a: string) => void;
   setReducedMotionPref: (b: boolean) => void;
+  setHour12: (b: boolean) => void;
 
   closeSpotlight: () => void;
   toggleSpotlight: () => void;
@@ -157,6 +144,7 @@ function persist(state: OSState) {
       soundEnabled: state.soundEnabled,
       brightness: state.brightness,
       dnd: state.dnd,
+      hour12: state.hour12,
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {
@@ -213,6 +201,7 @@ export const useOSStore = create<OSState>((set, get) => ({
   soundEnabled: true,
   brightness: 1,
   dnd: false,
+  hour12: true,
 
   windows: [],
   focusedId: null,
@@ -231,8 +220,6 @@ export const useOSStore = create<OSState>((set, get) => ({
   browserUrl: null,
   openFileId: null,
   finderSection: null,
-  desktopFiles: [],
-  trash: [],
 
   boot: () => set({ hasBooted: true }),
 
@@ -311,31 +298,6 @@ export const useOSStore = create<OSState>((set, get) => ({
     set({ finderSection: section });
     persistSession(get());
   },
-  addDesktopFile: (id, x, y) =>
-    set((s) => ({
-      desktopFiles: [...s.desktopFiles.filter((f) => f.id !== id), { id, x, y }],
-    })),
-  removeDesktopFile: (id) =>
-    set((s) => ({ desktopFiles: s.desktopFiles.filter((f) => f.id !== id) })),
-  trashDesktopFile: (id) =>
-    set((s) => {
-      const file = s.desktopFiles.find((f) => f.id === id);
-      return {
-        desktopFiles: s.desktopFiles.filter((f) => f.id !== id),
-        trash: file ? [...s.trash.filter((t) => t.id !== id), file] : s.trash,
-      };
-    }),
-  restoreFromTrash: (id) =>
-    set((s) => {
-      const file = s.trash.find((t) => t.id === id);
-      return {
-        trash: s.trash.filter((t) => t.id !== id),
-        desktopFiles: file
-          ? [...s.desktopFiles.filter((f) => f.id !== id), { ...file, x: 40, y: 80 }]
-          : s.desktopFiles,
-      };
-    }),
-  emptyTrash: () => set({ trash: [] }),
 
   closeWindow: (id) => {
     if (get().soundEnabled) playSound("close");
@@ -420,6 +382,11 @@ export const useOSStore = create<OSState>((set, get) => ({
     set({ reducedMotionPref });
     persist(get());
   },
+  setHour12: (hour12) => {
+    set({ hour12 });
+    persist(get());
+    if (get().soundEnabled) playSound("toggle");
+  },
 
   closeSpotlight: () => set({ spotlightOpen: false }),
   toggleSpotlight: () => set((s) => ({ spotlightOpen: !s.spotlightOpen })),
@@ -490,6 +457,7 @@ export const useOSStore = create<OSState>((set, get) => ({
         patch.soundEnabled = p.soundEnabled !== false;
         patch.brightness = typeof p.brightness === "number" ? Math.min(1, Math.max(0.4, p.brightness)) : 1;
         patch.dnd = Boolean(p.dnd);
+        patch.hour12 = p.hour12 !== false;
       }
     } catch {
       /* ignore malformed prefs */

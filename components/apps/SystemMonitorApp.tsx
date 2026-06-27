@@ -16,6 +16,7 @@ import {
 import { AppScroll } from "@/components/ui/AppShell";
 import { useOSStore } from "@/store/os-store";
 import { getApp } from "@/data/apps";
+import { experienceYM } from "@/data/profile";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
@@ -47,7 +48,7 @@ const memoryTotal = memory.reduce((sum, g) => sum + g.count, 0);
 const memoryTiers = [1, 0.82, 0.66, 0.52, 0.42, 0.32, 0.24];
 
 const specs: { icon: LucideIcon; label: string; value: string; sub: string }[] = [
-  { icon: Cpu, label: "Chip", value: "Sehgal Frontend Engine", sub: "4.5 yrs · 8-core focus" },
+  { icon: Cpu, label: "Chip", value: "Sehgal Frontend Engine", sub: `${experienceYM()} yrs · 8-core focus` },
   { icon: MemoryStick, label: "Memory", value: "React · Next.js · TypeScript", sub: "Unified, fully typed" },
   { icon: Sparkles, label: "Neural engine", value: "Streaming AI UI cores", sub: "SSE · tool-calls · reasoning" },
   { icon: MonitorSmartphone, label: "Display", value: "Pixel-perfect Retina UI", sub: "Responsive · accessible" },

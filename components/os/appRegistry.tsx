@@ -1,6 +1,5 @@
 import type { ComponentType } from "react";
 import type { AppId } from "@/data/apps";
-import { QuickHireApp } from "@/components/apps/QuickHireApp";
 import { AboutApp } from "@/components/apps/AboutApp";
 import { ResumeApp } from "@/components/apps/ResumeApp";
 import { ProjectsApp } from "@/components/apps/ProjectsApp";
@@ -12,17 +11,20 @@ import { FinderApp } from "@/components/apps/FinderApp";
 import { BrowserApp } from "@/components/apps/BrowserApp";
 import { NotesApp } from "@/components/apps/NotesApp";
 import { SettingsApp } from "@/components/apps/SettingsApp";
-import { UIStateGalleryApp } from "@/components/apps/UIStateGalleryApp";
 import { SystemMonitorApp } from "@/components/apps/SystemMonitorApp";
 import { ExperimentsApp } from "@/components/apps/ExperimentsApp";
 import { TextViewerApp } from "@/components/apps/TextViewerApp";
 import { TerminalApp } from "@/components/apps/TerminalApp";
 import { SnakeApp } from "@/components/apps/SnakeApp";
 import { SecretApp } from "@/components/apps/SecretApp";
-import { TrashApp } from "@/components/apps/TrashApp";
+import { LaunchpadApp } from "@/components/apps/LaunchpadApp";
+import { CalculatorApp } from "@/components/apps/CalculatorApp";
+import { TodoApp } from "@/components/apps/TodoApp";
+import { NotepadApp } from "@/components/apps/NotepadApp";
+import { ClockApp } from "@/components/apps/ClockApp";
+import { UnitConverterApp } from "@/components/apps/UnitConverterApp";
 
 export const APP_COMPONENTS: Record<AppId, ComponentType> = {
-  "quick-hire": QuickHireApp,
   about: AboutApp,
   resume: ResumeApp,
   projects: ProjectsApp,
@@ -34,12 +36,16 @@ export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   browser: BrowserApp,
   notes: NotesApp,
   settings: SettingsApp,
-  "ui-gallery": UIStateGalleryApp,
   "system-monitor": SystemMonitorApp,
   experiments: ExperimentsApp,
   "text-viewer": TextViewerApp,
   terminal: TerminalApp,
   snake: SnakeApp,
   secret: SecretApp,
-  trash: TrashApp,
+  launchpad: LaunchpadApp,
+  calculator: CalculatorApp,
+  todo: TodoApp,
+  notepad: NotepadApp,
+  clock: ClockApp,
+  "unit-converter": UnitConverterApp,
 };

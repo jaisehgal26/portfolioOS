@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Download, FlaskConical, Gamepad2, RefreshCw, Sparkles } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
 import { useOSStore } from "@/store/os-store";
-import { links } from "@/data/profile";
+import { downloadResume } from "@/lib/download";
 
 const FACTS = [
   "This whole portfolio is a tiny operating system — windows, dock, terminal and all — built in React, TypeScript and Tailwind.",
@@ -42,14 +42,13 @@ export function SecretApp() {
         </div>
 
         <div className="mt-6 grid gap-2.5">
-          <a
-            href={links.resume}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={downloadResume}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-transform hover:-translate-y-0.5"
           >
             <Download className="h-4 w-4" /> Download résumé
-          </a>
+          </button>
           <div className="grid grid-cols-2 gap-2.5">
             <button
               type="button"

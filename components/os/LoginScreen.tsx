@@ -48,7 +48,7 @@ export function LoginScreen() {
         >
           <Monogram size="xl" className="transition-transform group-hover:scale-105 group-focus-visible:scale-105" />
           <span className="font-display text-xl font-semibold tracking-tight text-ink">{profile.name}</span>
-          <span className="text-sm text-muted">{profile.role}</span>
+         
         </button>
 
         {/* Password field (any password works — it's a demo) */}
@@ -78,15 +78,7 @@ export function LoginScreen() {
           </button>
         </motion.div>
 
-        <button
-          type="button"
-          onClick={login}
-          className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-muted transition-colors hover:text-ink"
-        >
-          <Fingerprint className="h-4 w-4 text-accent" />
-          Sign in with Touch ID
-        </button>
-        <p className="mt-2 text-[11px] text-faint">Any password works — it&apos;s a demo.</p>
+        <p className="mt-2 text-[11px] text-faint">Any password works</p>
       </motion.div>
     </div>
   );

@@ -5,7 +5,7 @@ import { useOSStore } from "@/store/os-store";
 
 const SHORTCUTS: { keys: string[]; label: string }[] = [
   { keys: ["⌘", "K"], label: "Open Spotlight search" },
-  { keys: ["⌘", "1"], label: "Open Quick Hire" },
+  { keys: ["⌘", "1"], label: "Open About" },
   { keys: ["⌘", "2"], label: "Open Projects" },
   { keys: ["⌘", "3"], label: "Open Resume" },
   { keys: ["⌘", "4"], label: "Open Contact" },

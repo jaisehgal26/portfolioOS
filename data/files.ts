@@ -1,9 +1,6 @@
 import { notes } from "./notes";
 import { profile, links } from "./profile";
 
-/** MIME used to carry a file id from the explorer to the desktop drop zone. */
-export const FILE_DRAG_TYPE = "application/x-jaios-file";
-
 export interface FsFile {
   type: "file";
   id: string;
@@ -83,7 +80,7 @@ export const fileTree: FsFolder = {
       ext: "md",
       body: [
         "Welcome to JaiOS — a frontend portfolio built as a tiny operating system.",
-        "Browse these files in the explorer, drag any file onto the desktop, and open apps from the dock.",
+        "Browse these files in the explorer and open apps from the dock.",
         "Everything here is real React, TypeScript and Tailwind — no screenshots.",
       ],
     },

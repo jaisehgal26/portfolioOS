@@ -56,8 +56,8 @@ export const links = {
   linkedinLabel: "linkedin.com/in/jaisehgal26",
   github: "https://github.com/jaisehgal26",
   githubLabel: "github.com/jaisehgal26",
-  portfolio: "https://jaisehgalportfolio.vercel.app",
-  portfolioLabel: "jaisehgalportfolio.vercel.app",
+  portfolio: "https://jaisehgal.com",
+  portfolioLabel: "jaisehgal.com",
   resume: "/Jai_Sehgal_Resume.pdf",
   coverLetter: "/Jai_Sehgal_CoverLetter.pdf",
 } as const;
@@ -67,5 +67,5 @@ export const site = {
   title: "Jai Sehgal — Frontend Developer",
   description:
     "Frontend Developer specializing in Next.js, React, TypeScript, real-time UI, dashboards, and scalable product interfaces.",
-  url: "https://jaisehgalportfolio.vercel.app",
+  url: "https://jaisehgal.com",
 } as const;

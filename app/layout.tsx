@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { site } from "@/data/profile";
+import { profile, links, site, experienceYM } from "@/data/profile";
 
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -18,39 +18,108 @@ const display = Fraunces({
   weight: ["400", "500", "600", "700"],
 });
 
+const TITLE = "Jai Sehgal — Frontend Developer Portfolio";
+const DESCRIPTION = `Jai Sehgal is a Frontend Developer with ${experienceYM()} years of experience building Next.js, React and TypeScript apps — real-time dashboards, chat systems, payment flows and AI-driven product UIs. Explore the work in an interactive OS-style portfolio (JaiOS).`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: "Jai Sehgal — Frontend Developer Portfolio",
-  description:
-    "Interactive OS-style portfolio of Jai Sehgal, a Frontend Developer specializing in Next.js, React, TypeScript, real-time UI, dashboards, and scalable product interfaces.",
+  title: {
+    default: TITLE,
+    template: "%s — Jai Sehgal",
+  },
+  description: DESCRIPTION,
+  applicationName: "JaiOS",
   keywords: [
     "Jai Sehgal",
+    "Jai Sehgal portfolio",
     "Frontend Developer",
-    "Next.js",
-    "React",
+    "Frontend Engineer",
+    "React Developer",
+    "Next.js Developer",
     "TypeScript",
     "real-time UI",
+    "WebSockets",
+    "SSE",
+    "agentic UI",
+    "AI product UI",
     "dashboards",
     "JaiOS",
     "portfolio",
+    "India",
   ],
   authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  publisher: site.name,
+  category: "technology",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: site.url,
-    title: "Jai Sehgal — Frontend Developer Portfolio",
-    description:
-      "JaiOS — an interactive operating-system portfolio. Frontend craft, packaged as an OS.",
-    siteName: "JaiOS Portfolio",
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: "JaiOS — Jai Sehgal",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jai Sehgal — Frontend Developer Portfolio",
+    title: TITLE,
     description: "JaiOS — frontend craft, packaged as an operating system.",
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  formatDetection: { email: false, address: false, telephone: false },
+  appleWebApp: { capable: true, title: "JaiOS", statusBarStyle: "black-translucent" },
+};
+
+/** JSON-LD structured data so search engines understand the person + site. */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${site.url}/#person`,
+      name: profile.name,
+      url: site.url,
+      image: `${site.url}/opengraph-image`,
+      jobTitle: profile.role,
+      description: DESCRIPTION,
+      email: `mailto:${links.email}`,
+      address: { "@type": "PostalAddress", addressCountry: "India" },
+      alumniOf: { "@type": "CollegeOrUniversity", name: profile.education.school },
+      knowsAbout: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Redux",
+        "Zustand",
+        "WebSockets",
+        "Server-Sent Events",
+        "Real-time UI",
+        "AI product interfaces",
+        "Frontend architecture",
+      ],
+      sameAs: [links.linkedin, links.github],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`,
+      url: site.url,
+      name: site.title,
+      description: DESCRIPTION,
+      inLanguage: "en",
+      publisher: { "@id": `${site.url}/#person` },
+    },
+  ],
 };
 
 export const viewport: Viewport = {
@@ -68,6 +137,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${display.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-bg font-sans text-ink antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {children}
         <Analytics />

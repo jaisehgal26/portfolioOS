@@ -271,3 +271,9 @@ body {
     border-color: #d9d2c7 !important;
   }
 }
+
+/* ---- Custom OS pointer — a macOS-style slim arrow: black fill with a white
+   outline, slightly tilted. Buttons/links keep the system hand. ---- */
+body {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4.2 2.4L4.2 18.7L8.5 14.7L11.4 20.9L14.1 19.6L11.1 13.5L16.7 13.2Z" fill="black" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg>') 4 2, auto;
+}

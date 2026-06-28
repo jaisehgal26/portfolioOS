@@ -1,17 +1,11 @@
 <svg width="180" height="180" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="jai-tile" x1="4" y1="2" x2="44" y2="46" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F2854E"/>
-      <stop offset="1" stop-color="#DC4E2A"/>
-    </linearGradient>
-    <linearGradient id="jai-sheen" x1="24" y1="0" x2="24" y2="30" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF" stop-opacity="0.16"/>
-      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <rect width="48" height="48" fill="url(#jai-tile)"/>
-  <rect width="48" height="48" fill="url(#jai-sheen)"/>
-  <g transform="translate(24 24) scale(1.2) translate(-24 -24)">
-    <path d="M32 13.5V27a8 8 0 0 1-16 0" stroke="#FFF7F0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
+  <!-- Full-bleed dark base (iOS masks the corners) -->
+  <rect width="48" height="48" fill="#1a1714"/>
+  <mask id="jai-os" maskUnits="userSpaceOnUse" x="4" y="4" width="40" height="40">
+    <rect x="4" y="4" width="40" height="40" rx="12" fill="#fff"/>
+    <rect x="12" y="12" width="24" height="24" rx="6" transform="rotate(45 24 24)" fill="#000"/>
+    <rect x="18" y="18" width="12" height="12" rx="3.5" transform="rotate(45 24 24)" fill="#fff"/>
+    <circle cx="24" cy="24" r="2.6" fill="#000"/>
+  </mask>
+  <rect x="4" y="4" width="40" height="40" rx="12" fill="#f3efe8" mask="url(#jai-os)"/>
 </svg>

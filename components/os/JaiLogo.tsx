@@ -1,32 +1,19 @@
 /**
- * The JaiOS brand mark — a warm terracotta squircle "tile" with a crafted
- * paper "J", a soft top sheen and an etched rim. Fixed colors (not theme
- * tokens) so the logo stays consistent across themes/accents.
+ * The JaiOS brand mark — a monochrome "tile" with a negative-space aperture:
+ * concentric rounded diamonds around a pinhole core, like a system lens. No
+ * literal initial. Uses `currentColor`, so it adapts to the surrounding ink.
  * Mirrored in app/icon.svg (favicon) and app/apple-icon.svg.
  */
 export function JaiLogo({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" aria-hidden>
-      <defs>
-        <linearGradient id="jai-tile" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#F2854E" />
-          <stop offset="1" stopColor="#DC4E2A" />
-        </linearGradient>
-        <linearGradient id="jai-sheen" x1="24" y1="4" x2="24" y2="27" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FFFFFF" stopOpacity="0.18" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <rect x="4" y="4" width="40" height="40" rx="13" fill="url(#jai-tile)" />
-      <rect x="4" y="4" width="40" height="40" rx="13" fill="url(#jai-sheen)" />
-      <path
-        d="M32 13.5V27a8 8 0 0 1-16 0"
-        stroke="#FFF7F0"
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <rect x="4.75" y="4.75" width="38.5" height="38.5" rx="12.4" stroke="#FFFFFF" strokeOpacity="0.25" />
+      <mask id="jai-logo" maskUnits="userSpaceOnUse" x="4" y="4" width="40" height="40">
+        <rect x="4" y="4" width="40" height="40" rx="12" fill="#fff" />
+        <rect x="12" y="12" width="24" height="24" rx="6" transform="rotate(45 24 24)" fill="#000" />
+        <rect x="18" y="18" width="12" height="12" rx="3.5" transform="rotate(45 24 24)" fill="#fff" />
+        <circle cx="24" cy="24" r="2.6" fill="#000" />
+      </mask>
+      <rect x="4" y="4" width="40" height="40" rx="12" fill="currentColor" mask="url(#jai-logo)" />
     </svg>
   );
 }

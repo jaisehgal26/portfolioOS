@@ -1,0 +1,508 @@
+{
+  "site": {
+    "name": "Jai Sehgal",
+    "title": "Jai Sehgal — Frontend Developer",
+    "description": "Frontend Developer specializing in Next.js, React, TypeScript, real-time UI, dashboards, and scalable product interfaces.",
+    "url": "https://jaisehgal.com"
+  },
+  "links": {
+    "email": "sehgaljai81@gmail.com",
+    "phone": "+91 9416102571",
+    "phoneHref": "tel:+919416102571",
+    "linkedin": "https://www.linkedin.com/in/jaisehgal26",
+    "linkedinLabel": "linkedin.com/in/jaisehgal26",
+    "github": "https://github.com/jaisehgal26",
+    "githubLabel": "github.com/jaisehgal26",
+    "portfolio": "https://jaisehgal.com",
+    "portfolioLabel": "jaisehgal.com",
+    "resume": "/Jai_Sehgal_Resume.pdf",
+    "coverLetter": "/Jai_Sehgal_CoverLetter.pdf"
+  },
+  "profile": {
+    "name": "Jai Sehgal",
+    "role": "Frontend Developer",
+    "location": "India",
+    "experienceStart": "2021-10-01",
+    "supporting": "I'm a Frontend Developer with {{years}} years of experience building Next.js, React, TypeScript and SSE/WebSocket-powered interfaces — dashboards, chat systems, payment flows, AI-driven UIs, and scalable product experiences.",
+    "aboutIntro": "I'm a frontend developer who builds polished, responsive, real-world product interfaces. My work usually sits around complex product flows — real-time dashboards, payment systems, chat interfaces, AI-driven UIs, healthcare tools, admin platforms, and scalable React/Next.js applications.",
+    "highlights": [
+      "{{years}} years of frontend experience",
+      "Strong in Next.js, React, TypeScript",
+      "Real-time UI using SSE and WebSockets",
+      "AI-driven frontend interfaces",
+      "Dashboards, payments, chat, RBAC, healthcare workflows",
+      "Production-ready component systems"
+    ],
+    "coreStack": ["Next.js", "React.js", "TypeScript", "Tailwind CSS", "Redux", "Zustand", "SSE", "WebSockets"],
+    "summary": "Frontend Developer with {{years}} years of experience specializing in Next.js, React.js, TypeScript, JavaScript, Redux/Zustand, and scalable frontend systems. Skilled in real-time applications using WebSockets and SSE, REST/GraphQL integrations, testing, performance optimization, accessibility, and production-ready UI development.",
+    "education": {
+      "school": "Amity University",
+      "degree": "B.Tech, Computer Science & Engineering",
+      "location": "Gurugram, India",
+      "period": "2017 — 2021"
+    }
+  },
+  "experience": [
+    {
+      "id": "velotio",
+      "company": "Velotio Technologies",
+      "role": "Frontend Developer",
+      "location": "Remote",
+      "period": "May 2025 — Present",
+      "current": true,
+      "summary": "Building AI-driven product interfaces and high-performance Next.js apps for complex, real-world workflows.",
+      "contributions": [
+        "Engineered an advanced chatbot interface using the Vercel AI SDK and Server-Sent Events.",
+        "Built dynamic, adaptive UI that renders live tool calls, LLM actions and multi-step reasoning artifacts.",
+        "Contributed to agentic solution architecture across voice bots and chatbots.",
+        "Led frontend development of a high-performance job portal and career page with Next.js and MUI."
+      ],
+      "tech": ["Next.js", "React", "TypeScript", "Vercel AI SDK", "SSE", "MUI"],
+      "lesson": "Streaming UI needs first-class loading, partial, error and retry states — not just a happy path.",
+      "accent": "violet"
+    },
+    {
+      "id": "gigmo",
+      "company": "Gigmo Solutions",
+      "role": "Software Developer",
+      "location": "Gurugram, India",
+      "period": "June 2023 — April 2025",
+      "summary": "Owned real-time, money-critical surfaces: payments, low-latency chat and dynamic role-based access.",
+      "contributions": [
+        "Led frontend design and development of a Payments module with React.js, Redux, TypeScript and backend APIs.",
+        "Integrated SSE for real-time payment tracking.",
+        "Built a scalable real-time chat application using WebSockets.",
+        "Developed RBAC and dynamic permission management.",
+        "Contributed to a recommendation system powered by prompt engineering and the ChatGPT API."
+      ],
+      "tech": ["React", "Redux", "TypeScript", "SSE", "WebSockets", "REST APIs"],
+      "lesson": "Real-time UX lives or dies on the edges — reconnects, ordering and honest delivery state.",
+      "accent": "accent"
+    },
+    {
+      "id": "wipro",
+      "company": "Wipro Technologies",
+      "role": "Project Engineer",
+      "location": "Remote",
+      "period": "September 2021 — May 2023",
+      "summary": "Built the reusable component and performance foundations for enterprise-scale React applications.",
+      "contributions": [
+        "Built modular React components and integrated Redux for enterprise-scale applications.",
+        "Improved UI consistency and user session duration.",
+        "Enhanced performance and accessibility with WCAG-focused improvements.",
+        "Converted complex wireframes into responsive React interfaces."
+      ],
+      "tech": ["React", "Redux", "JavaScript", "CSS3", "Accessibility"],
+      "lesson": "Consistency and accessibility compound — small component decisions scale across whole products.",
+      "accent": "blue"
+    }
+  ],
+  "projects": [
+    {
+      "id": "agentic-ai-chat",
+      "title": "Agentic AI Chat Interface",
+      "category": "AI Product UI",
+      "summary": "An AI assistant that runs long, multi-step tasks — but users were left staring at a spinner with no sense of progress or trust.",
+      "contribution": "Designed and built the streaming chat experience: live tool calls, reasoning artifacts and message states.",
+      "stack": ["Next.js", "React", "TypeScript", "Vercel AI SDK", "SSE", "Tailwind CSS"],
+      "challenge": "Make a long-running, streaming AI task feel transparent, calm and trustworthy.",
+      "accent": "violet",
+      "preview": "ai-chat",
+      "caseStudy": {
+        "overview": "A dynamic chatbot interface that streams live tool calls, LLM actions and reasoning artifacts in real time using the Vercel AI SDK and Server-Sent Events. The interface lets people watch the assistant work instead of waiting in the dark.",
+        "problem": "Agent runs are opaque: a request goes in, then silence, then an answer. That erodes trust and makes failures impossible to read. The UI needed to narrate an unbounded, out-of-order stream of events clearly — without jumping around or stalling.",
+        "role": [
+          "Owned the end-to-end streaming chat UI.",
+          "Designed the contract that turns raw stream parts into stable, render-safe UI.",
+          "Built first-class loading, streaming, tool-call, error and retry states."
+        ],
+        "challenges": [
+          "Rendering a continuous, out-of-order event stream without layout jumps.",
+          "Keeping the message tree stable while many parts update at once.",
+          "Communicating progress during slow, multi-step tasks."
+        ],
+        "uiStates": [
+          "Empty / first-run",
+          "Thinking & streaming",
+          "Tool-call in progress",
+          "Reasoning artifact",
+          "Error + retry",
+          "Final answer"
+        ],
+        "architecture": [
+          "Next.js App Router with a component-driven message renderer.",
+          "SSE transport feeding an event reducer into a keyed message model.",
+          "Each message part owns a small state machine (pending → streaming → done)."
+        ],
+        "screens": [
+          "Streaming message bubbles with a soft typing caret.",
+          "Tool-call cards with arguments and status.",
+          "A reasoning-artifact timeline for multi-step plans."
+        ],
+        "improved": [
+          "Turned a black-box assistant into a transparent, readable experience.",
+          "Made failures recoverable without losing the conversation."
+        ],
+        "next": [
+          "Add run replay so a conversation can be reviewed after the fact.",
+          "Virtualize very long runs to keep memory flat."
+        ]
+      }
+    },
+    {
+      "id": "realtime-payments",
+      "title": "Real-Time Payments Module",
+      "category": "Fintech UX",
+      "summary": "Payments take time to settle, and uncertainty during that wait was driving anxiety and support tickets.",
+      "contribution": "Led frontend development of the payments module with live, trustworthy status tracking.",
+      "stack": ["React", "Redux", "TypeScript", "SSE", "REST APIs"],
+      "challenge": "Turn unavoidable payment latency into calm, legible progress.",
+      "accent": "accent",
+      "preview": "payments",
+      "caseStudy": {
+        "overview": "A payments module with real-time transaction tracking built on React, Redux, TypeScript and Server-Sent Events. It keeps people confident during the most anxious moment in any product — waiting for money to move.",
+        "problem": "Payment latency is unavoidable, but uncertainty is not. Users needed honest, live feedback through pending → processing → succeeded / failed, and a clear path to recover when something broke.",
+        "role": [
+          "Led frontend design and development of the payments module.",
+          "Integrated SSE for real-time status transitions.",
+          "Designed the waiting-state UX so latency reads as progress, not a hang."
+        ],
+        "challenges": [
+          "Building trust during the wait without misleading the user.",
+          "Reconciling streamed events with REST snapshots.",
+          "Designing a recovery path that never leaves a transaction ambiguous."
+        ],
+        "uiStates": ["Pending", "Processing", "Succeeded", "Failed", "Retrying", "Receipt"],
+        "architecture": [
+          "Normalized Redux transaction store reconciled against the SSE stream.",
+          "Per-transaction status machine driving the UI.",
+          "Error states that surface next steps, not dead ends."
+        ],
+        "screens": [
+          "A payment status timeline with soft transitions.",
+          "A transaction detail drawer with full history.",
+          "Distinct success, failed and retry treatments."
+        ],
+        "improved": [
+          "Reduced support anxiety by making the wait legible.",
+          "Gave finance and support a shared, real-time view of state."
+        ],
+        "next": [
+          "Optimistic settlement hints confirmed by webhooks.",
+          "A reconciliation diff when stream and snapshot disagree."
+        ]
+      }
+    },
+    {
+      "id": "realtime-chat",
+      "title": "Real-Time Chat Application",
+      "category": "Real-Time UX",
+      "summary": "A messaging product that needed to feel instant while staying correct across reconnects, devices and flaky networks.",
+      "contribution": "Built the WebSocket chat interface with presence, receipts and resilient reconnect behaviour.",
+      "stack": ["React", "TypeScript", "WebSockets", "Redux"],
+      "challenge": "Feel instant on the happy path while staying truthful at the edges.",
+      "accent": "blue",
+      "preview": "chat",
+      "caseStudy": {
+        "overview": "A scalable WebSocket-based chat interface with low-latency updates and smooth cross-device UX. The hard part wasn't the happy path — it was staying correct through reconnects, ordering and offline gaps.",
+        "problem": "Real-time messaging breaks at the edges: dropped sockets, out-of-order delivery, messages composed while offline. The UI had to feel instant while remaining honest about delivery state.",
+        "role": [
+          "Built the WebSocket client and message-state model.",
+          "Implemented typing indicators, presence and delivery / read receipts.",
+          "Designed reconnect and offline-queue behaviour."
+        ],
+        "challenges": [
+          "Optimistic sends reconciled against server acknowledgements.",
+          "Presence and typing on a lightweight side channel.",
+          "Never losing a message across a reconnect."
+        ],
+        "uiStates": [
+          "Typing indicator",
+          "Online / offline presence",
+          "Delivered / read",
+          "Reconnecting",
+          "Offline queue",
+          "Message grouping"
+        ],
+        "architecture": [
+          "Single multiplexed socket with heartbeat + backoff reconnect.",
+          "Optimistic local append reconciled by message id.",
+          "Queued offline messages flushed on reconnect."
+        ],
+        "screens": [
+          "Grouped message threads with presence dots.",
+          "Animated typing indicator and receipts.",
+          "A reconnecting banner with backoff feedback."
+        ],
+        "improved": [
+          "Kept a low-latency feel without lying about delivery.",
+          "Survived flaky networks gracefully."
+        ],
+        "next": [
+          "Cross-device read-cursor sync for large threads.",
+          "End-to-end dedupe across multi-device sessions."
+        ]
+      }
+    },
+    {
+      "id": "icu-ot",
+      "title": "ICU & OT Management System",
+      "category": "Healthcare Dashboards",
+      "summary": "Clinical teams needed live, role-aware dashboards where critical changes are impossible to miss — and impossible to misread.",
+      "contribution": "Built live vitals dashboards, complex PAC forms, role-based views and discharge workflows.",
+      "stack": ["React", "TypeScript", "Charts", "WebSockets", "RBAC"],
+      "challenge": "High-stakes, multi-role data that must read clearly under pressure.",
+      "accent": "mint",
+      "preview": "healthcare",
+      "caseStudy": {
+        "overview": "Healthcare dashboards with PAC forms, live vitals streaming, predictive visualizations, discharge workflows and role-based access control for doctors, nurses and admins.",
+        "problem": "Clinical UIs are high-stakes and multi-role. The same data must read differently for a doctor, a nurse and an admin, while live vitals and alert thresholds demand instant, unambiguous states.",
+        "role": [
+          "Built the live vitals visualizations and alert states.",
+          "Implemented complex PAC forms with clear, recoverable validation.",
+          "Built the role-based view switcher and discharge workflow."
+        ],
+        "challenges": [
+          "Designing alert states that can't be missed or misread.",
+          "Rendering role-aware UI without leaking unauthorized actions.",
+          "Keeping dense data calm and scannable."
+        ],
+        "uiStates": [
+          "Live vitals",
+          "Alert threshold",
+          "Role: doctor / nurse / admin",
+          "Form validation",
+          "Discharge summary",
+          "Loading & empty"
+        ],
+        "architecture": [
+          "Streamed vitals updating charts with explicit thresholds.",
+          "Role drives both data scope and the rendered controls.",
+          "Accessible form engine with inline validation."
+        ],
+        "screens": [
+          "A live patient-vitals board with alert highlights.",
+          "Role-based view switcher.",
+          "A reviewable discharge summary."
+        ],
+        "improved": [
+          "Gave each role exactly the view and actions they need.",
+          "Made critical thresholds impossible to overlook."
+        ],
+        "next": [
+          "Anomaly prediction overlays on the vitals charts.",
+          "Clinician-configurable thresholds per patient."
+        ]
+      }
+    },
+    {
+      "id": "product-management",
+      "title": "Product Management System",
+      "category": "Admin Platform",
+      "summary": "An inventory tool drowning operators in rows, where spotting low stock and acting in bulk took far too long.",
+      "contribution": "Built a responsive CRUD admin with auth, alerts, batch actions and AI-assisted suggestions.",
+      "stack": ["React", "Redux", "Tailwind CSS", "Firebase Auth", "JWT", "REST APIs"],
+      "challenge": "Make dense admin data effortless to scan and act on.",
+      "accent": "amber",
+      "preview": "inventory",
+      "caseStudy": {
+        "overview": "A responsive CRUD platform with role-based access, Firebase Auth, JWT sessions, AI-powered suggestions, notifications, inventory controls and stock alerts.",
+        "problem": "Inventory tools drown operators in rows. The UI had to make low-stock and batch operations effortless while keeping auth and sessions robust.",
+        "role": [
+          "Built the inventory table, filters, batch actions and stock alerts.",
+          "Wired Firebase Auth with JWT-based sessions.",
+          "Integrated AI-powered product suggestions and notifications."
+        ],
+        "challenges": [
+          "Keeping a dense table fast, sortable and selectable.",
+          "Surfacing low stock without adding noise.",
+          "Safe, fast bulk operations."
+        ],
+        "uiStates": [
+          "Inventory table",
+          "Filters",
+          "Batch actions",
+          "Empty state",
+          "Stock alert",
+          "Notification"
+        ],
+        "architecture": [
+          "Redux store with REST CRUD and derived stock selectors.",
+          "Role-scoped routes and controls.",
+          "Threshold-driven alerts and notifications."
+        ],
+        "screens": [
+          "A sortable inventory table with selection.",
+          "Stock-alert cards for items below threshold.",
+          "A product-suggestion panel and batch action bar."
+        ],
+        "improved": [
+          "Cut the time to spot and act on low stock.",
+          "Made bulk operations safe and fast."
+        ],
+        "next": [
+          "An audit trail for every inventory change.",
+          "Role-scoped batch permissions."
+        ]
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "core",
+      "title": "Core Frontend",
+      "icon": "code",
+      "description": "The foundation I build every product on.",
+      "usedIn": "Used across every project — from job portals to clinical dashboards.",
+      "skills": ["React.js", "Next.js", "TypeScript", "JavaScript", "HTML5", "CSS3"],
+      "accent": "accent"
+    },
+    {
+      "id": "styling",
+      "title": "Styling & UI",
+      "icon": "palette",
+      "description": "Design systems and pixel-careful component styling.",
+      "usedIn": "Used to ship consistent, responsive UI across admin tools and marketing sites.",
+      "skills": ["Tailwind CSS", "MUI", "Styled Components", "Bootstrap", "shadcn/ui"],
+      "accent": "violet"
+    },
+    {
+      "id": "state",
+      "title": "State & Data",
+      "icon": "database",
+      "description": "Predictable state and data flow at scale.",
+      "usedIn": "Used for payment stores, inventory tables and cached dashboard data.",
+      "skills": ["Redux", "Zustand", "React Query", "SWR", "TanStack"],
+      "accent": "blue"
+    },
+    {
+      "id": "realtime",
+      "title": "Real-Time UX",
+      "icon": "radio",
+      "description": "Live, event-driven interfaces that stay correct.",
+      "usedIn": "Used for payment tracking, chat systems, live dashboards and streaming AI.",
+      "skills": ["WebSockets", "SSE", "Optimistic UI", "Reconnect states", "Event-driven updates"],
+      "accent": "mint"
+    },
+    {
+      "id": "api",
+      "title": "API Integration",
+      "icon": "plug",
+      "description": "Connecting UI to data cleanly and resiliently.",
+      "usedIn": "Used to integrate product, payment and clinical back ends.",
+      "skills": ["REST APIs", "GraphQL", "Axios"],
+      "accent": "amber"
+    },
+    {
+      "id": "ai",
+      "title": "AI Product UI",
+      "icon": "sparkles",
+      "description": "Turning AI workflows into interfaces people can read.",
+      "usedIn": "Used to build streaming chat, tool-call rendering and reasoning timelines.",
+      "skills": ["Vercel AI SDK", "ChatGPT API", "Streaming UI patterns"],
+      "accent": "violet"
+    },
+    {
+      "id": "testing",
+      "title": "Testing",
+      "icon": "flask",
+      "description": "Confidence to ship and change safely.",
+      "usedIn": "Used to lock behaviour on critical flows and shared components.",
+      "skills": ["Jest", "React Testing Library", "Enzyme"],
+      "accent": "blue"
+    },
+    {
+      "id": "delivery",
+      "title": "Delivery",
+      "icon": "rocket",
+      "description": "From commit to production, reliably.",
+      "usedIn": "Used to ship and preview every project on Vercel & Netlify.",
+      "skills": ["Git", "GitHub", "Vercel", "Netlify", "CI/CD"],
+      "accent": "accent"
+    },
+    {
+      "id": "tools",
+      "title": "Tools",
+      "icon": "wrench",
+      "description": "A fast, modern day-to-day workflow.",
+      "usedIn": "Used to move quickly without cutting corners on quality.",
+      "skills": ["Cursor IDE", "GitHub Copilot", "ChatGPT", "Postman"],
+      "accent": "mint"
+    }
+  ],
+  "notes": [
+    {
+      "id": "realtime-states",
+      "title": "Handling real-time UI states",
+      "updated": "Pinned",
+      "preview": "Treat the stream as events; render a stable, keyed view model.",
+      "body": [
+        "Real-time UI lives or dies on the edges. I treat an SSE or WebSocket feed as an ordered stream of events and fold them into a stable, keyed view model — never re-parsing the whole payload per message.",
+        "Each live node owns a small state machine: pending → streaming → done → error. That keeps the tree stable while many parts update at once, and makes reconnects and out-of-order delivery something the UI can actually express.",
+        "I always design the stalled, errored and reconnecting states up front. They're not edge cases — they're the experience during a slow network."
+      ]
+    },
+    {
+      "id": "ui-states-matter",
+      "title": "Why loading, error & empty states matter",
+      "updated": "2 days ago",
+      "preview": "The happy path is the easy 20%. The states around it are the craft.",
+      "body": [
+        "Polished final screens are easy. The craft is everything around the happy path: empty, loading, partial, error, retry, offline, permission-denied.",
+        "These are the states users actually live in while waiting on a network or a backend. A thoughtful empty state guides the next action; a good error explains and offers a way forward instead of dead-ending.",
+        "I'd rather over-invest here than ship a demo that only works when everything goes right."
+      ]
+    },
+    {
+      "id": "reusable-components",
+      "title": "Structuring reusable components",
+      "updated": "5 days ago",
+      "preview": "Clear props, tight state boundaries, dumb presentational pieces.",
+      "body": [
+        "I break UI into small components with clear props and tight state boundaries. Presentational pieces stay dumb; only the state that must be shared gets lifted.",
+        "Typed contracts (TypeScript) make components safe to reuse and refactor across feature teams. Reuse beats clever — predictable beats surprising.",
+        "Data lives in typed files, UI in primitives, feature logic in clearly bounded modules. A teammate should be able to extend it without reading the whole tree."
+      ]
+    },
+    {
+      "id": "responsive",
+      "title": "Approaching responsive UI",
+      "updated": "1 week ago",
+      "preview": "Mobile-first, content-driven breakpoints, no squeezed desktops.",
+      "body": [
+        "I design mobile-first and let content — not arbitrary device widths — drive breakpoints. A layout should reflow into something intentional at every size, not a shrunken desktop.",
+        "On complex surfaces (dashboards, tables, this OS) mobile gets its own shape: full-screen views, bottom navigation, stacked cards. The goal is a native-feeling experience at each size."
+      ]
+    },
+    {
+      "id": "apis-backend",
+      "title": "Working with APIs & backend teams",
+      "updated": "1 week ago",
+      "preview": "Speak contracts and edge cases; normalize by id; reconcile.",
+      "body": [
+        "I collaborate closely on API contracts and the edge cases behind them. On the client I normalize by id, apply optimistic updates, then reconcile against server acks or snapshots.",
+        "Clear shared types and honest status modelling mean the UI and the API agree — and the user is never left guessing what state a request is in."
+      ]
+    },
+    {
+      "id": "a11y-perf",
+      "title": "Accessibility & performance",
+      "updated": "2 weeks ago",
+      "preview": "Measure first; semantics, focus, keyboard paths; no layout shift.",
+      "body": [
+        "Accessibility is pragmatic: semantic HTML, focus management, keyboard paths, real contrast, reduced-motion support. Buttons are buttons; links are links.",
+        "For performance I measure first, then stabilize references, code-split heavy work, virtualize long lists and push work to server components. I watch specifically for layout shift and re-render storms — the things users actually feel."
+      ]
+    },
+    {
+      "id": "ai-tools",
+      "title": "Using AI tools without losing quality",
+      "updated": "2 weeks ago",
+      "preview": "AI accelerates; review, types and tests keep the bar.",
+      "body": [
+        "I use Copilot, Cursor and ChatGPT to move faster — scaffolding, refactors, boilerplate. But generated code earns its place: it's reviewed, typed and tested like anything else.",
+        "AI is a force multiplier on a strong foundation, not a replacement for understanding the system. The quality bar doesn't move."
+      ]
+    }
+  ]
+}

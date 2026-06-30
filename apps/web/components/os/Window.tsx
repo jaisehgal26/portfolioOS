@@ -6,9 +6,9 @@ import { ChevronLeft, Maximize2, Minus, X } from "lucide-react";
 import { useOSStore, type OSWindow } from "@jaios/kernel/store";
 import { getApp } from "@jaios/kernel/data/apps";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { AppIcon } from "./AppIcon";
-import { clamp } from "@/lib/utils";
-import { cn } from "@/lib/utils";
+import { AppIcon } from "@jaios/ui/AppIcon";
+import { clamp } from "@jaios/ui/utils";
+import { cn } from "@jaios/ui/utils";
 
 const TOP_BAR = 44;
 const MIN_W = 360;

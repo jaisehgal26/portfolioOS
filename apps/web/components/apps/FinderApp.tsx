@@ -18,7 +18,7 @@ import { SkillsApp } from "./SkillsApp";
 import { ResumeDocument } from "./ResumeApp";
 import { ContactApp } from "./ContactApp";
 import { WorkSection, ExperienceSection, NotesSection } from "./finderSections";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 const ROOT = "Finder";
 

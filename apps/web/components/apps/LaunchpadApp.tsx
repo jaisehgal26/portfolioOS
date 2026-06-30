@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
 import { APPS, type AppId } from "@jaios/kernel/data/apps";
-import { AppIcon } from "@/components/os/AppIcon";
+import { AppIcon } from "@jaios/ui/AppIcon";
 
 /** Built-in apps surfaced in the launcher. */
 const LAUNCHER_IDS: AppId[] = [

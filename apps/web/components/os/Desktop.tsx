@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
 import { APPS } from "@jaios/kernel/data/apps";
 import { useIsMobile } from "@jaios/kernel/hooks/use-media-query";
-import { AppIcon } from "./AppIcon";
+import { AppIcon } from "@jaios/ui/AppIcon";
 import { DesktopWidgets, ClockWidget, QuoteWidget } from "./DesktopWidgets";
 
 const desktopApps = APPS.filter((a) => a.onDesktop);

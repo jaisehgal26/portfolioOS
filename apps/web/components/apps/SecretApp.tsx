@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Download, FlaskConical, Gamepad2, RefreshCw, Sparkles } from "lucide-react";
-import { AppScroll } from "@/components/ui/AppShell";
+import { AppScroll } from "@jaios/ui/AppShell";
 import { useOSStore } from "@jaios/kernel/store";
 import { downloadResume } from "@jaios/kernel/lib/download";
 

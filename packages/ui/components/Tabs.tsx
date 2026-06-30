@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 export interface TabItem {
   id: string;

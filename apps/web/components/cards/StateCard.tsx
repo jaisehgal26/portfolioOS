@@ -14,7 +14,7 @@ import {
   XCircle,
 } from "lucide-react";
 import type { StateKind, UIStateItem } from "@/data/ui-states";
-import { Card } from "@/components/ui/Card";
+import { Card } from "@jaios/ui/Card";
 
 /** Renders the small live demo for a given UI state. Used in Experiments. */
 export function StateDemo({ kind }: { kind: StateKind }) {

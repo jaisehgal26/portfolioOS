@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Download } from "lucide-react";
 import { links } from "@jaios/content/profile";
 import { downloadFile, downloadResume } from "@jaios/kernel/lib/download";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 const DOCS = {
   resume: { label: "Resume", url: links.resume, file: "Jai_Sehgal_Resume.pdf" },

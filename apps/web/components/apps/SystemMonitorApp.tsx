@@ -13,12 +13,12 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { AppScroll } from "@/components/ui/AppShell";
+import { AppScroll } from "@jaios/ui/AppShell";
 import { useOSStore } from "@jaios/kernel/store";
 import { getApp } from "@jaios/kernel/data/apps";
 import { experienceYM } from "@jaios/content/profile";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 /** Skills as running processes — deterministic load values (stable across renders). */
 const processes: { name: string; group: string; load: number }[] = [

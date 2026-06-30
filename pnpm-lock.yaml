@@ -20,6 +20,9 @@ importers:
       '@jaios/kernel':
         specifier: workspace:*
         version: link:../../packages/kernel
+      '@jaios/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@vercel/analytics':
         specifier: ^2.0.1
         version: 2.0.1(next@15.5.19(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
@@ -51,6 +54,9 @@ importers:
         specifier: ^5.0.3
         version: 5.0.14(@types/react@19.2.17)(react@19.2.7)
     devDependencies:
+      '@jaios/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
       '@types/node':
         specifier: ^22.10.7
         version: 22.20.0
@@ -95,6 +101,36 @@ importers:
       zustand:
         specifier: ^5.0.3
         version: 5.0.14(@types/react@19.2.17)(react@19.2.7)
+
+  packages/tailwind-config:
+    devDependencies:
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19
+
+  packages/ui:
+    dependencies:
+      '@jaios/kernel':
+        specifier: workspace:*
+        version: link:../kernel
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      framer-motion:
+        specifier: ^11.18.0
+        version: 11.18.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      lucide-react:
+        specifier: ^0.469.0
+        version: 0.469.0(react@19.2.7)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.7(react@19.2.7)
+      tailwind-merge:
+        specifier: ^2.6.0
+        version: 2.6.1
 
 packages:
 

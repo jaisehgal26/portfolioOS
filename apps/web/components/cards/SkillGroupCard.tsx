@@ -11,10 +11,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { SkillGroup } from "@jaios/content/skills";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import { Card } from "@jaios/ui/Card";
+import { Badge } from "@jaios/ui/Badge";
 import { ACCENT } from "@jaios/kernel/lib/accent";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 const ICONS: Record<string, LucideIcon> = {
   code: Code2,

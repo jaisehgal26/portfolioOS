@@ -6,7 +6,7 @@ import { RotateCcw } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { experienceYM } from "@jaios/content/profile";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 const DUMP = [
   "panic: user requested total annihilation",

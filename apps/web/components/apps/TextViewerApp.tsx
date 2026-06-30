@@ -1,10 +1,10 @@
 "use client";
 
 import { FileText } from "lucide-react";
-import { AppScroll } from "@/components/ui/AppShell";
+import { AppScroll } from "@jaios/ui/AppShell";
 import { useOSStore } from "@jaios/kernel/store";
 import { getFile } from "@jaios/content/files";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 export function TextViewerApp() {
   const openFileId = useOSStore((s) => s.openFileId);

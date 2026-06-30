@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  transpilePackages: ["@jaios/content", "@jaios/kernel"],
+  transpilePackages: ["@jaios/content", "@jaios/kernel", "@jaios/ui"],
   compiler: {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },

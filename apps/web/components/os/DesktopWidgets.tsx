@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { Quote as QuoteIcon, RefreshCw } from "lucide-react";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
-import { WatchDial } from "./WatchDial";
-import { cn } from "@/lib/utils";
+import { WatchDial } from "@jaios/ui/WatchDial";
+import { cn } from "@jaios/ui/utils";
 
 function Widget({ className, children, delay = 0 }: { className?: string; children: React.ReactNode; delay?: number }) {
   const reduced = usePrefersReducedMotion();

@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
 import { browserSites } from "@/data/sites";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 type Device = "desktop" | "tablet" | "mobile";
 const DEVICE_WIDTH: Record<Device, number | null> = { desktop: null, tablet: 768, mobile: 390 };

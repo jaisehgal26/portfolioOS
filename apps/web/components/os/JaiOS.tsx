@@ -21,8 +21,8 @@ import { MissionControl } from "./MissionControl";
 import { Screensaver } from "./Screensaver";
 import { AppSwitcher } from "./AppSwitcher";
 import { ShortcutsPanel } from "./ShortcutsPanel";
-import { ToastViewport } from "@/components/ui/Toast";
-import { cn } from "@/lib/utils";
+import { ToastViewport } from "@jaios/ui/Toast";
+import { cn } from "@jaios/ui/utils";
 
 export function JaiOS() {
   const hasBooted = useOSStore((s) => s.hasBooted);

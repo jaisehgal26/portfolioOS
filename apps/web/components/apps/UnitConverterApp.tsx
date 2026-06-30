@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ArrowRightLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 /** Each unit stores its size relative to a base unit (metre, gram, etc.). */
 interface Category {

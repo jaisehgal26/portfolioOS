@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Check, Circle, Plus, X } from "lucide-react";
 import { useLocalStorage } from "@jaios/kernel/hooks/use-local-storage";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 interface Task {
   id: string;

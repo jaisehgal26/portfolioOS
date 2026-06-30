@@ -6,7 +6,7 @@ import { ArrowRight, Fingerprint } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
-import { Monogram } from "./Monogram";
+import { Monogram } from "@jaios/ui/Monogram";
 import { profile } from "@jaios/content/profile";
 
 export function LoginScreen() {

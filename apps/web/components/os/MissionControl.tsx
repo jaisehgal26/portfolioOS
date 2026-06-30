@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@jaios/kernel/store";
 import { getApp } from "@jaios/kernel/data/apps";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { AppIcon } from "./AppIcon";
-import { cn } from "@/lib/utils";
+import { AppIcon } from "@jaios/ui/AppIcon";
+import { cn } from "@jaios/ui/utils";
 
 /** Exposé-style overview: tiles every open window; click one to focus it. */
 export function MissionControl() {

@@ -5,7 +5,7 @@ import { BellOff, Check, Moon, Sun, SunDim, Volume2, VolumeX } from "lucide-reac
 import { useOSStore } from "@jaios/kernel/store";
 import { WALLPAPERS, ACCENTS } from "@jaios/kernel/data/system";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 function Tile({
   active,

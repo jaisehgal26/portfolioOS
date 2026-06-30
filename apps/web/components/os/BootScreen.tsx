@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@jaios/kernel/store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { JaiLogo } from "./JaiLogo";
+import { JaiLogo } from "@jaios/ui/JaiLogo";
 
 const STEPS = [
   "Initializing portfolio shell",

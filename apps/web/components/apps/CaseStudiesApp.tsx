@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { AppTwoPane } from "@/components/ui/AppShell";
+import { AppTwoPane } from "@jaios/ui/AppShell";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
 import { projects } from "@jaios/content/projects";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { ACCENT } from "@jaios/kernel/lib/accent";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 export function CaseStudiesApp() {
   const reduced = usePrefersReducedMotion();

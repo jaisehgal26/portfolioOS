@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Check, Clock, Moon, Sun, Zap, ZapOff } from "lucide-react";
-import { AppTwoPane } from "@/components/ui/AppShell";
+import { AppTwoPane } from "@jaios/ui/AppShell";
 import { useOSStore } from "@jaios/kernel/store";
 import { WALLPAPERS, ACCENTS } from "@jaios/kernel/data/system";
-import { JaiLogo } from "@/components/os/JaiLogo";
-import { cn } from "@/lib/utils";
+import { JaiLogo } from "@jaios/ui/JaiLogo";
+import { cn } from "@jaios/ui/utils";
 
 const SECTIONS = ["Appearance", "Motion", "About JaiOS"] as const;
 type SectionId = (typeof SECTIONS)[number];

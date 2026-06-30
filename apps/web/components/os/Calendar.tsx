@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 

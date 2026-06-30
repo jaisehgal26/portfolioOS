@@ -3,7 +3,7 @@
 import { Check, Copy } from "lucide-react";
 import { useCopyToClipboard } from "@jaios/kernel/hooks/use-copy-to-clipboard";
 import { useOSStore } from "@jaios/kernel/store";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 interface CopyButtonProps {
   value: string;

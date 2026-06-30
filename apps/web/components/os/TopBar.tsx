@@ -9,8 +9,8 @@ import { FINDER_SECTIONS } from "@jaios/kernel/data/sections";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
 import { useDismissOnOutside } from "@jaios/kernel/hooks/use-dismiss-on-outside";
-import { JaiLogo } from "./JaiLogo";
-import { cn } from "@/lib/utils";
+import { JaiLogo } from "@jaios/ui/JaiLogo";
+import { cn } from "@jaios/ui/utils";
 
 interface MenuEntry {
   label: string;

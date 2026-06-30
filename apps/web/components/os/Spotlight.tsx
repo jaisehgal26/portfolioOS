@@ -20,8 +20,8 @@ import { links } from "@jaios/content/profile";
 import { downloadResume } from "@jaios/kernel/lib/download";
 import { useCopyToClipboard } from "@jaios/kernel/hooks/use-copy-to-clipboard";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { AppIcon } from "./AppIcon";
-import { cn } from "@/lib/utils";
+import { AppIcon } from "@jaios/ui/AppIcon";
+import { cn } from "@jaios/ui/utils";
 
 type Group = "Sections" | "Apps" | "Actions" | "Links" | "View";
 const GROUP_ORDER: Group[] = ["Sections", "Apps", "Actions", "Links", "View"];

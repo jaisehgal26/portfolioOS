@@ -1,8 +1,8 @@
 "use client";
 
 import { Check, Download, MapPin, Sparkles } from "lucide-react";
-import { AppScroll } from "@/components/ui/AppShell";
-import { Monogram } from "@/components/os/Monogram";
+import { AppScroll } from "@jaios/ui/AppShell";
+import { Monogram } from "@jaios/ui/Monogram";
 import { profile } from "@jaios/content/profile";
 import { downloadResume } from "@jaios/kernel/lib/download";
 

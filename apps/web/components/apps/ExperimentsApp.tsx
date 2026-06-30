@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Bell, Check, Heart, X } from "lucide-react";
-import { AppScroll } from "@/components/ui/AppShell";
+import { AppScroll } from "@jaios/ui/AppShell";
 import { StateDemo } from "@/components/cards/StateCard";
 import { useOSStore } from "@jaios/kernel/store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@jaios/ui/utils";
 
 function Lab({ title, children }: { title: string; children: React.ReactNode }) {
   return (

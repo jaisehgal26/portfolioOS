@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 const SIZES = {
   sm: { box: "h-11 w-11", text: "text-base" },

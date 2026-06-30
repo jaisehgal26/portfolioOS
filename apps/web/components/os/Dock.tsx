@@ -7,8 +7,8 @@ import { APPS, type AppId } from "@jaios/kernel/data/apps";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { useIsMobile } from "@jaios/kernel/hooks/use-media-query";
 import { useDismissOnOutside } from "@jaios/kernel/hooks/use-dismiss-on-outside";
-import { AppIcon } from "./AppIcon";
-import { cn } from "@/lib/utils";
+import { AppIcon } from "@jaios/ui/AppIcon";
+import { cn } from "@jaios/ui/utils";
 
 // Apps launcher always leads the dock; the rest follow their natural order.
 const dockApps = APPS.filter((a) => a.inDock).sort(

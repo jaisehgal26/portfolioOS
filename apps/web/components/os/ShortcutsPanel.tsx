@@ -1,6 +1,6 @@
 "use client";
 
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@jaios/ui/Modal";
 import { useOSStore } from "@jaios/kernel/store";
 
 const SHORTCUTS: { keys: string[]; label: string }[] = [

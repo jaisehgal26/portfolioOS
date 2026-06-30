@@ -1,8 +1,8 @@
 "use client";
 
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
-import { AppScroll } from "@/components/ui/AppShell";
-import { CopyButton } from "@/components/ui/CopyButton";
+import { AppScroll } from "@jaios/ui/AppShell";
+import { CopyButton } from "@jaios/ui/CopyButton";
 import { links } from "@jaios/content/profile";
 
 const channels = [

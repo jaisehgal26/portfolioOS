@@ -1,17 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Globe, Lock } from "lucide-react";
+import { Globe, Lock, Star } from "lucide-react";
 import { useBrowserStore, tabUrl } from "@jaios/kernel/browser-store";
-import { inputToUrl, isInternalUrl } from "./lib/routes";
+import { inputToUrl, isInternalUrl, resolveTitle } from "./lib/routes";
+import { cn } from "@jaios/ui/utils";
 
 export function Omnibox() {
   const tabs = useBrowserStore((s) => s.tabs);
   const activeTabId = useBrowserStore((s) => s.activeTabId);
   const navigate = useBrowserStore((s) => s.navigate);
+  const bookmarks = useBrowserStore((s) => s.bookmarks);
+  const addBookmark = useBrowserStore((s) => s.addBookmark);
+  const removeBookmark = useBrowserStore((s) => s.removeBookmark);
 
   const tab = tabs.find((t) => t.id === activeTabId);
   const url = tab ? tabUrl(tab) : "";
+  const existing = bookmarks.find((b) => b.url === url);
   const [value, setValue] = useState(url);
   const [editing, setEditing] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
@@ -63,6 +68,18 @@ export function Omnibox() {
         placeholder="Search, or type jai:// or a URL"
         className="min-w-0 flex-1 bg-transparent text-sm text-ink placeholder:text-faint focus:outline-none"
       />
+      <button
+        type="button"
+        aria-label={existing ? "Remove bookmark" : "Bookmark this page"}
+        aria-pressed={Boolean(existing)}
+        onClick={() => (existing ? removeBookmark(existing.id) : addBookmark({ label: resolveTitle(url), url }))}
+        className={cn(
+          "grid h-6 w-6 shrink-0 place-items-center rounded-full transition-colors hover:bg-ink/5",
+          existing ? "text-accent" : "text-faint hover:text-ink",
+        )}
+      >
+        <Star className={cn("h-3.5 w-3.5", existing && "fill-current")} />
+      </button>
     </form>
   );
 }

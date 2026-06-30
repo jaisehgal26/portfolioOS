@@ -5,6 +5,9 @@ import { useBrowserStore, tabUrl } from "@jaios/kernel/browser-store";
 import { isInternalUrl, isKnownInternalPath, parsePath, resolveTitle } from "./lib/routes";
 import { HomePage } from "./pages/HomePage";
 import { AboutPage } from "./pages/AboutPage";
+import { BookmarksPage } from "./pages/BookmarksPage";
+import { HistoryPage } from "./pages/HistoryPage";
+import { DownloadsPage } from "./pages/DownloadsPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { ExternalPage } from "./pages/ExternalPage";
@@ -19,6 +22,12 @@ function renderPage(url: string): ReactNode {
       return <HomePage />;
     case "about":
       return <AboutPage />;
+    case "bookmarks":
+      return <BookmarksPage />;
+    case "history":
+      return <HistoryPage />;
+    case "downloads":
+      return <DownloadsPage />;
     default:
       // Known route built in a later phase vs a genuine 404.
       return isKnownInternalPath(path) ? <PlaceholderPage title={resolveTitle(url)} /> : <NotFoundPage url={url} />;

@@ -4,6 +4,8 @@ import { create } from "zustand";
 import { playSound } from "../lib/sounds";
 
 export const HOME_URL = "jai://home";
+/** Most tabs we let the strip hold before hiding the new-tab button. */
+export const MAX_TABS = 8;
 
 export interface BrowserTab {
   id: string;
@@ -151,6 +153,7 @@ export const useBrowserStore = create<BrowserState>((set, get) => ({
   soundEnabled: true,
 
   newTab: (url = HOME_URL) => {
+    if (get().tabs.length >= MAX_TABS) return;
     beep(get(), "open");
     const tab: BrowserTab = { id: nextTabId(), history: [url], historyIndex: 0 };
     set((s) => ({ tabs: [...s.tabs, tab], activeTabId: tab.id }));

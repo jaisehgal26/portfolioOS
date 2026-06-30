@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Download, FlaskConical, Gamepad2, RefreshCw, Sparkles } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
-import { useOSStore } from "@/store/os-store";
-import { downloadResume } from "@/lib/download";
+import { useOSStore } from "@jaios/kernel/store";
+import { downloadResume } from "@jaios/kernel/lib/download";
 
 const FACTS = [
   "This whole portfolio is a tiny operating system — windows, dock, terminal and all — built in React, TypeScript and Tailwind.",

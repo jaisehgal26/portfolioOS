@@ -2,7 +2,7 @@
 
 import { FileText } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
-import { useOSStore } from "@/store/os-store";
+import { useOSStore } from "@jaios/kernel/store";
 import { getFile } from "@jaios/content/files";
 import { cn } from "@/lib/utils";
 

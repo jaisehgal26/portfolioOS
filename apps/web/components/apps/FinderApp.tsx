@@ -11,8 +11,8 @@ import {
   User,
   type LucideIcon,
 } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { FINDER_SECTIONS } from "@/data/sections";
+import { useOSStore } from "@jaios/kernel/store";
+import { FINDER_SECTIONS } from "@jaios/kernel/data/sections";
 import { AboutApp } from "./AboutApp";
 import { SkillsApp } from "./SkillsApp";
 import { ResumeDocument } from "./ResumeApp";

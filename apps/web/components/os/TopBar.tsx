@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bell, Search, SlidersHorizontal } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { getApp } from "@/data/apps";
-import { FINDER_SECTIONS } from "@/data/sections";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { useCurrentTime } from "@/hooks/use-current-time";
-import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
+import { useOSStore } from "@jaios/kernel/store";
+import { getApp } from "@jaios/kernel/data/apps";
+import { FINDER_SECTIONS } from "@jaios/kernel/data/sections";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
+import { useDismissOnOutside } from "@jaios/kernel/hooks/use-dismiss-on-outside";
 import { JaiLogo } from "./JaiLogo";
 import { cn } from "@/lib/utils";
 

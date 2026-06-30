@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useOSStore, type AppId } from "@/store/os-store";
-import { getApp } from "@/data/apps";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useOSStore, type AppId } from "@jaios/kernel/store";
+import { getApp } from "@jaios/kernel/data/apps";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 

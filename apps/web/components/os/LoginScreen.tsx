@@ -3,9 +3,9 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Fingerprint } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { useCurrentTime } from "@/hooks/use-current-time";
+import { useOSStore } from "@jaios/kernel/store";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
 import { Monogram } from "./Monogram";
 import { profile } from "@jaios/content/profile";
 

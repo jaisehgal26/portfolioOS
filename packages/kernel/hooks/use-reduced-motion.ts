@@ -1,7 +1,7 @@
 "use client";
 
 import { useReducedMotion as useFramerReducedMotion } from "framer-motion";
-import { useOSStore } from "@/store/os-store";
+import { useOSStore } from "../store/os-store";
 
 /**
  * Single source of truth for "should I animate?". Combines the OS-level

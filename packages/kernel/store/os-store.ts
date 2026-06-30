@@ -1,9 +1,9 @@
 "use client";
 
 import { create } from "zustand";
-import { APPS, type AppId } from "@/data/apps";
-import { initialNotifications, type OSNotification } from "@/data/notifications";
-import { playSound } from "@/lib/sounds";
+import { APPS, type AppId } from "../data/apps";
+import { initialNotifications, type OSNotification } from "../data/notifications";
+import { playSound } from "../lib/sounds";
 
 export type { AppId, OSNotification };
 export type Theme = "light" | "dark";

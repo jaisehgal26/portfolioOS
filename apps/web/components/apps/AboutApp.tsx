@@ -4,7 +4,7 @@ import { Check, Download, MapPin, Sparkles } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
 import { Monogram } from "@/components/os/Monogram";
 import { profile } from "@jaios/content/profile";
-import { downloadResume } from "@/lib/download";
+import { downloadResume } from "@jaios/kernel/lib/download";
 
 export function AboutApp() {
   const stats = [

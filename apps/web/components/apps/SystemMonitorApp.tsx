@@ -14,10 +14,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
-import { useOSStore } from "@/store/os-store";
-import { getApp } from "@/data/apps";
+import { useOSStore } from "@jaios/kernel/store";
+import { getApp } from "@jaios/kernel/data/apps";
 import { experienceYM } from "@jaios/content/profile";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 /** Skills as running processes — deterministic load values (stable across renders). */

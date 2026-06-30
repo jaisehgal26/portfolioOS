@@ -5,8 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Lightbulb, MapPin } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { experience } from "@jaios/content/experience";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { ACCENT } from "@/lib/accent";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { ACCENT } from "@jaios/kernel/lib/accent";
 import { cn } from "@/lib/utils";
 
 const VERSION: Record<string, string> = { velotio: "v4.5", gigmo: "v3.0", wipro: "v1.0" };

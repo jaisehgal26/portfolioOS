@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCurrentTime } from "@/hooks/use-current-time";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 
 const IDLE_MS = 60_000;
 

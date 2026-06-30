@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { NotebookPen } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { notes } from "@jaios/content/notes";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 export function NotesApp() {

@@ -14,12 +14,12 @@ import {
   Phone,
   Search,
 } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { APPS } from "@/data/apps";
+import { useOSStore } from "@jaios/kernel/store";
+import { APPS } from "@jaios/kernel/data/apps";
 import { links } from "@jaios/content/profile";
-import { downloadResume } from "@/lib/download";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { downloadResume } from "@jaios/kernel/lib/download";
+import { useCopyToClipboard } from "@jaios/kernel/hooks/use-copy-to-clipboard";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 

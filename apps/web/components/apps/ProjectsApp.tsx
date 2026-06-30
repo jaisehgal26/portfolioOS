@@ -6,8 +6,8 @@ import { AppTwoPane } from "@/components/ui/AppShell";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
 import { projects } from "@jaios/content/projects";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { ACCENT } from "@/lib/accent";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { ACCENT } from "@jaios/kernel/lib/accent";
 import { cn } from "@/lib/utils";
 
 const TABS: TabItem[] = [

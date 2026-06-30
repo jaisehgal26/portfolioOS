@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useOSStore } from "@jaios/kernel/store";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];

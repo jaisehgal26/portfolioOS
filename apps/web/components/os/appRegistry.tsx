@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import type { AppId } from "@/data/apps";
+import type { AppId } from "@jaios/kernel/data/apps";
 import { AboutApp } from "@/components/apps/AboutApp";
 import { ResumeApp } from "@/components/apps/ResumeApp";
 import { ProjectsApp } from "@/components/apps/ProjectsApp";

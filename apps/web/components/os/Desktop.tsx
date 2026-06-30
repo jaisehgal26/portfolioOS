@@ -1,9 +1,9 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { APPS } from "@/data/apps";
-import { useIsMobile } from "@/hooks/use-media-query";
+import { useOSStore } from "@jaios/kernel/store";
+import { APPS } from "@jaios/kernel/data/apps";
+import { useIsMobile } from "@jaios/kernel/hooks/use-media-query";
 import { AppIcon } from "./AppIcon";
 import { DesktopWidgets, ClockWidget, QuoteWidget } from "./DesktopWidgets";
 

@@ -2,11 +2,11 @@
 
 import { Fragment, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useOSStore } from "@/store/os-store";
-import { APPS, type AppId } from "@/data/apps";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { useIsMobile } from "@/hooks/use-media-query";
-import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
+import { useOSStore } from "@jaios/kernel/store";
+import { APPS, type AppId } from "@jaios/kernel/data/apps";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { useIsMobile } from "@jaios/kernel/hooks/use-media-query";
+import { useDismissOnOutside } from "@jaios/kernel/hooks/use-dismiss-on-outside";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 

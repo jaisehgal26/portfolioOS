@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bell, FileText, FolderKanban, Search, Sparkles, X, type LucideIcon } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useOSStore } from "@jaios/kernel/store";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 
 const ICONS: Record<string, LucideIcon> = {
   sparkles: Sparkles,

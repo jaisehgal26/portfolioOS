@@ -13,7 +13,7 @@ import {
 import type { SkillGroup } from "@jaios/content/skills";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { ACCENT } from "@/lib/accent";
+import { ACCENT } from "@jaios/kernel/lib/accent";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, LucideIcon> = {

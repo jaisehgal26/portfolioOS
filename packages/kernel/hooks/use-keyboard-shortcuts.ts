@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useOSStore } from "@/store/os-store";
+import { useOSStore } from "../store/os-store";
 
 const NUMBER_SECTIONS: Record<string, string> = {
   "1": "about",

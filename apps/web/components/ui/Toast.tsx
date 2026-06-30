@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check } from "lucide-react";
-import { useOSStore, type Toast as ToastType } from "@/store/os-store";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useOSStore, type Toast as ToastType } from "@jaios/kernel/store";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 
 function ToastItem({ toast }: { toast: ToastType }) {
   const remove = useOSStore((s) => s.removeToast);

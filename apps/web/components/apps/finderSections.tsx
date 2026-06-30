@@ -5,7 +5,7 @@ import { projects } from "@jaios/content/projects";
 import { experience } from "@jaios/content/experience";
 import { notes } from "@jaios/content/notes";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
-import { ACCENT } from "@/lib/accent";
+import { ACCENT } from "@jaios/kernel/lib/accent";
 import { cn } from "@/lib/utils";
 
 /** Shared streamlined wrapper so every Finder section reads the same way. */

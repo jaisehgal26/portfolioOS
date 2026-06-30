@@ -1,8 +1,8 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
-import { useOSStore } from "@/store/os-store";
+import { useCopyToClipboard } from "@jaios/kernel/hooks/use-copy-to-clipboard";
+import { useOSStore } from "@jaios/kernel/store";
 import { cn } from "@/lib/utils";
 
 interface CopyButtonProps {

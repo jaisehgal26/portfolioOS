@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@jaios/content": "workspace:*",
+    "@jaios/kernel": "workspace:*",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.0",

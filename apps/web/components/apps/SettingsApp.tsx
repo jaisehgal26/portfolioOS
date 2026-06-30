@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Check, Clock, Moon, Sun, Zap, ZapOff } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
-import { useOSStore } from "@/store/os-store";
-import { WALLPAPERS, ACCENTS } from "@/data/system";
+import { useOSStore } from "@jaios/kernel/store";
+import { WALLPAPERS, ACCENTS } from "@jaios/kernel/data/system";
 import { JaiLogo } from "@/components/os/JaiLogo";
 import { cn } from "@/lib/utils";
 

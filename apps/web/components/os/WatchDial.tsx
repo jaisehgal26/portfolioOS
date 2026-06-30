@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 
 const I = "rgb(var(--ink))";
 const ACCENT = "rgb(var(--accent))";

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 
 interface ModalProps {
   open: boolean;

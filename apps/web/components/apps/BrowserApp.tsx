@@ -15,7 +15,7 @@ import {
   Smartphone,
   Tablet,
 } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
+import { useOSStore } from "@jaios/kernel/store";
 import { browserSites } from "@/data/sites";
 import { cn } from "@/lib/utils";
 

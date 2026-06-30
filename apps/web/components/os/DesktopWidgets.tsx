@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Quote as QuoteIcon, RefreshCw } from "lucide-react";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { useCurrentTime } from "@/hooks/use-current-time";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
 import { WatchDial } from "./WatchDial";
 import { cn } from "@/lib/utils";
 

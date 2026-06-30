@@ -1,9 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useOSStore } from "@/store/os-store";
-import { getApp } from "@/data/apps";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { useOSStore } from "@jaios/kernel/store";
+import { getApp } from "@jaios/kernel/data/apps";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { AppIcon } from "./AppIcon";
 import { cn } from "@/lib/utils";
 

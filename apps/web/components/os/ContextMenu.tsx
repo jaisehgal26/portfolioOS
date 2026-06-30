@@ -2,9 +2,9 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { FolderKanban, FileText, Mail, Image, MoonStar, Info } from "lucide-react";
-import { useOSStore } from "@/store/os-store";
-import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
+import { useOSStore } from "@jaios/kernel/store";
+import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { useDismissOnOutside } from "@jaios/kernel/hooks/use-dismiss-on-outside";
 
 export function ContextMenu() {
   const ctx = useOSStore((s) => s.contextMenu);

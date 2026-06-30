@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useOSStore } from "@/store/os-store";
-import { getAccentPreset, getWallpaperClass } from "@/data/system";
-import { useGlobalShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { useOSStore } from "@jaios/kernel/store";
+import { getAccentPreset, getWallpaperClass } from "@jaios/kernel/data/system";
+import { useGlobalShortcuts } from "@jaios/kernel/hooks/use-keyboard-shortcuts";
 import { BootScreen } from "./BootScreen";
 import { CrashScreen } from "./CrashScreen";
 import { LoginScreen } from "./LoginScreen";

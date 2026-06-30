@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal } from "@/components/ui/Modal";
-import { useOSStore } from "@/store/os-store";
+import { useOSStore } from "@jaios/kernel/store";
 
 const SHORTCUTS: { keys: string[]; label: string }[] = [
   { keys: ["⌘", "K"], label: "Open Spotlight search" },

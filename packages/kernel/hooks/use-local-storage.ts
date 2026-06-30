@@ -1,12 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 /**
  * Persist a piece of state to localStorage. Reads lazily on mount (after
  * hydration) so server and client markup match.
  */
-export function useLocalStorage<T>(key: string, initial: T) {
+export function useLocalStorage<T>(
+  key: string,
+  initial: T,
+): readonly [T, Dispatch<SetStateAction<T>>, () => void] {
   const [value, setValue] = useState<T>(initial);
   const [loaded, setLoaded] = useState(false);
 

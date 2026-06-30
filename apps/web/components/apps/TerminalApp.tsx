@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useOSStore } from "@/store/os-store";
-import { APPS } from "@/data/apps";
+import { useOSStore } from "@jaios/kernel/store";
+import { APPS } from "@jaios/kernel/data/apps";
 import { profile, links } from "@jaios/content/profile";
 import { cn } from "@/lib/utils";
 

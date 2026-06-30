@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useOSStore, type OSWindow } from "@/store/os-store";
-import { useIsMobile } from "@/hooks/use-media-query";
+import { useOSStore, type OSWindow } from "@jaios/kernel/store";
+import { useIsMobile } from "@jaios/kernel/hooks/use-media-query";
 import { Window } from "./Window";
 import { APP_COMPONENTS } from "./appRegistry";
 

@@ -25,7 +25,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import type { AppMeta } from "@/data/apps";
+import type { AppMeta } from "@jaios/kernel/data/apps";
 import { cn } from "@/lib/utils";
 
 /** One cohesive icon family: a line glyph on a warm "ceramic" tile. */

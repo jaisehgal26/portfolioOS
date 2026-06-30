@@ -2,6 +2,10 @@ packages:
   - "apps/*"
   - "packages/*"
 
+# Internal monorepo: hoist shared deps (react, @types, framer-motion, lucide…)
+# to the root node_modules so every package can resolve them.
+shamefullyHoist: true
+
 allowBuilds:
   sharp: false
   unrs-resolver: false

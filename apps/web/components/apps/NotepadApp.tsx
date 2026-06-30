@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Check, Trash2 } from "lucide-react";
-import { useLocalStorage } from "@/hooks/use-local-storage";
+import { useLocalStorage } from "@jaios/kernel/hooks/use-local-storage";
 
 export function NotepadApp() {
   const [text, setText] = useLocalStorage("jaios-notepad", "");

@@ -1,0 +1,31 @@
+{
+  "name": "@jaios/kernel",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./store": "./store/os-store.ts",
+    "./hooks/use-copy-to-clipboard": "./hooks/use-copy-to-clipboard.ts",
+    "./hooks/use-current-time": "./hooks/use-current-time.ts",
+    "./hooks/use-dismiss-on-outside": "./hooks/use-dismiss-on-outside.ts",
+    "./hooks/use-keyboard-shortcuts": "./hooks/use-keyboard-shortcuts.ts",
+    "./hooks/use-local-storage": "./hooks/use-local-storage.ts",
+    "./hooks/use-media-query": "./hooks/use-media-query.ts",
+    "./hooks/use-reduced-motion": "./hooks/use-reduced-motion.ts",
+    "./lib/accent": "./lib/accent.ts",
+    "./lib/download": "./lib/download.ts",
+    "./lib/sounds": "./lib/sounds.ts",
+    "./data/apps": "./data/apps.ts",
+    "./data/notifications": "./data/notifications.ts",
+    "./data/sections": "./data/sections.ts",
+    "./data/system": "./data/system.ts"
+  },
+  "dependencies": {
+    "@jaios/content": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.3"
+  }
+}

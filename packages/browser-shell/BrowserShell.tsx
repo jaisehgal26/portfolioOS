@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
-import { useBrowserStore } from "@jaios/kernel/browser-store";
+import { useBrowserStore, tabUrl } from "@jaios/kernel/browser-store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { cn } from "@jaios/ui/utils";
 import { TabStrip } from "./TabStrip";
@@ -13,6 +13,8 @@ import { Omnibox } from "./Omnibox";
 import { BookmarksBar } from "./BookmarksBar";
 import { BrowserMenu } from "./BrowserMenu";
 import { Viewport } from "./Viewport";
+import { DevTools } from "./devtools/DevTools";
+import { useConsole } from "./devtools/use-console";
 import { DEFAULT_BOOKMARKS } from "./data/default-bookmarks";
 
 /** JaiBrowser — the browser-themed shell (tabs, omnibox, pages, DevTools). */
@@ -24,7 +26,14 @@ export function BrowserShell() {
   const navigate = useBrowserStore((s) => s.navigate);
   const downloads = useBrowserStore((s) => s.downloads);
   const incognito = useBrowserStore((s) => s.incognito);
+  const tabs = useBrowserStore((s) => s.tabs);
+  const activeTabId = useBrowserStore((s) => s.activeTabId);
+  const devtoolsSide = useBrowserStore((s) => s.devtools.side);
   const soundEnabled = useOSStore((s) => s.soundEnabled);
+  const logConsole = useConsole((s) => s.push);
+
+  const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
+  const activeUrl = activeTab ? tabUrl(activeTab) : "";
 
   useEffect(() => {
     hydrate();
@@ -34,6 +43,11 @@ export function BrowserShell() {
   useEffect(() => {
     setSoundEnabled(soundEnabled);
   }, [soundEnabled, setSoundEnabled]);
+
+  // Mirror navigations into the DevTools console, like a real site.
+  useEffect(() => {
+    if (activeUrl) logConsole("info", `navigated to ${activeUrl}`);
+  }, [activeUrl, logConsole]);
 
   return (
     <motion.div
@@ -61,7 +75,10 @@ export function BrowserShell() {
         <BrowserMenu />
       </div>
       <BookmarksBar />
-      <Viewport />
+      <div className={cn("flex min-h-0 flex-1", devtoolsSide === "right" ? "flex-row" : "flex-col")}>
+        <Viewport />
+        <DevTools />
+      </div>
     </motion.div>
   );
 }

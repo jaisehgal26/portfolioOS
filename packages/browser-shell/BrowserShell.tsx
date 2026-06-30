@@ -13,6 +13,7 @@ import { Omnibox } from "./Omnibox";
 import { BookmarksBar } from "./BookmarksBar";
 import { BrowserMenu } from "./BrowserMenu";
 import { DeviceToolbar } from "./DeviceToolbar";
+import { FindBar } from "./FindBar";
 import { Viewport, type Device } from "./Viewport";
 import { DevTools } from "./devtools/DevTools";
 import { useConsole } from "./devtools/use-console";
@@ -25,6 +26,9 @@ export function BrowserShell() {
   const seedBookmarks = useBrowserStore((s) => s.seedBookmarks);
   const setSoundEnabled = useBrowserStore((s) => s.setSoundEnabled);
   const navigate = useBrowserStore((s) => s.navigate);
+  const goBack = useBrowserStore((s) => s.goBack);
+  const goForward = useBrowserStore((s) => s.goForward);
+  const newTab = useBrowserStore((s) => s.newTab);
   const downloads = useBrowserStore((s) => s.downloads);
   const incognito = useBrowserStore((s) => s.incognito);
   const tabs = useBrowserStore((s) => s.tabs);
@@ -50,6 +54,25 @@ export function BrowserShell() {
   useEffect(() => {
     if (activeUrl) logConsole("info", `navigated to ${activeUrl}`);
   }, [activeUrl, logConsole]);
+
+  // Browser-mode shortcuts that browsers allow us to handle.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.altKey && e.key === "ArrowLeft") {
+        e.preventDefault();
+        goBack();
+      } else if (e.altKey && e.key === "ArrowRight") {
+        e.preventDefault();
+        goForward();
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "t") {
+        // Best-effort; most browsers reserve Cmd/Ctrl+T.
+        e.preventDefault();
+        newTab();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goBack, goForward, newTab]);
 
   return (
     <motion.div
@@ -78,7 +101,8 @@ export function BrowserShell() {
         <BrowserMenu />
       </div>
       <BookmarksBar />
-      <div className={cn("flex min-h-0 flex-1", devtoolsSide === "right" ? "flex-row" : "flex-col")}>
+      <div className={cn("relative flex min-h-0 flex-1", devtoolsSide === "right" ? "flex-row" : "flex-col")}>
+        <FindBar />
         <Viewport device={device} />
         <DevTools />
       </div>

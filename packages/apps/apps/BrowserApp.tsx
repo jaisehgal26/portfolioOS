@@ -16,30 +16,12 @@ import {
   Tablet,
 } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
+import { normalizeUrl, hostOf, favicon } from "@jaios/kernel/lib/url";
 import { browserSites } from "../data/sites";
 import { cn } from "@jaios/ui/utils";
 
 type Device = "desktop" | "tablet" | "mobile";
 const DEVICE_WIDTH: Record<Device, number | null> = { desktop: null, tablet: 768, mobile: 390 };
-
-function normalizeUrl(input: string): string {
-  const u = input.trim();
-  if (!u) return "";
-  if (/^https?:\/\//i.test(u)) return u;
-  return `https://${u}`;
-}
-
-function hostOf(url: string): string {
-  try {
-    return new URL(url).host;
-  } catch {
-    return url;
-  }
-}
-
-function favicon(url: string): string {
-  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostOf(url))}&sz=64`;
-}
 
 export function BrowserApp() {
   const browserUrl = useOSStore((s) => s.browserUrl);

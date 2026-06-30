@@ -7,6 +7,8 @@ import { playSound } from "../lib/sounds";
 
 export type { AppId, OSNotification };
 export type Theme = "light" | "dark";
+/** Which world the user is in: the macOS-style desktop, or the browser shell. */
+export type ShellMode = "os" | "browser";
 
 export interface WindowRect {
   x: number;
@@ -48,6 +50,8 @@ interface Persisted {
   dnd: boolean;
   /** Clock format: true = 12-hour (AM/PM), false = 24-hour. */
   hour12: boolean;
+  /** Which shell to enter after login. */
+  shellMode: ShellMode;
 }
 
 interface OSState extends Persisted {
@@ -104,6 +108,7 @@ interface OSState extends Persisted {
   setAccent: (a: string) => void;
   setReducedMotionPref: (b: boolean) => void;
   setHour12: (b: boolean) => void;
+  setShellMode: (m: ShellMode) => void;
 
   closeSpotlight: () => void;
   toggleSpotlight: () => void;
@@ -145,6 +150,7 @@ function persist(state: OSState) {
       brightness: state.brightness,
       dnd: state.dnd,
       hour12: state.hour12,
+      shellMode: state.shellMode,
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {
@@ -202,6 +208,7 @@ export const useOSStore = create<OSState>((set, get) => ({
   brightness: 1,
   dnd: false,
   hour12: true,
+  shellMode: "os",
 
   windows: [],
   focusedId: null,
@@ -387,6 +394,10 @@ export const useOSStore = create<OSState>((set, get) => ({
     persist(get());
     if (get().soundEnabled) playSound("toggle");
   },
+  setShellMode: (shellMode) => {
+    set({ shellMode });
+    persist(get());
+  },
 
   closeSpotlight: () => set({ spotlightOpen: false }),
   toggleSpotlight: () => set((s) => ({ spotlightOpen: !s.spotlightOpen })),
@@ -458,6 +469,7 @@ export const useOSStore = create<OSState>((set, get) => ({
         patch.brightness = typeof p.brightness === "number" ? Math.min(1, Math.max(0.4, p.brightness)) : 1;
         patch.dnd = Boolean(p.dnd);
         patch.hour12 = p.hour12 !== false;
+        patch.shellMode = p.shellMode === "browser" ? "browser" : "os";
       }
     } catch {
       /* ignore malformed prefs */

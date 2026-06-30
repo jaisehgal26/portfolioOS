@@ -9,6 +9,7 @@ const config: Config = {
     "../../packages/ui/**/*.{ts,tsx}",
     "../../packages/shell/**/*.{ts,tsx}",
     "../../packages/apps/**/*.{ts,tsx}",
+    "../../packages/browser-shell/**/*.{ts,tsx}",
   ],
 };
 

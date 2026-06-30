@@ -15,6 +15,7 @@
     "./lib/accent": "./lib/accent.ts",
     "./lib/download": "./lib/download.ts",
     "./lib/sounds": "./lib/sounds.ts",
+    "./lib/url": "./lib/url.ts",
     "./data/apps": "./data/apps.ts",
     "./data/notifications": "./data/notifications.ts",
     "./data/sections": "./data/sections.ts",

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@jaios/apps": "workspace:*",
+    "@jaios/browser-shell": "workspace:*",
     "@jaios/content": "workspace:*",
     "@jaios/kernel": "workspace:*",
     "@jaios/shell": "workspace:*",

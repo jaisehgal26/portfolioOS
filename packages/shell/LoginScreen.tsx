@@ -2,15 +2,23 @@
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Fingerprint } from "lucide-react";
+import { ArrowRight, Globe, Monitor } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { useCurrentTime } from "@jaios/kernel/hooks/use-current-time";
 import { Monogram } from "@jaios/ui/Monogram";
+import { cn } from "@jaios/ui/utils";
 import { profile } from "@jaios/content/profile";
+
+const WORLDS = [
+  { id: "os", label: "Desktop", desc: "The macOS experience", Icon: Monitor },
+  { id: "browser", label: "Browser", desc: "Everything runs in the browser", Icon: Globe },
+] as const;
 
 export function LoginScreen() {
   const login = useOSStore((s) => s.login);
+  const shellMode = useOSStore((s) => s.shellMode);
+  const setShellMode = useOSStore((s) => s.setShellMode);
   const reduced = usePrefersReducedMotion();
   const now = useCurrentTime();
   const [pwd, setPwd] = useState("");
@@ -48,8 +56,49 @@ export function LoginScreen() {
         >
           <Monogram size="xl" className="transition-transform group-hover:scale-105 group-focus-visible:scale-105" />
           <span className="font-display text-xl font-semibold tracking-tight text-ink">{profile.name}</span>
-         
         </button>
+
+        {/* World chooser — enter the macOS desktop or the browser shell */}
+        <div
+          role="radiogroup"
+          aria-label="Choose your world"
+          className="mt-5 grid w-full grid-cols-2 gap-2.5"
+          onKeyDown={(e) => {
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+              e.preventDefault();
+              setShellMode(shellMode === "os" ? "browser" : "os");
+            }
+          }}
+        >
+          {WORLDS.map((w) => {
+            const active = shellMode === w.id;
+            return (
+              <button
+                key={w.id}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                tabIndex={active ? 0 : -1}
+                onClick={() => setShellMode(w.id)}
+                className={cn(
+                  "flex flex-col items-start gap-1.5 rounded-2xl border p-3 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent",
+                  active ? "border-accent bg-accent/[0.06]" : "border-line bg-surface/70 hover:border-line-strong",
+                )}
+              >
+                <span
+                  className={cn(
+                    "grid h-8 w-8 place-items-center rounded-lg transition-colors",
+                    active ? "bg-accent/15 text-accent" : "bg-surface-2 text-muted",
+                  )}
+                >
+                  <w.Icon className="h-4 w-4" />
+                </span>
+                <span className="text-sm font-semibold text-ink">{w.label}</span>
+                <span className="text-[11px] leading-tight text-muted">{w.desc}</span>
+              </button>
+            );
+          })}
+        </div>
 
         {/* Password field (any password works — it's a demo) */}
         <motion.div

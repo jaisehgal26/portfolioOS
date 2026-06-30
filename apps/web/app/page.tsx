@@ -1,5 +1,5 @@
-import { JaiOS } from "@jaios/shell";
+import { Root } from "@/components/Root";
 
 export default function Home() {
-  return <JaiOS />;
+  return <Root />;
 }

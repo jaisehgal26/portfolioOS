@@ -5,6 +5,11 @@ import { PanelBottom, PanelRight, X } from "lucide-react";
 import { useBrowserStore, type DevToolsTab } from "@jaios/kernel/browser-store";
 import { cn } from "@jaios/ui/utils";
 import { ConsolePanel } from "./ConsolePanel";
+import { ElementsPanel } from "./ElementsPanel";
+import { NetworkPanel } from "./NetworkPanel";
+import { SourcesPanel } from "./SourcesPanel";
+import { ApplicationPanel } from "./ApplicationPanel";
+import { LighthousePanel } from "./LighthousePanel";
 
 const TABS: { id: DevToolsTab; label: string }[] = [
   { id: "elements", label: "Elements" },
@@ -105,11 +110,12 @@ export function DevTools() {
           </div>
         </div>
         <div className="min-h-0 flex-1 overflow-hidden">
-          {dt.tab === "console" ? (
-            <ConsolePanel />
-          ) : (
-            <div className="grid h-full place-items-center text-xs text-faint">{dt.tab} panel — coming online</div>
-          )}
+          {dt.tab === "console" && <ConsolePanel />}
+          {dt.tab === "elements" && <ElementsPanel />}
+          {dt.tab === "network" && <NetworkPanel />}
+          {dt.tab === "sources" && <SourcesPanel />}
+          {dt.tab === "application" && <ApplicationPanel />}
+          {dt.tab === "lighthouse" && <LighthousePanel />}
         </div>
       </div>
     </div>

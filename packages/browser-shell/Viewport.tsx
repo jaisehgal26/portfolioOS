@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useBrowserStore, tabUrl } from "@jaios/kernel/browser-store";
 import { isInternalUrl, parsePath } from "./lib/routes";
+import { cn } from "@jaios/ui/utils";
 import { HomePage } from "./pages/HomePage";
 import { AboutPage } from "./pages/AboutPage";
 import { ProjectsPage } from "./pages/ProjectsPage";
@@ -58,18 +59,38 @@ function renderPage(url: string): ReactNode {
   }
 }
 
-export function Viewport() {
+export type Device = "desktop" | "tablet" | "mobile";
+const DEVICE_WIDTH: Record<Device, number | null> = { desktop: null, tablet: 768, mobile: 390 };
+
+export function Viewport({ device = "desktop" }: { device?: Device }) {
   const tabs = useBrowserStore((s) => s.tabs);
   const activeTabId = useBrowserStore((s) => s.activeTabId);
   const reloadKey = useBrowserStore((s) => s.reloadKey);
   const tab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
   const url = tab ? tabUrl(tab) : "jai://home";
   const external = !isInternalUrl(url);
+  const width = DEVICE_WIDTH[device];
+
+  if (external) {
+    return (
+      <main className="relative min-h-0 flex-1 overflow-hidden bg-bg">
+        <div key={`${url}-${reloadKey}`} className="h-full">
+          {renderPage(url)}
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="relative min-h-0 flex-1 overflow-hidden bg-bg">
-      <div key={`${url}-${reloadKey}`} className={external ? "h-full" : "h-full overflow-y-auto"}>
-        {renderPage(url)}
+    <main className="relative min-h-0 flex-1 overflow-y-auto bg-bg">
+      <div key={`${url}-${reloadKey}`} className={cn(width ? "flex justify-center bg-surface-2/60 p-4" : "")}>
+        <div
+          id="jai-page-root"
+          className={cn(width ? "overflow-hidden rounded-2xl border border-line bg-bg shadow-card" : "w-full")}
+          style={width ? { width, maxWidth: "100%" } : undefined}
+        >
+          {renderPage(url)}
+        </div>
       </div>
     </main>
   );

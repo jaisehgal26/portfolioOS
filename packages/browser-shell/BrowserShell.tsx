@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
@@ -12,7 +12,8 @@ import { NavControls } from "./NavControls";
 import { Omnibox } from "./Omnibox";
 import { BookmarksBar } from "./BookmarksBar";
 import { BrowserMenu } from "./BrowserMenu";
-import { Viewport } from "./Viewport";
+import { DeviceToolbar } from "./DeviceToolbar";
+import { Viewport, type Device } from "./Viewport";
 import { DevTools } from "./devtools/DevTools";
 import { useConsole } from "./devtools/use-console";
 import { DEFAULT_BOOKMARKS } from "./data/default-bookmarks";
@@ -31,6 +32,7 @@ export function BrowserShell() {
   const devtoolsSide = useBrowserStore((s) => s.devtools.side);
   const soundEnabled = useOSStore((s) => s.soundEnabled);
   const logConsole = useConsole((s) => s.push);
+  const [device, setDevice] = useState<Device>("desktop");
 
   const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
   const activeUrl = activeTab ? tabUrl(activeTab) : "";
@@ -61,6 +63,7 @@ export function BrowserShell() {
       <div className="flex shrink-0 items-center gap-1.5 border-b border-line bg-surface px-2.5 py-2">
         <NavControls />
         <Omnibox />
+        <DeviceToolbar device={device} setDevice={setDevice} />
         <button
           type="button"
           onClick={() => navigate("jai://downloads")}
@@ -76,7 +79,7 @@ export function BrowserShell() {
       </div>
       <BookmarksBar />
       <div className={cn("flex min-h-0 flex-1", devtoolsSide === "right" ? "flex-row" : "flex-col")}>
-        <Viewport />
+        <Viewport device={device} />
         <DevTools />
       </div>
     </motion.div>

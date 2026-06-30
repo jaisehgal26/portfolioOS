@@ -1,4 +1,4 @@
-import type { Accent } from "@/data/projects";
+import type { Accent } from "@jaios/content/projects";
 
 interface AccentClasses {
   text: string;

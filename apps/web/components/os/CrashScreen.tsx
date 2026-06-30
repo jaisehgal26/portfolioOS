@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { RotateCcw } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { experienceYM } from "@/data/profile";
+import { experienceYM } from "@jaios/content/profile";
 import { cn } from "@/lib/utils";
 
 const DUMP = [

@@ -7,7 +7,7 @@ import { useOSStore } from "@/store/os-store";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useCurrentTime } from "@/hooks/use-current-time";
 import { Monogram } from "./Monogram";
-import { profile } from "@/data/profile";
+import { profile } from "@jaios/content/profile";
 
 export function LoginScreen() {
   const login = useOSStore((s) => s.login);

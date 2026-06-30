@@ -2,7 +2,7 @@
 
 import { AppScroll } from "@/components/ui/AppShell";
 import { SkillGroupCard } from "@/components/cards/SkillGroupCard";
-import { skillGroups } from "@/data/skills";
+import { skillGroups } from "@jaios/content/skills";
 
 export function SkillsApp() {
   return (

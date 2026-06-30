@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
-import { projects } from "@/data/projects";
+import { projects } from "@jaios/content/projects";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { ACCENT } from "@/lib/accent";
 import { cn } from "@/lib/utils";

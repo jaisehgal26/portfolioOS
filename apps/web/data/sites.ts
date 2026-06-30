@@ -1,4 +1,4 @@
-import { links } from "./profile";
+import { links } from "@jaios/content/profile";
 
 export interface BrowserSite {
   id: string;

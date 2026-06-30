@@ -1,4 +1,4 @@
-import type { Accent } from "./projects";
+import type { Accent } from "@jaios/content/projects";
 
 export type AppId =
   | "about"

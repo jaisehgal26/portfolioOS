@@ -1,9 +1,9 @@
 "use client";
 
 import { MapPin } from "lucide-react";
-import { projects } from "@/data/projects";
-import { experience } from "@/data/experience";
-import { notes } from "@/data/notes";
+import { projects } from "@jaios/content/projects";
+import { experience } from "@jaios/content/experience";
+import { notes } from "@jaios/content/notes";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
 import { ACCENT } from "@/lib/accent";
 import { cn } from "@/lib/utils";

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useOSStore } from "@/store/os-store";
 import { APPS } from "@/data/apps";
-import { profile, links } from "@/data/profile";
+import { profile, links } from "@jaios/content/profile";
 import { cn } from "@/lib/utils";
 
 type Line = { kind: "in" | "out" | "err" | "sys"; text: string };

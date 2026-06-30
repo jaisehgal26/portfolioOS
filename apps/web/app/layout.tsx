@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { profile, links, site, experienceYM } from "@/data/profile";
+import { profile, links, site, experienceYM } from "@jaios/content/profile";
 
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],

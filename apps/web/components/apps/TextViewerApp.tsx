@@ -3,7 +3,7 @@
 import { FileText } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
 import { useOSStore } from "@/store/os-store";
-import { getFile } from "@/data/files";
+import { getFile } from "@jaios/content/files";
 import { cn } from "@/lib/utils";
 
 export function TextViewerApp() {

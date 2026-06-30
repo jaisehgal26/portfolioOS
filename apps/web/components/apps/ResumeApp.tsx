@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Download } from "lucide-react";
-import { links } from "@/data/profile";
+import { links } from "@jaios/content/profile";
 import { downloadFile, downloadResume } from "@/lib/download";
 import { cn } from "@/lib/utils";
 

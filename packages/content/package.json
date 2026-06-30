@@ -1,0 +1,16 @@
+{
+  "name": "@jaios/content",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./content": "./content.ts",
+    "./profile": "./profile.ts",
+    "./projects": "./projects.ts",
+    "./experience": "./experience.ts",
+    "./skills": "./skills.ts",
+    "./notes": "./notes.ts",
+    "./files": "./files.ts"
+  }
+}

@@ -1,5 +1,5 @@
 import { AlertTriangle, Check, Sparkles, Wrench } from "lucide-react";
-import type { ProjectPreview as PreviewKind } from "@/data/projects";
+import type { ProjectPreview as PreviewKind } from "@jaios/content/projects";
 import { cn } from "@/lib/utils";
 
 /** Static, frontend-only mini mockups that illustrate each project. */

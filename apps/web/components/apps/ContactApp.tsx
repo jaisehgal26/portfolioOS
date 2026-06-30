@@ -3,7 +3,7 @@
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
 import { CopyButton } from "@/components/ui/CopyButton";
-import { links } from "@/data/profile";
+import { links } from "@jaios/content/profile";
 
 const channels = [
   { label: "Email", value: links.email, icon: Mail, href: `mailto:${links.email}`, copy: links.email },

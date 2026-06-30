@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { APPS } from "@/data/apps";
-import { links } from "@/data/profile";
+import { links } from "@jaios/content/profile";
 import { downloadResume } from "@/lib/download";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";

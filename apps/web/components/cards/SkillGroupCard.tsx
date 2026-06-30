@@ -10,7 +10,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import type { SkillGroup } from "@/data/skills";
+import type { SkillGroup } from "@jaios/content/skills";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ACCENT } from "@/lib/accent";

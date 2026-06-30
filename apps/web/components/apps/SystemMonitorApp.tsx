@@ -16,7 +16,7 @@ import {
 import { AppScroll } from "@/components/ui/AppShell";
 import { useOSStore } from "@/store/os-store";
 import { getApp } from "@/data/apps";
-import { experienceYM } from "@/data/profile";
+import { experienceYM } from "@jaios/content/profile";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 

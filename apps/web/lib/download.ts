@@ -1,4 +1,4 @@
-import { links } from "@/data/profile";
+import { links } from "@jaios/content/profile";
 
 /** Trigger a browser download for a same-origin file (served from /public). */
 export function downloadFile(url: string, filename: string) {

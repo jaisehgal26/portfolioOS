@@ -4,7 +4,7 @@ import { MapPin } from "lucide-react";
 import { projects } from "@jaios/content/projects";
 import { experience } from "@jaios/content/experience";
 import { notes } from "@jaios/content/notes";
-import { ProjectPreview } from "@/components/cards/ProjectPreview";
+import { ProjectPreview } from "../cards/ProjectPreview";
 import { ACCENT } from "@jaios/kernel/lib/accent";
 import { cn } from "@jaios/ui/utils";
 

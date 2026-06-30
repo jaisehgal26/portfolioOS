@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@jaios/apps": "workspace:*",
     "@jaios/content": "workspace:*",
     "@jaios/kernel": "workspace:*",
     "@jaios/ui": "workspace:*",

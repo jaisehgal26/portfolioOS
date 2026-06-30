@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Bell, Check, Heart, X } from "lucide-react";
 import { AppScroll } from "@jaios/ui/AppShell";
-import { StateDemo } from "@/components/cards/StateCard";
+import { StateDemo } from "../cards/StateCard";
 import { useOSStore } from "@jaios/kernel/store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
 import { cn } from "@jaios/ui/utils";

@@ -13,7 +13,7 @@ import {
   WifiOff,
   XCircle,
 } from "lucide-react";
-import type { StateKind, UIStateItem } from "@/data/ui-states";
+import type { StateKind, UIStateItem } from "../data/ui-states";
 import { Card } from "@jaios/ui/Card";
 
 /** Renders the small live demo for a given UI state. Used in Experiments. */

@@ -1,0 +1,42 @@
+{
+  "name": "@jaios/apps",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./AboutApp": "./apps/AboutApp.tsx",
+    "./BrowserApp": "./apps/BrowserApp.tsx",
+    "./CalculatorApp": "./apps/CalculatorApp.tsx",
+    "./CaseStudiesApp": "./apps/CaseStudiesApp.tsx",
+    "./ClockApp": "./apps/ClockApp.tsx",
+    "./ContactApp": "./apps/ContactApp.tsx",
+    "./ExperienceApp": "./apps/ExperienceApp.tsx",
+    "./ExperimentsApp": "./apps/ExperimentsApp.tsx",
+    "./FinderApp": "./apps/FinderApp.tsx",
+    "./LaunchpadApp": "./apps/LaunchpadApp.tsx",
+    "./NotepadApp": "./apps/NotepadApp.tsx",
+    "./NotesApp": "./apps/NotesApp.tsx",
+    "./ProjectsApp": "./apps/ProjectsApp.tsx",
+    "./ResumeApp": "./apps/ResumeApp.tsx",
+    "./SecretApp": "./apps/SecretApp.tsx",
+    "./SettingsApp": "./apps/SettingsApp.tsx",
+    "./SkillsApp": "./apps/SkillsApp.tsx",
+    "./SnakeApp": "./apps/SnakeApp.tsx",
+    "./SystemMonitorApp": "./apps/SystemMonitorApp.tsx",
+    "./TerminalApp": "./apps/TerminalApp.tsx",
+    "./TextViewerApp": "./apps/TextViewerApp.tsx",
+    "./TodoApp": "./apps/TodoApp.tsx",
+    "./UnitConverterApp": "./apps/UnitConverterApp.tsx"
+  },
+  "dependencies": {
+    "@jaios/content": "workspace:*",
+    "@jaios/kernel": "workspace:*",
+    "@jaios/ui": "workspace:*",
+    "framer-motion": "^11.18.0",
+    "lucide-react": "^0.469.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

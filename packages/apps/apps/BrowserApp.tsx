@@ -16,7 +16,7 @@ import {
   Tablet,
 } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
-import { browserSites } from "@/data/sites";
+import { browserSites } from "../data/sites";
 import { cn } from "@jaios/ui/utils";
 
 type Device = "desktop" | "tablet" | "mobile";

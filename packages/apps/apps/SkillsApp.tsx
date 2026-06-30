@@ -1,7 +1,7 @@
 "use client";
 
 import { AppScroll } from "@jaios/ui/AppShell";
-import { SkillGroupCard } from "@/components/cards/SkillGroupCard";
+import { SkillGroupCard } from "../cards/SkillGroupCard";
 import { skillGroups } from "@jaios/content/skills";
 
 export function SkillsApp() {

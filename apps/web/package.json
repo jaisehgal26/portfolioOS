@@ -14,6 +14,7 @@
     "@jaios/apps": "workspace:*",
     "@jaios/content": "workspace:*",
     "@jaios/kernel": "workspace:*",
+    "@jaios/shell": "workspace:*",
     "@jaios/ui": "workspace:*",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",

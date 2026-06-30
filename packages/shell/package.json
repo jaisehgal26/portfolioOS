@@ -1,0 +1,21 @@
+{
+  "name": "@jaios/shell",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@jaios/apps": "workspace:*",
+    "@jaios/content": "workspace:*",
+    "@jaios/kernel": "workspace:*",
+    "@jaios/ui": "workspace:*",
+    "framer-motion": "^11.18.0",
+    "lucide-react": "^0.469.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

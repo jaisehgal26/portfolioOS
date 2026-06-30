@@ -1,4 +1,4 @@
-import { JaiOS } from "@/components/os/JaiOS";
+import { JaiOS } from "@jaios/shell";
 
 export default function Home() {
   return <JaiOS />;

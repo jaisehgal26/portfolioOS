@@ -1,38 +1,45 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Globe, Monitor } from "lucide-react";
 import { useOSStore } from "@jaios/kernel/store";
+import { useBrowserStore } from "@jaios/kernel/browser-store";
 import { usePrefersReducedMotion } from "@jaios/kernel/hooks/use-reduced-motion";
+import { TabStrip } from "./TabStrip";
+import { NavControls } from "./NavControls";
+import { Omnibox } from "./Omnibox";
+import { Viewport } from "./Viewport";
 
-/**
- * JaiBrowser — the browser-themed shell. Phase 0 stub; the chrome, tabs,
- * omnibox, pages and DevTools are built up in later phases.
- */
+/** JaiBrowser — the browser-themed shell (tabs, omnibox, pages, DevTools). */
 export function BrowserShell() {
   const reduced = usePrefersReducedMotion();
-  const setShellMode = useOSStore((s) => s.setShellMode);
+  const hydrate = useBrowserStore((s) => s.hydrate);
+  const setSoundEnabled = useBrowserStore((s) => s.setSoundEnabled);
+  const soundEnabled = useOSStore((s) => s.soundEnabled);
+
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
+
+  // Honor the OS-wide sound preference.
+  useEffect(() => {
+    setSoundEnabled(soundEnabled);
+  }, [soundEnabled, setSoundEnabled]);
 
   return (
     <motion.div
       key="browser"
       initial={reduced ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: reduced ? 0 : 0.4 }}
-      className="fixed inset-0 grid place-items-center overflow-hidden bg-bg"
+      transition={{ duration: reduced ? 0 : 0.3 }}
+      className="fixed inset-0 flex flex-col overflow-hidden bg-surface-2/40"
     >
-      <div className="text-center">
-        <Globe className="mx-auto h-10 w-10 text-accent" />
-        <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-ink">JaiBrowser</h1>
-        <p className="mt-1 text-sm text-muted">Everything runs in the browser.</p>
-        <button
-          type="button"
-          onClick={() => setShellMode("os")}
-          className="mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink shadow-soft transition-colors hover:bg-ink/5"
-        >
-          <Monitor className="h-4 w-4" /> Switch to OS
-        </button>
+      <TabStrip />
+      <div className="flex shrink-0 items-center gap-1.5 border-b border-line bg-surface px-2.5 py-2">
+        <NavControls />
+        <Omnibox />
       </div>
+      <Viewport />
     </motion.div>
   );
 }

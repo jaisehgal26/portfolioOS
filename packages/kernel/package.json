@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./store": "./store/os-store.ts",
+    "./browser-store": "./store/browser-store.ts",
     "./hooks/use-copy-to-clipboard": "./hooks/use-copy-to-clipboard.ts",
     "./hooks/use-current-time": "./hooks/use-current-time.ts",
     "./hooks/use-dismiss-on-outside": "./hooks/use-dismiss-on-outside.ts",

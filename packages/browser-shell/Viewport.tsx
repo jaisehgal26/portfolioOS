@@ -1,0 +1,43 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { useBrowserStore, tabUrl } from "@jaios/kernel/browser-store";
+import { isInternalUrl, isKnownInternalPath, parsePath, resolveTitle } from "./lib/routes";
+import { HomePage } from "./pages/HomePage";
+import { AboutPage } from "./pages/AboutPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
+import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { ExternalPage } from "./pages/ExternalPage";
+
+function renderPage(url: string): ReactNode {
+  if (!isInternalUrl(url)) return <ExternalPage url={url} />;
+  const path = parsePath(url);
+  const root = path.split("/")[0] ?? "";
+  switch (root) {
+    case "":
+    case "home":
+      return <HomePage />;
+    case "about":
+      return <AboutPage />;
+    default:
+      // Known route built in a later phase vs a genuine 404.
+      return isKnownInternalPath(path) ? <PlaceholderPage title={resolveTitle(url)} /> : <NotFoundPage url={url} />;
+  }
+}
+
+export function Viewport() {
+  const tabs = useBrowserStore((s) => s.tabs);
+  const activeTabId = useBrowserStore((s) => s.activeTabId);
+  const reloadKey = useBrowserStore((s) => s.reloadKey);
+  const tab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
+  const url = tab ? tabUrl(tab) : "jai://home";
+  const external = !isInternalUrl(url);
+
+  return (
+    <main className="relative min-h-0 flex-1 overflow-hidden bg-bg">
+      <div key={`${url}-${reloadKey}`} className={external ? "h-full" : "h-full overflow-y-auto"}>
+        {renderPage(url)}
+      </div>
+    </main>
+  );
+}

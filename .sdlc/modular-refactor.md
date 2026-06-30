@@ -1,6 +1,8 @@
 # Modular Refactor — Design Doc (JaiOS)
 
-Status: APPROVED (awaiting go-ahead to start Phase 1)
+Status: DONE — all 7 phases complete on branch `refactor/monorepo`.
+Verified: pnpm install, turbo build, typecheck, lint all green; production server
+smoke-tested (/ → 200 with JaiOS markup, /sitemap.xml → 200).
 
 ## Decisions (locked)
 - Tooling: **pnpm workspaces + Turborepo**

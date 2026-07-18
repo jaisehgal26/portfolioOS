@@ -81,7 +81,7 @@ export function Dock() {
     <>
       <div
         className={cn(
-          "fixed inset-x-0 z-30 flex justify-center",
+          "pointer-events-none fixed inset-x-0 z-30 flex justify-center",
           isMobile ? "bottom-1.5" : "bottom-1",
         )}
       >
@@ -94,7 +94,7 @@ export function Dock() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: reduced ? 0 : 0.5, ease: [0.22, 1, 0.36, 1], delay: reduced ? 0 : 0.2 }}
           className={cn(
-            "flex items-end gap-3 rounded-2xl border border-line/60 bg-surface/55 px-3 py-1.5 shadow-soft backdrop-blur-xl",
+            "pointer-events-auto flex items-end gap-3 rounded-2xl border border-line/60 bg-surface/55 px-3 py-1.5 shadow-soft backdrop-blur-xl",
             isMobile && "max-w-[calc(100vw-1.5rem)] overflow-x-auto",
           )}
         >
@@ -115,6 +115,7 @@ export function Dock() {
                       iconRefs.current[i] = el;
                     }}
                     type="button"
+                    data-tour={app.id === "finder" ? "dock-finder" : undefined}
                     onClick={() => onDockClick(app.id)}
                     onContextMenu={(e) => {
                       e.preventDefault();

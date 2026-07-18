@@ -12,10 +12,13 @@ import { BrowserApp } from "@/components/apps/BrowserApp";
 import { NotesApp } from "@/components/apps/NotesApp";
 import { SettingsApp } from "@/components/apps/SettingsApp";
 import { SystemMonitorApp } from "@/components/apps/SystemMonitorApp";
-import { ExperimentsApp } from "@/components/apps/ExperimentsApp";
+import { ChangelogApp } from "@/components/apps/ChangelogApp";
+import { KnowledgeApp } from "@/components/apps/KnowledgeApp";
+import { MusicApp } from "@/components/apps/MusicApp";
 import { TextViewerApp } from "@/components/apps/TextViewerApp";
 import { TerminalApp } from "@/components/apps/TerminalApp";
 import { SnakeApp } from "@/components/apps/SnakeApp";
+import { PianoApp } from "@/components/apps/PianoApp";
 import { SecretApp } from "@/components/apps/SecretApp";
 import { LaunchpadApp } from "@/components/apps/LaunchpadApp";
 import { CalculatorApp } from "@/components/apps/CalculatorApp";
@@ -37,10 +40,13 @@ export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   notes: NotesApp,
   settings: SettingsApp,
   "system-monitor": SystemMonitorApp,
-  experiments: ExperimentsApp,
+  changelog: ChangelogApp,
+  knowledge: KnowledgeApp,
+  music: MusicApp,
   "text-viewer": TextViewerApp,
   terminal: TerminalApp,
   snake: SnakeApp,
+  piano: PianoApp,
   secret: SecretApp,
   launchpad: LaunchpadApp,
   calculator: CalculatorApp,

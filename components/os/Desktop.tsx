@@ -78,9 +78,10 @@ export function Desktop() {
       <button
         type="button"
         onClick={() => openApp("secret")}
+        data-tour="secret-sparkle"
         aria-label="A hidden folder"
         title="?"
-        className="group absolute bottom-6 left-6 z-10 grid h-9 w-9 place-items-center rounded-lg text-ink/[0.07] transition-all duration-200 hover:bg-ink/5 hover:text-accent"
+        className="group absolute bottom-6 left-6 z-30 grid h-9 w-9 cursor-pointer place-items-center rounded-lg text-ink/[0.07] transition-all duration-200 hover:bg-ink/5 hover:text-accent"
       >
         <Sparkles className="h-4 w-4 transition-transform group-hover:scale-110" />
       </button>

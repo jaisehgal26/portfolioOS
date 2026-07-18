@@ -10,13 +10,14 @@ import {
   Loader2,
   Lock,
   Monitor,
-  Plus,
   RotateCw,
   Smartphone,
   Tablet,
+  WifiOff,
 } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { browserSites } from "@/data/sites";
+import { useOnline } from "@/hooks/use-online";
 import { cn } from "@/lib/utils";
 
 type Device = "desktop" | "tablet" | "mobile";
@@ -42,6 +43,7 @@ function favicon(url: string): string {
 }
 
 export function BrowserApp() {
+  const online = useOnline();
   const browserUrl = useOSStore((s) => s.browserUrl);
   const clearBrowserUrl = useOSStore((s) => s.clearBrowserUrl);
 
@@ -61,6 +63,7 @@ export function BrowserApp() {
   const navigate = useCallback(
     (raw: string) => {
       const url = normalizeUrl(raw);
+      if (url && !navigator.onLine) return;
       setHistory((h) => [...h.slice(0, index + 1), url]);
       setIndex(index + 1);
     },
@@ -193,7 +196,9 @@ export function BrowserApp() {
 
       {/* Viewport */}
       <div className="relative min-h-0 flex-1 overflow-hidden">
-        {current ? (
+        {current && !online ? (
+          <OfflineViewport host={hostOf(current)} onHome={() => navigate("")} />
+        ) : current ? (
           <div
             className={cn(
               "h-full w-full",
@@ -225,14 +230,38 @@ export function BrowserApp() {
             </div>
           </div>
         ) : (
-          <StartPage onOpen={navigate} />
+          <StartPage onOpen={navigate} online={online} />
         )}
       </div>
     </div>
   );
 }
 
-function StartPage({ onOpen }: { onOpen: (url: string) => void }) {
+function OfflineViewport({ host, onHome }: { host: string; onHome: () => void }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-4 px-6 text-center">
+      <span className="grid h-14 w-14 place-items-center rounded-2xl bg-surface border border-line text-muted shadow-soft">
+        <WifiOff className="h-7 w-7" />
+      </span>
+      <div>
+        <h2 className="font-display text-lg font-semibold text-ink">Browser needs internet</h2>
+        <p className="mt-1 max-w-sm text-sm text-muted">
+          <span className="font-medium text-ink">{host}</span> can&apos;t load while you&apos;re offline.
+          The rest of JaiOS still works.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={onHome}
+        className="rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink hover:border-line-strong"
+      >
+        Back to start page
+      </button>
+    </div>
+  );
+}
+
+function StartPage({ onOpen, online }: { onOpen: (url: string) => void; online: boolean }) {
   return (
     <div className="h-full overflow-y-auto p-6 sm:p-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -251,7 +280,15 @@ function StartPage({ onOpen }: { onOpen: (url: string) => void }) {
             key={site.id}
             className="group flex items-center gap-3 rounded-2xl border border-line bg-surface p-3.5 shadow-soft transition-colors hover:border-line-strong"
           >
-            <button type="button" onClick={() => onOpen(site.url)} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+            <button
+              type="button"
+              onClick={() => online && onOpen(site.url)}
+              disabled={!online}
+              className={cn(
+                "flex min-w-0 flex-1 items-center gap-3 text-left",
+                !online && "cursor-not-allowed opacity-60",
+              )}
+            >
               <img
                 src={favicon(site.url)}
                 alt=""
@@ -280,10 +317,11 @@ function StartPage({ onOpen }: { onOpen: (url: string) => void }) {
         ))}
       </div>
 
-      <p className="mx-auto mt-6 flex max-w-2xl items-center justify-center gap-1.5 text-center text-xs text-faint">
-        <Plus className="h-3.5 w-3.5" />
-        Add more project links in <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono">data/sites.ts</code>
-      </p>
+      {!online && (
+        <p className="mx-auto mt-4 max-w-2xl text-center text-xs text-muted">
+          You&apos;re offline — bookmarks are visible but external sites need a connection.
+        </p>
+      )}
     </div>
   );
 }

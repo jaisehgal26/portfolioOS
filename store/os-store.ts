@@ -1,9 +1,18 @@
 "use client";
 
 import { create } from "zustand";
+import { ACHIEVEMENTS_BY_ID, type AchievementId } from "@/data/achievements";
 import { APPS, type AppId } from "@/data/apps";
 import { initialNotifications, type OSNotification } from "@/data/notifications";
+import {
+  isStandaloneDisplay,
+  loadUnlockedAchievements,
+  recordAppOpen,
+  saveUnlockedAchievements,
+} from "@/lib/achievements";
 import { playSound } from "@/lib/sounds";
+import { TOUR_STEPS } from "@/data/tour-steps";
+import { DEFAULT_AMBIENCE_VOLUME, type AmbienceTrackId } from "@/data/ambience";
 
 export type { AppId, OSNotification };
 export type Theme = "light" | "dark";
@@ -34,6 +43,7 @@ interface ContextMenuState {
 }
 
 const STORAGE_KEY = "jaios-prefs";
+const AMBIENCE_KEY = "jaios-ambience";
 const SESSION_KEY = "jaios-session";
 const TOP_BAR = 44;
 const APP_IDS = new Set<AppId>(APPS.map((a) => a.id));
@@ -77,6 +87,14 @@ interface OSState extends Persisted {
   openFileId: string | null;
   /** A section requested in the Finder hub (consumed by FinderApp). */
   finderSection: string | null;
+
+  unlockedAchievements: AchievementId[];
+
+  tourOpen: boolean;
+  tourStep: number;
+
+  ambienceTrack: AmbienceTrackId;
+  ambienceVolume: number;
 
   boot: () => void;
   login: () => void;
@@ -130,6 +148,16 @@ interface OSState extends Persisted {
   pushToast: (message: string) => void;
   removeToast: (id: string) => void;
 
+  tryUnlock: (id: AchievementId) => boolean;
+
+  startTour: () => void;
+  nextTourStep: () => void;
+  prevTourStep: () => void;
+  endTour: (completed?: boolean) => void;
+
+  setAmbienceTrack: (track: AmbienceTrackId) => void;
+  setAmbienceVolume: (v: number) => void;
+
   hydrate: () => void;
 }
 
@@ -159,7 +187,6 @@ interface SessionData {
   finderSection: string | null;
 }
 
-/** Persist the live desktop so a reload resumes open windows + section. */
 function persistSession(state: OSState) {
   if (typeof window === "undefined") return;
   try {
@@ -170,6 +197,15 @@ function persistSession(state: OSState) {
       finderSection: state.finderSection,
     };
     window.localStorage.setItem(SESSION_KEY, JSON.stringify(data));
+  } catch {
+    /* ignore */
+  }
+}
+
+function persistAmbience(track: AmbienceTrackId, volume: number) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(AMBIENCE_KEY, JSON.stringify({ track, volume }));
   } catch {
     /* ignore */
   }
@@ -220,12 +256,19 @@ export const useOSStore = create<OSState>((set, get) => ({
   browserUrl: null,
   openFileId: null,
   finderSection: null,
+  unlockedAchievements: [],
+  tourOpen: false,
+  tourStep: 0,
+
+  ambienceTrack: "off",
+  ambienceVolume: DEFAULT_AMBIENCE_VOLUME,
 
   boot: () => set({ hasBooted: true }),
 
   login: () => {
     set({ isLoggedIn: true });
     if (get().soundEnabled) playSound("boot");
+    get().tryUnlock("first-boot");
   },
 
   lock: () =>
@@ -245,6 +288,7 @@ export const useOSStore = create<OSState>((set, get) => ({
 
   crash: () => {
     set({ crashed: true });
+    get().tryUnlock("kernel-panic");
     if (get().soundEnabled) playSound("error");
   },
   reboot: () => {
@@ -277,6 +321,12 @@ export const useOSStore = create<OSState>((set, get) => ({
       };
     });
     persistSession(get());
+
+    const uniqueApps = recordAppOpen(appId);
+    if (appId === "secret") get().tryUnlock("secret-finder");
+    if (appId === "changelog") get().tryUnlock("changelog-reader");
+    if (uniqueApps >= 6) get().tryUnlock("explorer");
+    if (typeof navigator !== "undefined" && !navigator.onLine) get().tryUnlock("offline-operator");
   },
 
   openUrlInBrowser: (url) => {
@@ -362,15 +412,18 @@ export const useOSStore = create<OSState>((set, get) => ({
   setTheme: (theme) => {
     set({ theme });
     persist(get());
+    if (theme === "dark") get().tryUnlock("night-owl");
   },
   toggleTheme: () => {
     set((s) => ({ theme: s.theme === "dark" ? "light" : "dark" }));
     persist(get());
     if (get().soundEnabled) playSound("toggle");
+    if (get().theme === "dark") get().tryUnlock("night-owl");
   },
   setWallpaper: (wallpaper) => {
     set({ wallpaper });
     persist(get());
+    get().tryUnlock("wallpaper-artist");
     if (get().soundEnabled) playSound("toggle");
   },
   setAccent: (accent) => {
@@ -389,7 +442,11 @@ export const useOSStore = create<OSState>((set, get) => ({
   },
 
   closeSpotlight: () => set({ spotlightOpen: false }),
-  toggleSpotlight: () => set((s) => ({ spotlightOpen: !s.spotlightOpen })),
+  toggleSpotlight: () => {
+    const opening = !get().spotlightOpen;
+    set({ spotlightOpen: opening });
+    if (opening) get().tryUnlock("spotlight-user");
+  },
   toggleNotificationCenter: () =>
     set((s) => ({ notificationCenterOpen: !s.notificationCenterOpen })),
   closeNotificationCenter: () => set({ notificationCenterOpen: false }),
@@ -442,6 +499,59 @@ export const useOSStore = create<OSState>((set, get) => ({
   },
   removeToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 
+  tryUnlock: (id) => {
+    const st = get();
+    if (st.unlockedAchievements.includes(id)) return false;
+    const ach = ACHIEVEMENTS_BY_ID[id];
+    if (!ach) return false;
+    const next = [...st.unlockedAchievements, id];
+    set({ unlockedAchievements: next });
+    saveUnlockedAchievements(next);
+    st.pushToast(`${ach.icon} Achievement: ${ach.title}`);
+    return true;
+  },
+
+  startTour: () => {
+    set({
+      tourOpen: true,
+      tourStep: 0,
+      spotlightOpen: false,
+      notificationCenterOpen: false,
+      controlCenterOpen: false,
+      missionControlOpen: false,
+      calendarOpen: false,
+      helpOpen: false,
+    });
+  },
+
+  nextTourStep: () => {
+    const next = get().tourStep + 1;
+    if (next >= TOUR_STEPS.length) {
+      get().endTour(true);
+      return;
+    }
+    set({ tourStep: next });
+  },
+
+  prevTourStep: () => {
+    set((s) => ({ tourStep: Math.max(0, s.tourStep - 1) }));
+  },
+
+  endTour: (completed = false) => {
+    set({ tourOpen: false, tourStep: 0 });
+    if (completed) get().tryUnlock("tour-complete");
+  },
+
+  setAmbienceTrack: (track) => {
+    set({ ambienceTrack: track });
+    persistAmbience(track, get().ambienceVolume);
+  },
+  setAmbienceVolume: (v) => {
+    const volume = Math.min(1, Math.max(0, v));
+    set({ ambienceVolume: volume });
+    persistAmbience(get().ambienceTrack, volume);
+  },
+
   hydrate: () => {
     if (typeof window === "undefined" || get().hydrated) return;
     const patch: Partial<OSState> = { hydrated: true };
@@ -461,6 +571,34 @@ export const useOSStore = create<OSState>((set, get) => ({
       }
     } catch {
       /* ignore malformed prefs */
+    }
+
+    try {
+      const rawAmb = window.localStorage.getItem(AMBIENCE_KEY);
+      if (rawAmb) {
+        const a = JSON.parse(rawAmb) as { track?: string; volume?: number };
+        const validTracks: AmbienceTrackId[] = [
+          "off",
+          "rain",
+          "stream",
+          "night",
+          "fire",
+          "babble",
+          "steam",
+          "airplane",
+          "boat",
+          "bus",
+          "train",
+        ];
+        if (a.track && validTracks.includes(a.track as AmbienceTrackId)) {
+          patch.ambienceTrack = a.track as AmbienceTrackId;
+        }
+        if (typeof a.volume === "number") {
+          patch.ambienceVolume = Math.min(1, Math.max(0, a.volume));
+        }
+      }
+    } catch {
+      /* ignore malformed ambience */
     }
 
     try {
@@ -487,6 +625,10 @@ export const useOSStore = create<OSState>((set, get) => ({
       /* ignore malformed session */
     }
 
+    patch.unlockedAchievements = loadUnlockedAchievements();
+
     set(patch);
+
+    if (isStandaloneDisplay()) get().tryUnlock("installed");
   },
 }));

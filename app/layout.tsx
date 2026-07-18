@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SerwistRegister } from "@/components/pwa/SerwistRegister";
 import "./globals.css";
 import { profile, links, site, experienceYM } from "@/data/profile";
 
@@ -78,6 +79,10 @@ export const metadata: Metadata = {
   },
   formatDetection: { email: false, address: false, telephone: false },
   appleWebApp: { capable: true, title: "JaiOS", statusBarStyle: "black-translucent" },
+  icons: {
+    icon: [{ url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 /** JSON-LD structured data so search engines understand the person + site. */
@@ -142,7 +147,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        {children}
+        <SerwistRegister>{children}</SerwistRegister>
         <Analytics />
       </body>
     </html>

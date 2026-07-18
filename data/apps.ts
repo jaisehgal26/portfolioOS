@@ -13,10 +13,13 @@ export type AppId =
   | "notes"
   | "settings"
   | "system-monitor"
-  | "experiments"
+  | "changelog"
+  | "knowledge"
+  | "music"
   | "text-viewer"
   | "terminal"
   | "snake"
+  | "piano"
   | "secret"
   | "launchpad"
   | "calculator"
@@ -163,18 +166,6 @@ export const APPS: AppMeta[] = [
     onDesktop: false,
   },
   {
-    id: "experiments",
-    name: "Experiments",
-    shortName: "Experiments",
-    icon: "flask",
-    accent: "amber",
-    category: "lab",
-    description: "Small interactive frontend demos",
-    defaultSize: { w: 880, h: 600 },
-    inDock: false,
-    onDesktop: false,
-  },
-  {
     id: "system-monitor",
     name: "System Monitor",
     shortName: "Monitor",
@@ -183,6 +174,42 @@ export const APPS: AppMeta[] = [
     category: "system",
     description: "Portfolio health and capabilities",
     defaultSize: { w: 760, h: 540 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "changelog",
+    name: "Changelog",
+    shortName: "Changelog",
+    icon: "history",
+    accent: "blue",
+    category: "system",
+    description: "What shipped in JaiOS and when",
+    defaultSize: { w: 720, h: 560 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "knowledge",
+    name: "Knowledge",
+    shortName: "Knowledge",
+    icon: "bookOpen",
+    accent: "violet",
+    category: "career",
+    description: "CSS, frameworks, AI tools, dev tools, and Chrome extensions I recommend",
+    defaultSize: { w: 800, h: 600 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "music",
+    name: "Music",
+    shortName: "Music",
+    icon: "music",
+    accent: "mint",
+    category: "utility",
+    description: "Focus ambience — rain, stream, fire, travel sounds, and more",
+    defaultSize: { w: 520, h: 640 },
     inDock: false,
     onDesktop: false,
   },
@@ -231,6 +258,18 @@ export const APPS: AppMeta[] = [
     category: "lab",
     description: "A quick game of Snake",
     defaultSize: { w: 520, h: 620 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "piano",
+    name: "Piano",
+    shortName: "Piano",
+    icon: "piano",
+    accent: "amber",
+    category: "lab",
+    description: "Playable keyboard and Echo memory game",
+    defaultSize: { w: 560, h: 620 },
     inDock: false,
     onDesktop: false,
   },

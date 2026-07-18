@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Play, RotateCcw } from "lucide-react";
+import { useOSStore } from "@/store/os-store";
 import { cn } from "@/lib/utils";
 
 const SIZE = 17;
@@ -25,6 +26,7 @@ function randomFood(snake: Point[]): Point {
 }
 
 export function SnakeApp() {
+  const tryUnlock = useOSStore((s) => s.tryUnlock);
   const [snake, setSnake] = useState<Point[]>(START);
   const [food, setFood] = useState<Point>({ x: 13, y: 8 });
   const [dir, setDir] = useState<Dir>("R");
@@ -72,13 +74,17 @@ export function SnakeApp() {
     const ate = head.x === foodRef.current.x && head.y === foodRef.current.y;
     const next = [head, ...s];
     if (ate) {
-      setScore((sc) => sc + 1);
+      setScore((sc) => {
+        const next = sc + 1;
+        if (next >= 10) tryUnlock("snake-charmer");
+        return next;
+      });
       setFood(randomFood(next));
     } else {
       next.pop();
     }
     setSnake(next);
-  }, []);
+  }, [tryUnlock]);
 
   useEffect(() => {
     if (status !== "playing") return;

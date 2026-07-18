@@ -9,12 +9,15 @@ import {
   MemoryStick,
   MonitorSmartphone,
   Sparkles,
+  Trophy,
   Wifi,
   Zap,
   type LucideIcon,
 } from "lucide-react";
 import { AppScroll } from "@/components/ui/AppShell";
+import { ACHIEVEMENTS, TIER_ORDER, type AchievementTier } from "@/data/achievements";
 import { useOSStore } from "@/store/os-store";
+import { getAchievementDisplay } from "@/lib/achievements";
 import { getApp } from "@/data/apps";
 import { experienceYM } from "@/data/profile";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
@@ -52,7 +55,7 @@ const specs: { icon: LucideIcon; label: string; value: string; sub: string }[] =
   { icon: MemoryStick, label: "Memory", value: "React · Next.js · TypeScript", sub: "Unified, fully typed" },
   { icon: Sparkles, label: "Neural engine", value: "Streaming AI UI cores", sub: "SSE · tool-calls · reasoning" },
   { icon: MonitorSmartphone, label: "Display", value: "Pixel-perfect Retina UI", sub: "Responsive · accessible" },
-  { icon: HardDrive, label: "Storage", value: "5 flagship case studies", sub: "+ live experiments" },
+  { icon: HardDrive, label: "Storage", value: "5 flagship case studies", sub: "Deep-dive narratives" },
   { icon: Wifi, label: "Connectivity", value: "REST · GraphQL · WS · SSE", sub: "Resilient, reconnecting" },
 ];
 
@@ -93,11 +96,19 @@ function Battery({ level }: { level: number }) {
   );
 }
 
+const TIER_STYLES: Record<AchievementTier, string> = {
+  bronze: "border-amber-500/30 bg-amber-500/8 text-amber-700 dark:text-amber-400",
+  silver: "border-slate-400/30 bg-slate-400/8 text-slate-600 dark:text-slate-300",
+  gold: "border-yellow-500/40 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+};
+
 export function SystemMonitorApp() {
   const theme = useOSStore((s) => s.theme);
   const windows = useOSStore((s) => s.windows);
   const focusedId = useOSStore((s) => s.focusedId);
+  const unlockedAchievements = useOSStore((s) => s.unlockedAchievements);
   const reduced = usePrefersReducedMotion();
+  const unlocked = new Set(unlockedAchievements);
 
   // Live session clock → derives a gently-draining "battery" and uptime.
   const [seconds, setSeconds] = useState(0);
@@ -220,6 +231,47 @@ export function SystemMonitorApp() {
             </p>
           </div>
         ))}
+      </div>
+
+      {/* Achievements */}
+      <h2 className="mt-7 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+        <Trophy className="h-3.5 w-3.5" /> Achievements · {unlocked.size}/{ACHIEVEMENTS.length}
+      </h2>
+      <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        {[...ACHIEVEMENTS]
+          .sort((a, b) => TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier))
+          .map((a) => {
+            const isUnlocked = unlocked.has(a.id);
+            const { title, description } = getAchievementDisplay(a, isUnlocked);
+            return (
+              <div
+                key={a.id}
+                className={cn(
+                  "flex items-start gap-3 rounded-2xl border p-3.5 shadow-soft transition-opacity",
+                  isUnlocked ? "border-line bg-surface" : "border-line/60 bg-surface/50 opacity-60",
+                )}
+              >
+                <span
+                  className={cn(
+                    "grid h-10 w-10 shrink-0 place-items-center rounded-xl text-lg",
+                    isUnlocked ? TIER_STYLES[a.tier] : "bg-ink/5 text-faint grayscale",
+                  )}
+                  aria-hidden
+                >
+                  {isUnlocked ? a.icon : "?"}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-ink">{title}</p>
+                  <p className="mt-0.5 text-xs text-muted">{description}</p>
+                  {isUnlocked && (
+                    <span className={cn("mt-1.5 inline-block rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider", TIER_STYLES[a.tier])}>
+                      {a.tier}
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
       </div>
     </AppScroll>
   );

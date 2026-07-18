@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Quote as QuoteIcon, RefreshCw } from "lucide-react";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
@@ -62,44 +62,31 @@ interface Quote {
   author: string;
 }
 
-/** Shown when the API is unreachable so the widget always has something. */
-const FALLBACK_QUOTES: Quote[] = [
+/** Local quotes — no network required (offline-first). */
+const QUOTES: Quote[] = [
   { content: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
   { content: "Make it work, make it right, make it fast.", author: "Kent Beck" },
   { content: "The details are not the details. They make the design.", author: "Charles Eames" },
   { content: "Programs must be written for people to read.", author: "Harold Abelson" },
   { content: "Any sufficiently advanced technology is indistinguishable from magic.", author: "Arthur C. Clarke" },
+  { content: "Curiosity is a frontend superpower.", author: "Jai Sehgal" },
 ];
+
+function pickQuote(exclude?: Quote): Quote {
+  const pool = exclude ? QUOTES.filter((q) => q.content !== exclude.content) : QUOTES;
+  return pool[Math.floor(Math.random() * pool.length)] ?? QUOTES[0];
+}
 
 export function QuoteWidget({ delay = 0 }: { delay?: number }) {
   const [quote, setQuote] = useState<Quote | null>(null);
-  const [loading, setLoading] = useState(true);
-  const abortRef = useRef<AbortController | null>(null);
-
-  const load = useCallback(async () => {
-    abortRef.current?.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
-    setLoading(true);
-    try {
-      const res = await fetch("https://api.quotable.io/random?maxLength=120", {
-        signal: controller.signal,
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as Quote;
-      setQuote({ content: data.content, author: data.author });
-    } catch (err) {
-      if ((err as Error).name === "AbortError") return;
-      setQuote(FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]);
-    } finally {
-      if (!controller.signal.aborted) setLoading(false);
-    }
-  }, []);
 
   useEffect(() => {
-    load();
-    return () => abortRef.current?.abort();
-  }, [load]);
+    setQuote(pickQuote());
+  }, []);
+
+  function refresh() {
+    setQuote((prev) => pickQuote(prev ?? undefined));
+  }
 
   return (
     <Widget delay={delay}>
@@ -107,24 +94,17 @@ export function QuoteWidget({ delay = 0 }: { delay?: number }) {
         <Eyebrow>Thought of the day</Eyebrow>
         <button
           type="button"
-          onClick={load}
-          disabled={loading}
+          onClick={refresh}
           aria-label="New quote"
-          className="grid h-6 w-6 place-items-center rounded-md text-faint transition-colors hover:bg-ink/5 hover:text-ink disabled:opacity-50"
+          className="grid h-6 w-6 place-items-center rounded-md text-faint transition-colors hover:bg-ink/5 hover:text-ink"
         >
-          <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
+          <RefreshCw className="h-3.5 w-3.5" />
         </button>
       </div>
 
       <QuoteIcon className="mt-2 h-4 w-4 text-accent/70" aria-hidden />
 
-      {loading && !quote ? (
-        <div className="mt-2 space-y-2">
-          <div className="h-3 w-full animate-pulse rounded bg-ink/10" />
-          <div className="h-3 w-4/5 animate-pulse rounded bg-ink/10" />
-          <div className="mt-3 h-2.5 w-1/3 animate-pulse rounded bg-ink/10" />
-        </div>
-      ) : quote ? (
+      {quote ? (
         <figure className="mt-1.5">
           <blockquote className="text-sm leading-relaxed text-ink">{quote.content}</blockquote>
           <figcaption className="mt-2 text-xs font-medium text-muted">— {quote.author}</figcaption>

@@ -6,6 +6,7 @@ import {
   ChevronRight,
   FileText,
   FolderKanban,
+  Hammer,
   Mail,
   Notebook,
   User,
@@ -17,7 +18,7 @@ import { AboutApp } from "./AboutApp";
 import { SkillsApp } from "./SkillsApp";
 import { ResumeDocument } from "./ResumeApp";
 import { ContactApp } from "./ContactApp";
-import { WorkSection, ExperienceSection, NotesSection } from "./finderSections";
+import { WorkSection, ExperienceSection, NotesSection, BuildingJaiOSSection } from "./finderSections";
 import { cn } from "@/lib/utils";
 
 const ROOT = "Finder";
@@ -25,6 +26,7 @@ const ROOT = "Finder";
 const ICONS: Record<string, LucideIcon> = {
   about: User,
   work: FolderKanban,
+  "building-jaios": Hammer,
   experience: Briefcase,
   skills: Blocks,
   notes: Notebook,
@@ -38,6 +40,8 @@ function Content({ id }: { id: string }) {
   switch (id) {
     case "work":
       return <WorkSection />;
+    case "building-jaios":
+      return <BuildingJaiOSSection />;
     case "experience":
       return <ExperienceSection />;
     case "skills":
@@ -69,6 +73,7 @@ export function FinderApp() {
               <button
                 key={s.id}
                 type="button"
+                data-tour={s.id === "work" ? "finder-work" : s.id === "contact" ? "finder-contact" : undefined}
                 onClick={() => setFinderSection(s.id)}
                 className={cn(
                   "flex shrink-0 items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors",

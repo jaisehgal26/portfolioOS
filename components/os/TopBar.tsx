@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bell, Search, SlidersHorizontal } from "lucide-react";
+import { Bell, Search, SlidersHorizontal, WifiOff } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
 import { getApp } from "@/data/apps";
 import { FINDER_SECTIONS } from "@/data/sections";
+import { useOnline } from "@/hooks/use-online";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useCurrentTime } from "@/hooks/use-current-time";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
@@ -94,11 +95,13 @@ function MenuButton({
 }
 
 export function TopBar() {
+  const online = useOnline();
   const openApp = useOSStore((s) => s.openApp);
   const openFinderAt = useOSStore((s) => s.openFinderAt);
   const lock = useOSStore((s) => s.lock);
   const toggleMissionControl = useOSStore((s) => s.toggleMissionControl);
   const setHelpOpen = useOSStore((s) => s.setHelpOpen);
+  const startTour = useOSStore((s) => s.startTour);
   const toggleSpotlight = useOSStore((s) => s.toggleSpotlight);
   const toggleNC = useOSStore((s) => s.toggleNotificationCenter);
   const toggleControlCenter = useOSStore((s) => s.toggleControlCenter);
@@ -178,6 +181,7 @@ export function TopBar() {
           <MenuButton
             label="Help"
             items={[
+              { label: "Take a tour", onClick: startTour },
               { label: "Keyboard shortcuts", onClick: () => setHelpOpen(true) },
               { label: "Search (⌘K)", onClick: toggleSpotlight },
             ]}
@@ -187,9 +191,16 @@ export function TopBar() {
 
       {/* Right */}
       <div className="flex items-center gap-1 text-muted">
+        {!online && (
+          <span className="mr-1 hidden items-center gap-1 rounded-full border border-line bg-surface-2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted sm:inline-flex">
+            <WifiOff className="h-3 w-3" />
+            Offline
+          </span>
+        )}
         <button
           type="button"
           onClick={toggleSpotlight}
+          data-tour="spotlight"
           aria-label="Open search"
           className="grid h-7 w-7 place-items-center rounded-md transition-colors hover:bg-ink/5 hover:text-ink"
         >

@@ -11,6 +11,7 @@ import { profile } from "@/data/profile";
 
 export function LoginScreen() {
   const login = useOSStore((s) => s.login);
+  const startTour = useOSStore((s) => s.startTour);
   const reduced = usePrefersReducedMotion();
   const now = useCurrentTime();
   const [pwd, setPwd] = useState("");
@@ -23,6 +24,11 @@ export function LoginScreen() {
   function submit() {
     if (pwd.trim()) login();
     else setShake((n) => n + 1);
+  }
+
+  function loginAndTour() {
+    login();
+    startTour();
   }
 
   return (
@@ -79,6 +85,14 @@ export function LoginScreen() {
         </motion.div>
 
         <p className="mt-2 text-[11px] text-faint">Any password works</p>
+
+        <button
+          type="button"
+          onClick={loginAndTour}
+          className="mt-4 text-xs font-medium text-muted underline-offset-2 hover:text-ink hover:underline"
+        >
+          Or take the recruiter tour →
+        </button>
       </motion.div>
     </div>
   );

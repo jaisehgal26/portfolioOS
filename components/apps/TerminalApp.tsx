@@ -2,16 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useOSStore } from "@/store/os-store";
-import { APPS } from "@/data/apps";
-import { profile, links } from "@/data/profile";
+import { recordTerminalCommand } from "@/lib/achievements";
+import { runTerminalCommand, type TerminalLine } from "@/lib/terminal-commands";
 import { cn } from "@/lib/utils";
-
-type Line = { kind: "in" | "out" | "err" | "sys"; text: string };
 
 // Any reckless `rm -rf …` (with or without sudo, with or without a target).
 const DANGER = /^(sudo\s+)?rm\s+-rf\b/i;
 
-const LINE_COLOR: Record<Line["kind"], string> = {
+const LINE_COLOR: Record<TerminalLine["kind"], string> = {
   in: "text-[#e9e3d9]",
   out: "text-[#cfc8bd]",
   err: "text-[#ff9b8a]",
@@ -20,8 +18,15 @@ const LINE_COLOR: Record<Line["kind"], string> = {
 
 export function TerminalApp() {
   const openApp = useOSStore((s) => s.openApp);
+  const setTheme = useOSStore((s) => s.setTheme);
+  const setWallpaper = useOSStore((s) => s.setWallpaper);
   const crash = useOSStore((s) => s.crash);
-  const [lines, setLines] = useState<Line[]>([
+  const tryUnlock = useOSStore((s) => s.tryUnlock);
+  const theme = useOSStore((s) => s.theme);
+  const wallpaper = useOSStore((s) => s.wallpaper);
+  const windows = useOSStore((s) => s.windows);
+  const unlockedAchievements = useOSStore((s) => s.unlockedAchievements);
+  const [lines, setLines] = useState<TerminalLine[]>([
     { kind: "sys", text: "JaiOS Terminal — type `help` to begin." },
   ]);
   const [input, setInput] = useState("");
@@ -34,7 +39,7 @@ export function TerminalApp() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [lines]);
 
-  function print(...out: Line[]) {
+  function print(...out: TerminalLine[]) {
     setLines((prev) => [...prev, ...out]);
   }
 
@@ -54,67 +59,29 @@ export function TerminalApp() {
       return;
     }
 
-    const [name, ...args] = cmd.split(/\s+/);
-    const arg = args.join(" ");
-
-    switch (name.toLowerCase()) {
-      case "help":
-        print(
-          { kind: "out", text: "Commands: help · whoami · about · ls · open <app> · cat <file> · date · echo <text> · clear" },
-          { kind: "sys", text: "Some commands are more dangerous than others. 😏" },
-        );
-        break;
-      case "whoami":
-        print({ kind: "out", text: `${profile.name} — ${profile.role} · ${profile.location} · ${profile.experience}` });
-        break;
-      case "about":
-        print({ kind: "out", text: profile.aboutIntro });
-        break;
-      case "ls":
-        print({
-          kind: "out",
-          text: APPS.filter((a) => a.id !== "text-viewer" && a.id !== "secret")
-            .map((a) => a.shortName.toLowerCase().replace(/\s+/g, "-"))
-            .join("  "),
-        });
-        break;
-      case "open": {
-        const t = APPS.find(
-          (a) =>
-            a.id === arg ||
-            a.shortName.toLowerCase() === arg.toLowerCase() ||
-            a.name.toLowerCase() === arg.toLowerCase(),
-        );
-        if (t) {
-          print({ kind: "out", text: `Opening ${t.name}…` });
-          openApp(t.id);
-        } else {
-          print({ kind: "err", text: `open: app not found: ${arg || "(none)"}` });
-        }
-        break;
-      }
-      case "cat":
-        if (/contact/i.test(arg)) print({ kind: "out", text: `${links.email}  ·  ${links.phone}` });
-        else if (/resume/i.test(arg)) {
-          print({ kind: "out", text: "Opening resume…" });
-          openApp("resume");
-        } else print({ kind: "err", text: `cat: ${arg || "(missing operand)"}: No such file` });
-        break;
-      case "date":
-        print({ kind: "out", text: new Date().toString() });
-        break;
-      case "echo":
-        print({ kind: "out", text: arg });
-        break;
-      case "clear":
-        setLines([]);
-        break;
-      case "sudo":
-        print({ kind: "out", text: "Nice try — you're not root here. 🙂" });
-        break;
-      default:
-        print({ kind: "err", text: `command not found: ${name}` });
+    const result = runTerminalCommand(cmd, {
+      openApp,
+      setTheme,
+      setWallpaper,
+      getSysinfo: () => ({
+        theme,
+        wallpaper,
+        windowsCount: windows.length,
+        achievementsUnlocked: unlockedAchievements.length,
+        online: typeof navigator !== "undefined" ? navigator.onLine : true,
+      }),
+      getUnlockedAchievements: () => unlockedAchievements,
+    });
+    const verb = cmd.split(/\s+/)[0]?.toLowerCase();
+    if (verb) {
+      const uniqueCount = recordTerminalCommand(verb);
+      if (uniqueCount >= 8) tryUnlock("command-master");
     }
+    if (result.clear) {
+      setLines([]);
+      return;
+    }
+    if (result.lines.length > 0) print(...result.lines);
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {

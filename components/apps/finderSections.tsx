@@ -1,6 +1,7 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
+import { META_CASE_STUDY } from "@/data/meta-case-study";
 import { projects } from "@/data/projects";
 import { experience } from "@/data/experience";
 import { notes } from "@/data/notes";
@@ -95,6 +96,54 @@ export function WorkSection() {
             </article>
           );
         })}
+      </div>
+    </SectionDoc>
+  );
+}
+
+export function BuildingJaiOSSection() {
+  const { title, subtitle, github, githubLabel, sections } = META_CASE_STUDY;
+
+  return (
+    <SectionDoc title={title} subtitle={subtitle}>
+      <a
+        href={github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink shadow-soft transition-colors hover:border-line-strong"
+      >
+        View source on GitHub
+        <ArrowUpRight className="h-3.5 w-3.5 text-muted" />
+        <span className="text-faint">({githubLabel})</span>
+      </a>
+
+      <div className="space-y-8">
+        {sections.map((section) => (
+          <article key={section.id} className="rounded-2xl border border-line bg-surface p-5 shadow-soft">
+            <h2 className="font-display text-lg font-semibold tracking-tight text-ink">{section.title}</h2>
+
+            {section.paragraphs?.map((p, i) => (
+              <p key={i} className="mt-3 text-sm leading-relaxed text-muted">
+                {p}
+              </p>
+            ))}
+
+            {section.diagram && (
+              <pre
+                className="mt-4 overflow-x-auto rounded-xl border border-line bg-ink/[0.03] p-4 font-mono text-[11px] leading-relaxed text-ink/80 sm:text-xs"
+                aria-label="Architecture diagram"
+              >
+                {section.diagram}
+              </pre>
+            )}
+
+            {section.bullets && (
+              <div className="mt-4">
+                <Bullets items={section.bullets} dot="bg-violet" />
+              </div>
+            )}
+          </article>
+        ))}
       </div>
     </SectionDoc>
   );

@@ -21,6 +21,9 @@ import { MissionControl } from "./MissionControl";
 import { Screensaver } from "./Screensaver";
 import { AppSwitcher } from "./AppSwitcher";
 import { ShortcutsPanel } from "./ShortcutsPanel";
+import { GuidedTour } from "./GuidedTour";
+import { TourBanner } from "./TourBanner";
+import { AmbienceSync } from "./AmbienceSync";
 import { ToastViewport } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
 
@@ -112,6 +115,9 @@ export function JaiOS() {
             <AppSwitcher />
             <Screensaver />
             <ShortcutsPanel />
+            <GuidedTour />
+            <TourBanner />
+            <AmbienceSync />
             <ToastViewport />
           </motion.div>
         )}

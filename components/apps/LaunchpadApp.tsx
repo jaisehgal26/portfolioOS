@@ -15,9 +15,13 @@ const LAUNCHER_IDS: AppId[] = [
   "clock",
   "unit-converter",
   "snake",
+  "piano",
   "terminal",
   "browser",
   "system-monitor",
+  "changelog",
+  "knowledge",
+  "music",
   "settings",
 ];
 

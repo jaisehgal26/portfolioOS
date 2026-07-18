@@ -1,8 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BellOff, Check, Moon, Sun, SunDim, Volume2, VolumeX } from "lucide-react";
+import { BellOff, Check, Moon, Music2, Sun, SunDim, Volume2, VolumeX } from "lucide-react";
 import { useOSStore } from "@/store/os-store";
+import { getAmbienceTrack } from "@/data/ambience";
 import { WALLPAPERS, ACCENTS } from "@/data/system";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
@@ -51,7 +52,11 @@ export function ControlCenter() {
   const setWallpaper = useOSStore((s) => s.setWallpaper);
   const accent = useOSStore((s) => s.accent);
   const setAccent = useOSStore((s) => s.setAccent);
+  const ambienceTrack = useOSStore((s) => s.ambienceTrack);
+  const openApp = useOSStore((s) => s.openApp);
   const reduced = usePrefersReducedMotion();
+
+  const playingLabel = getAmbienceTrack(ambienceTrack)?.label ?? "Off";
 
   return (
     <AnimatePresence>
@@ -127,6 +132,20 @@ export function ControlCenter() {
                 ))}
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                openApp("music");
+                close();
+              }}
+              className="flex w-full items-center justify-between rounded-2xl border border-line bg-surface p-3.5 text-left transition-colors hover:border-line-strong"
+            >
+              <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-faint">
+                <Music2 className="h-4 w-4" /> Ambience
+              </span>
+              <span className="text-sm font-medium text-ink">{playingLabel}</span>
+            </button>
 
             <div className="flex items-center justify-between rounded-2xl border border-line bg-surface p-3.5">
               <p className="text-xs font-semibold uppercase tracking-wider text-faint">Accent</p>

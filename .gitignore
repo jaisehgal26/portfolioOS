@@ -28,7 +28,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# editor
+# Serwist
+public/sw*
+public/swe-worker*
+
 .vscode/*
 !.vscode/extensions.json
 .idea

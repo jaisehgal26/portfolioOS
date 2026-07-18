@@ -187,6 +187,7 @@ export function Window({ win, isMobile, children }: WindowProps) {
     return (
       <motion.section
         aria-label={app.name}
+        data-tour={win.id === "case-studies" ? "case-studies" : undefined}
         initial={reduced ? { opacity: 0 } : { opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         exit={reduced ? { opacity: 0 } : { opacity: 0, y: 24 }}
@@ -246,6 +247,7 @@ export function Window({ win, isMobile, children }: WindowProps) {
       )}
       <motion.section
         aria-label={app.name}
+        data-tour={win.id === "case-studies" ? "case-studies" : undefined}
         onPointerDown={() => focusWindow(win.id)}
         initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 28 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

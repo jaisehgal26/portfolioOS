@@ -60,6 +60,7 @@ export const links = {
   portfolioLabel: "jaisehgal.com",
   resume: "/Jai_Sehgal_Resume.pdf",
   coverLetter: "/Jai_Sehgal_CoverLetter.pdf",
+  oldPortfolio: "https://oldportfolio.jaisehgal.com",
 } as const;
 
 export const site = {

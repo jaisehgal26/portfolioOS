@@ -34,7 +34,8 @@ const FOLDED = new Set([
 
 const SECTIONS: { id: string; label: string; keywords: string }[] = [
   { id: "about", label: "About", keywords: "bio who" },
-  { id: "work", label: "Work", keywords: "projects case studies portfolio" },
+  { id: "work", label: "Work", keywords: "professional client employer modules case studies" },
+  { id: "projects", label: "Projects", keywords: "github live demo showcase open source repos" },
   { id: "experience", label: "Experience", keywords: "career roles jobs" },
   { id: "skills", label: "Skills", keywords: "tech stack tools" },
   { id: "notes", label: "Notes", keywords: "writing frontend" },

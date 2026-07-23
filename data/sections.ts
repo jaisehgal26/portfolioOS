@@ -2,6 +2,7 @@
 export const FINDER_SECTIONS: { id: string; label: string }[] = [
   { id: "about", label: "About" },
   { id: "work", label: "Work" },
+  { id: "projects", label: "Projects" },
   { id: "building-jaios", label: "Building JaiOS" },
   { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },

@@ -6,6 +6,7 @@ import {
   ChevronRight,
   FileText,
   FolderKanban,
+  Globe,
   Hammer,
   Mail,
   Notebook,
@@ -18,7 +19,13 @@ import { AboutApp } from "./AboutApp";
 import { SkillsApp } from "./SkillsApp";
 import { ResumeDocument } from "./ResumeApp";
 import { ContactApp } from "./ContactApp";
-import { WorkSection, ExperienceSection, NotesSection, BuildingJaiOSSection } from "./finderSections";
+import {
+  WorkSection,
+  ProjectsSection,
+  ExperienceSection,
+  NotesSection,
+  BuildingJaiOSSection,
+} from "./finderSections";
 import { cn } from "@/lib/utils";
 
 const ROOT = "Finder";
@@ -26,6 +33,7 @@ const ROOT = "Finder";
 const ICONS: Record<string, LucideIcon> = {
   about: User,
   work: FolderKanban,
+  projects: Globe,
   "building-jaios": Hammer,
   experience: Briefcase,
   skills: Blocks,
@@ -40,6 +48,8 @@ function Content({ id }: { id: string }) {
   switch (id) {
     case "work":
       return <WorkSection />;
+    case "projects":
+      return <ProjectsSection />;
     case "building-jaios":
       return <BuildingJaiOSSection />;
     case "experience":

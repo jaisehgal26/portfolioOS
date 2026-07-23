@@ -15,6 +15,10 @@ export function ProjectPreview({ kind }: { kind: PreviewKind }) {
       return <HealthcarePreview />;
     case "inventory":
       return <InventoryPreview />;
+    case "portfolio":
+      return <PortfolioSitePreview />;
+    case "notepad":
+      return <NotepadPreview />;
   }
 }
 
@@ -128,6 +132,46 @@ function HealthcarePreview() {
             <p className="text-[10px] text-faint">{t.k}</p>
           </div>
         ))}
+      </div>
+    </Panel>
+  );
+}
+
+function NotepadPreview() {
+  return (
+    <Panel className="w-full">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-xs font-medium text-muted">quickpad.link/abc</span>
+        <span className="rounded-full bg-violet/12 px-2 py-0.5 text-[10px] font-semibold text-violet">Live</span>
+      </div>
+      <div className="space-y-1.5 rounded-xl border border-line bg-surface p-2.5">
+        <div className="h-1.5 w-3/4 rounded bg-ink/10" />
+        <div className="h-1.5 w-full rounded bg-ink/10" />
+        <div className="h-1.5 w-5/6 rounded bg-ink/10" />
+        <div className="flex items-center gap-1 pt-1">
+          <span className="h-3 w-0.5 animate-pulse rounded bg-violet" />
+          <span className="text-[10px] text-faint">2 editing</span>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+function PortfolioSitePreview() {
+  return (
+    <Panel className="w-full">
+      <div className="mb-2 flex items-center gap-1.5 rounded-lg border border-line bg-ink/[0.03] px-2 py-1">
+        <span className="h-1.5 w-1.5 rounded-full bg-amber" />
+        <span className="h-1.5 w-1.5 rounded-full bg-mint" />
+        <span className="h-1.5 w-1.5 rounded-full bg-blue" />
+        <span className="ml-1 truncate text-[10px] text-faint">portfolio.dev</span>
+      </div>
+      <div className="space-y-2">
+        <div className="h-8 rounded-lg bg-blue/10" />
+        <div className="grid grid-cols-2 gap-1.5">
+          <div className="h-10 rounded-lg border border-line bg-surface" />
+          <div className="h-10 rounded-lg border border-line bg-surface" />
+        </div>
       </div>
     </Panel>
   );

@@ -1,8 +1,10 @@
 "use client";
 
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight, Globe, Github, MapPin } from "lucide-react";
 import { META_CASE_STUDY } from "@/data/meta-case-study";
+import { portfolioProjects } from "@/data/project-portfolio";
 import { projects } from "@/data/projects";
+import { useOSStore } from "@/store/os-store";
 import { experience } from "@/data/experience";
 import { notes } from "@/data/notes";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
@@ -47,53 +49,175 @@ function Bullets({ items, dot = "bg-accent" }: { items: string[]; dot?: string }
   );
 }
 
+interface FinderProjectCardProps {
+  category: string;
+  title: string;
+  overview: string;
+  highlights: string[];
+  challenges: string[];
+  impact: string[];
+  stack: string[];
+  accent: keyof typeof ACCENT;
+  preview: React.ComponentProps<typeof ProjectPreview>["kind"];
+  githubUrl?: string;
+  liveUrl?: string;
+  onLiveDemo?: (url: string) => void;
+  highlightsLabel?: string;
+  challengesLabel?: string;
+}
+
+function FinderProjectCard({
+  category,
+  title,
+  overview,
+  highlights,
+  challenges,
+  impact,
+  stack,
+  accent,
+  preview,
+  githubUrl,
+  liveUrl,
+  onLiveDemo,
+  highlightsLabel = "My role",
+  challengesLabel = "Frontend challenges",
+}: FinderProjectCardProps) {
+  const a = ACCENT[accent];
+  const hasLinks = Boolean(githubUrl || liveUrl);
+
+  return (
+    <article className="rounded-2xl border border-line bg-surface p-5 shadow-soft">
+      <div className={cn("flex flex-col gap-3", hasLinks && "sm:flex-row sm:items-start sm:justify-between")}>
+        <div className="min-w-0">
+          <p className={cn("text-xs font-semibold uppercase tracking-[0.16em]", a.text)}>{category}</p>
+          <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">{title}</h2>
+        </div>
+
+        {hasLinks && (
+          <div className="flex shrink-0 flex-wrap gap-1.5">
+            {githubUrl && (
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface-2 px-2.5 py-1 text-xs font-medium text-ink transition-colors hover:border-line-strong hover:bg-ink/[0.04]"
+              >
+                <Github className="h-3.5 w-3.5 text-muted" />
+                GitHub
+              </a>
+            )}
+            {liveUrl && onLiveDemo && (
+              <button
+                type="button"
+                onClick={() => onLiveDemo(liveUrl)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-opacity hover:opacity-90",
+                  a.chip,
+                )}
+              >
+                <Globe className="h-3.5 w-3.5" />
+                Live demo
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className={cn("flex items-center justify-center rounded-2xl p-4", a.softBg)}>
+          <div className="w-full max-w-xs">
+            <ProjectPreview kind={preview} />
+          </div>
+        </div>
+        <div>
+          <p className="text-sm leading-relaxed text-muted">{overview}</p>
+          <div className="mt-4">
+            <Head>{highlightsLabel}</Head>
+            <Bullets items={highlights} dot={a.dot} />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-5 sm:grid-cols-2">
+        <div>
+          <Head>{challengesLabel}</Head>
+          <Bullets items={challenges} dot={a.dot} />
+        </div>
+        <div>
+          <Head>Impact</Head>
+          <Bullets items={impact} dot="bg-mint" />
+        </div>
+      </div>
+
+      <div className="mt-5">
+        <Head>Stack</Head>
+        <div className="flex flex-wrap gap-1.5">
+          {stack.map((t) => (
+            <span key={t} className="chip">
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function ProjectsSection() {
+  const openUrlInBrowser = useOSStore((s) => s.openUrlInBrowser);
+
+  return (
+    <SectionDoc
+      title="Projects"
+      subtitle="Showcase work — open source repos and live demos you can explore."
+    >
+      <div className="space-y-5">
+        {portfolioProjects.map((p) => (
+          <FinderProjectCard
+            key={p.id}
+            category={p.category}
+            title={p.title}
+            overview={p.overview}
+            highlights={p.highlights}
+            highlightsLabel="What I built"
+            challenges={p.challenges}
+            challengesLabel="Challenges"
+            impact={p.impact}
+            stack={p.stack}
+            accent={p.accent}
+            preview={p.preview}
+            githubUrl={p.githubUrl}
+            liveUrl={p.liveUrl}
+            onLiveDemo={openUrlInBrowser}
+          />
+        ))}
+      </div>
+    </SectionDoc>
+  );
+}
+
 export function WorkSection() {
   return (
-    <SectionDoc title="Selected Work" subtitle="Product UIs — the problem, the build, and the impact.">
+    <SectionDoc
+      title="Selected Work"
+      subtitle="Professional modules and product UIs — built for employers and clients."
+    >
       <div className="space-y-5">
         {projects.map((p) => {
-          const a = ACCENT[p.accent];
           const cs = p.caseStudy;
           return (
-            <article key={p.id} className="rounded-2xl border border-line bg-surface p-5 shadow-soft">
-              <p className={cn("text-xs font-semibold uppercase tracking-[0.16em]", a.text)}>{p.category}</p>
-              <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">{p.title}</h2>
-
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <div className={cn("flex items-center justify-center rounded-2xl p-4", a.softBg)}>
-                  <div className="w-full max-w-xs">
-                    <ProjectPreview kind={p.preview} />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm leading-relaxed text-muted">{cs.overview}</p>
-                  <div className="mt-4">
-                    <Head>My role</Head>
-                    <Bullets items={cs.role} dot={a.dot} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                <div>
-                  <Head>Frontend challenges</Head>
-                  <Bullets items={cs.challenges} dot={a.dot} />
-                </div>
-                <div>
-                  <Head>Impact</Head>
-                  <Bullets items={cs.improved} dot="bg-mint" />
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <Head>Stack</Head>
-                <div className="flex flex-wrap gap-1.5">
-                  {p.stack.map((t) => (
-                    <span key={t} className="chip">{t}</span>
-                  ))}
-                </div>
-              </div>
-            </article>
+            <FinderProjectCard
+              key={p.id}
+              category={p.category}
+              title={p.title}
+              overview={cs.overview}
+              highlights={cs.role}
+              challenges={cs.challenges}
+              impact={cs.improved}
+              stack={p.stack}
+              accent={p.accent}
+              preview={p.preview}
+            />
           );
         })}
       </div>

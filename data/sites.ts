@@ -1,4 +1,4 @@
-import { links } from "./profile";
+import { portfolioProjects } from "./project-portfolio";
 
 export interface BrowserSite {
   id: string;
@@ -8,20 +8,12 @@ export interface BrowserSite {
   description?: string;
 }
 
-/**
- * Bookmarks shown on the JaiOS Browser start page. These open inside the
- * in-OS browser window (an iframe) so you can showcase live projects.
- *
- * 👉 ADD YOUR PROJECT LINKS HERE LATER.
- * Tip: sites deployed on Vercel / Netlify embed cleanly. Some third-party
- * sites block embedding (X-Frame-Options / CSP) — for those, the browser
- * shows an "Open in new tab" fallback automatically.
- */
-export const browserSites: BrowserSite[] = [
-  {
-    id: "portfolio",
-    title: "Portfolio",
-    url: links.portfolio,
-    description: "This portfolio — live on Vercel.",
-  },
-];
+/** Live project demos — derived from Finder → Projects so links stay in sync. */
+export const browserSites: BrowserSite[] = portfolioProjects
+  .filter((p) => p.liveUrl)
+  .map((p) => ({
+    id: p.id,
+    title: p.title,
+    url: p.liveUrl!,
+    description: p.overview,
+  }));

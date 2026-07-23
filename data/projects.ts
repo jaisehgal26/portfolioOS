@@ -1,4 +1,4 @@
-export type ProjectPreview = "ai-chat" | "payments" | "chat" | "healthcare" | "inventory";
+export type ProjectPreview = "ai-chat" | "payments" | "chat" | "healthcare" | "inventory" | "portfolio" | "notepad";
 export type Accent = "accent" | "blue" | "violet" | "mint" | "amber";
 
 export interface CaseStudy {

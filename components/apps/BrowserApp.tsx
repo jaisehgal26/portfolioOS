@@ -23,8 +23,8 @@ import { cn } from "@/lib/utils";
 type Device = "desktop" | "tablet" | "mobile";
 const DEVICE_WIDTH: Record<Device, number | null> = { desktop: null, tablet: 768, mobile: 390 };
 
-function normalizeUrl(input: string): string {
-  const u = input.trim();
+function normalizeUrl(input: string | undefined | null): string {
+  const u = (input ?? "").trim();
   if (!u) return "";
   if (/^https?:\/\//i.test(u)) return u;
   return `https://${u}`;
@@ -282,7 +282,7 @@ function StartPage({ onOpen, online }: { onOpen: (url: string) => void; online: 
           >
             <button
               type="button"
-              onClick={() => online && onOpen(site.url)}
+              onClick={() => online && site.url && onOpen(site.url)}
               disabled={!online}
               className={cn(
                 "flex min-w-0 flex-1 items-center gap-3 text-left",

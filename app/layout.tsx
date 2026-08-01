@@ -3,7 +3,7 @@ import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SerwistRegister } from "@/components/pwa/SerwistRegister";
 import "./globals.css";
-import { profile, links, site, experienceYM } from "@/data/profile";
+import { profile, links, site, seo } from "@/data/profile";
 
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -19,34 +19,18 @@ const display = Fraunces({
   weight: ["400", "500", "600", "700"],
 });
 
-const TITLE = "Jai Sehgal — Software Engineer Portfolio";
-const DESCRIPTION = `Jai Sehgal is a Software Engineer with ${experienceYM()} years of experience building full-stack products — Next.js, FastAPI, PostgreSQL, real-time systems, auth, and AI workflows. Explore use cases and projects in an interactive OS-style portfolio (JaiOS).`;
+const TITLE = seo.titleWithPortfolio;
+const DESCRIPTION = seo.description;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
     default: TITLE,
-    template: "%s — Jai Sehgal",
+    template: `%s — ${site.name}`,
   },
   description: DESCRIPTION,
   applicationName: "JaiOS",
-  keywords: [
-    "Jai Sehgal",
-    "Jai Sehgal portfolio",
-    "Software Engineer",
-    "React Developer",
-    "Next.js Developer",
-    "TypeScript",
-    "real-time UI",
-    "WebSockets",
-    "SSE",
-    "agentic UI",
-    "AI product UI",
-    "dashboards",
-    "JaiOS",
-    "portfolio",
-    "India",
-  ],
+  keywords: [...seo.keywords],
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
   publisher: site.name,
@@ -63,7 +47,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: TITLE,
-    description: `JaiOS — ${site.tagline}`,
+    description: DESCRIPTION,
   },
   robots: {
     index: true,

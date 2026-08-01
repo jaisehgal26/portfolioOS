@@ -84,3 +84,32 @@ export const site = {
   tagline: "Software engineering, packaged as an operating system.",
   url: "https://jaisehgal.com",
 } as const;
+
+/** Single source of truth for search / social snippets (layout, JSON-LD, OG image). */
+export const seo = {
+  title: `${site.name} — Software Engineer`,
+  titleWithPortfolio: `${site.name} — Software Engineer Portfolio`,
+  description: `Jai Sehgal is a Software Engineer with ${EXP} years of experience building full-stack products — Next.js, FastAPI, PostgreSQL, real-time systems, auth, and AI workflows. Explore use cases and projects in an interactive OS-style portfolio (JaiOS).`,
+  ogSubtitle: "Full-stack software engineer — Next.js, FastAPI, PostgreSQL, real-time systems, and AI workflows.",
+  keywords: [
+    "Jai Sehgal",
+    "Jai Sehgal portfolio",
+    "Software Engineer",
+    "Full-stack developer",
+    "Full-stack engineer",
+    "Next.js",
+    "FastAPI",
+    "PostgreSQL",
+    "TypeScript",
+    "Python",
+    "real-time systems",
+    "WebSockets",
+    "SSE",
+    "JWT auth",
+    "RBAC",
+    "AI workflows",
+    "JaiOS",
+    "portfolio",
+    "India",
+  ],
+} as const;

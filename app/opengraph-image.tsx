@@ -1,9 +1,11 @@
 import { ImageResponse } from "next/og";
-import { profile } from "@/data/profile";
+import { profile, seo } from "@/data/profile";
 
 export const alt = `${profile.name} — ${profile.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+const STACK = ["Next.js", "FastAPI", "PostgreSQL", "TypeScript", "Real-time"];
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -51,19 +53,19 @@ export default function OpengraphImage() {
           <div
             style={{
               display: "flex",
-              fontSize: "34px",
+              fontSize: "30px",
               color: "#4a443d",
               maxWidth: "960px",
-              lineHeight: 1.3,
+              lineHeight: 1.35,
               fontFamily: "sans-serif",
             }}
           >
-            Crafting polished, real-time, product-ready web experiences.
+            {seo.ogSubtitle}
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "12px", fontFamily: "sans-serif" }}>
-          {["Next.js", "React", "TypeScript", "Real-time UI", "AI product UI"].map((t) => (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", fontFamily: "sans-serif" }}>
+          {STACK.map((t) => (
             <div
               key={t}
               style={{

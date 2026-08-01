@@ -1,3 +1,5 @@
+import { site } from "./profile";
+
 export interface OSNotification {
   id: string;
   title: string;
@@ -11,7 +13,7 @@ export const initialNotifications: OSNotification[] = [
   {
     id: "welcome",
     title: "Welcome to JaiOS",
-    body: "Frontend craft, packaged as an operating system. Open any app to explore.",
+    body: `${site.tagline} Open any app to explore.`,
     icon: "sparkles",
     time: "Just now",
   },
@@ -31,8 +33,8 @@ export const initialNotifications: OSNotification[] = [
   },
   {
     id: "work",
-    title: "Selected Work",
-    body: "Projects includes 5 case studies with previews and details.",
+    title: "Use cases",
+    body: "Full-stack problems shipped for employers and clients — open Finder → Use cases.",
     icon: "folderKanban",
     time: "Just now",
   },

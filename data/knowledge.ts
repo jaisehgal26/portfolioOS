@@ -1,6 +1,9 @@
 export type KnowledgeSection =
   | "css"
   | "css-frameworks"
+  | "backend"
+  | "databases"
+  | "auth"
   | "ai-libraries"
   | "ai-tools"
   | "dev-tools"
@@ -30,6 +33,21 @@ export const KNOWLEDGE_SECTIONS: { id: KnowledgeSection; label: string; descript
     id: "css-frameworks",
     label: "CSS frameworks",
     description: "Frameworks and component libraries — what I pick and when.",
+  },
+  {
+    id: "backend",
+    label: "Backend",
+    description: "APIs, Python services, and server-side patterns I ship in production.",
+  },
+  {
+    id: "databases",
+    label: "Databases",
+    description: "Postgres, caching, migrations, and serverless data platforms.",
+  },
+  {
+    id: "auth",
+    label: "Auth & security",
+    description: "Sessions, passwords, access control, and safe public endpoints.",
   },
   {
     id: "ai-libraries",
@@ -148,6 +166,220 @@ export const KNOWLEDGE: KnowledgeItem[] = [
     hrefLabel: "motion.dev",
   },
 
+  // —— Backend ——
+  {
+    id: "fastapi",
+    section: "backend",
+    title: "FastAPI",
+    tags: ["python", "api", "async"],
+    summary: "Modern Python API framework — Pydantic validation, OpenAPI docs, and async routes out of the box.",
+    recommendation: "My default for product APIs beside Next.js. QuickPad and FormForge both run FastAPI services — typed request/response models catch bad payloads before they hit the DB.",
+    details: [
+      "Dependency injection for DB sessions, auth, and rate-limit checks.",
+      "Auto-generated /docs for quick integration testing with the frontend team.",
+    ],
+    href: "https://fastapi.tiangolo.com/",
+    hrefLabel: "fastapi.tiangolo.com",
+  },
+  {
+    id: "pydantic",
+    section: "backend",
+    title: "Pydantic",
+    tags: ["validation", "python", "types"],
+    summary: "Data validation and settings management for Python — the backbone of FastAPI request models.",
+    recommendation: "Define schemas once, validate at the boundary. Same mindset as Zod on the client — wrong shapes never reach business logic.",
+    href: "https://docs.pydantic.dev/",
+    hrefLabel: "docs.pydantic.dev",
+  },
+  {
+    id: "zod",
+    section: "backend",
+    title: "Zod",
+    tags: ["validation", "typescript", "schemas"],
+    summary: "Schema validation for TypeScript — API responses, form input, env vars, and shared contracts with the frontend.",
+    recommendation: "The TypeScript counterpart to Pydantic. I validate at every boundary: fetch responses, server actions, and tool-call JSON before it touches UI state.",
+    details: [
+      "Infer types from schemas with z.infer — one source of truth for runtime + compile time.",
+      "Also useful for structured LLM outputs — validate agent JSON before rendering tool-call cards.",
+    ],
+    href: "https://zod.dev/",
+    hrefLabel: "zod.dev",
+  },
+  {
+    id: "sqlalchemy",
+    section: "backend",
+    title: "SQLAlchemy",
+    tags: ["orm", "python", "postgres"],
+    summary: "Python ORM and query builder for Postgres — models, relationships, and session management.",
+    recommendation: "Pairs with Alembic for migrations. I keep queries explicit in hot paths instead of lazy-loading surprises in production.",
+    details: [
+      "Use async sessions with FastAPI for serverless-friendly handlers.",
+      "Index foreign keys and filter columns you query on every list endpoint.",
+    ],
+    href: "https://www.sqlalchemy.org/",
+    hrefLabel: "sqlalchemy.org",
+  },
+  {
+    id: "alembic",
+    section: "backend",
+    title: "Alembic",
+    tags: ["migrations", "postgres", "schema"],
+    summary: "Database migration tool for SQLAlchemy — versioned schema changes with up/down revisions.",
+    recommendation: "Every schema change gets a migration file, not a manual ALTER in prod. Review migrations like code — destructive changes need a rollout plan.",
+    href: "https://alembic.sqlalchemy.org/",
+    hrefLabel: "alembic.sqlalchemy.org",
+  },
+  {
+    id: "pytest",
+    section: "backend",
+    title: "pytest",
+    tags: ["testing", "python", "api"],
+    summary: "Python test runner — fixtures, parametrized cases, and clean assertions for API suites.",
+    recommendation: "API tests are the safety net behind auth and payment flows. I test happy path, 401/403, and validation errors — not just 200 OK.",
+    href: "https://docs.pytest.org/",
+    hrefLabel: "docs.pytest.org",
+  },
+  {
+    id: "httpx",
+    section: "backend",
+    title: "HTTPX",
+    tags: ["http", "testing", "async"],
+    summary: "Modern HTTP client for Python — sync and async, great for calling external APIs and writing API tests.",
+    recommendation: "Use with pytest and FastAPI TestClient for integration tests that hit real route handlers without spinning up a browser.",
+    href: "https://www.python-httpx.org/",
+    hrefLabel: "python-httpx.org",
+  },
+
+  // —— Databases ——
+  {
+    id: "postgresql",
+    section: "databases",
+    title: "PostgreSQL",
+    tags: ["sql", "relational", "production"],
+    summary: "Reliable relational database — JSONB, full-text search, constraints, and transactions done right.",
+    recommendation: "Default when data has relationships and integrity rules. I model roles, notes, forms, and audit trails here — not in scattered JSON files.",
+    details: [
+      "Use constraints and foreign keys; let the DB enforce what the API promises.",
+      "Explain ANALYZE on slow list endpoints before adding cache layers.",
+    ],
+    href: "https://www.postgresql.org/docs/",
+    hrefLabel: "postgresql.org",
+  },
+  {
+    id: "neon",
+    section: "databases",
+    title: "Neon",
+    tags: ["postgres", "serverless", "branching"],
+    summary: "Serverless Postgres — branching, autoscaling, and connection pooling for modern deploy targets.",
+    recommendation: "What I use for production Postgres on Vercel/Railway stacks. Branch per feature for safe schema experiments without touching prod data.",
+    details: [
+      "Use the pooled connection string in serverless handlers — raw connections exhaust limits fast.",
+      "Scale-to-zero saves cost on side projects; watch cold-start latency on first query.",
+    ],
+    href: "https://neon.tech/docs/introduction",
+    hrefLabel: "neon.tech",
+  },
+  {
+    id: "redis",
+    section: "databases",
+    title: "Redis",
+    tags: ["cache", "pub-sub", "real-time"],
+    summary: "In-memory data store — caching, pub/sub, rate-limit counters, and session backing.",
+    recommendation: "QuickPad uses Redis pub/sub so multiple API instances broadcast Yjs updates. Also my go-to for rate limits and short-lived tokens.",
+    href: "https://redis.io/docs/",
+    hrefLabel: "redis.io",
+  },
+  {
+    id: "upstash",
+    section: "databases",
+    title: "Upstash Redis",
+    tags: ["serverless", "redis", "rate-limiting"],
+    summary: "Serverless Redis with REST and SDK access — no connection-pool headaches on edge/serverless runtimes.",
+    recommendation: "Drop-in when you need Redis from Vercel functions without managing a persistent connection. I use it for rate limits and lightweight queues.",
+    href: "https://upstash.com/docs/redis",
+    hrefLabel: "upstash.com",
+  },
+  {
+    id: "prisma",
+    section: "databases",
+    title: "Prisma",
+    tags: ["orm", "typescript", "migrations"],
+    summary: "Type-safe ORM for Node/Next.js — schema-first models, migrations, and generated client types.",
+    recommendation: "Reach for it on Next.js-only stacks where the API lives in route handlers. On Python services I stay with SQLAlchemy + Alembic.",
+    href: "https://www.prisma.io/docs",
+    hrefLabel: "prisma.io",
+  },
+
+  // —— Auth & security ——
+  {
+    id: "jwt",
+    section: "auth",
+    title: "JWT sessions",
+    tags: ["auth", "tokens", "api"],
+    summary: "Signed tokens for stateless auth — access tokens, refresh flows, and scoped API access.",
+    recommendation: "FormForge and QuickPad use JWT for session unlock after password verification. Short expiry + HttpOnly cookies where the browser is involved; bearer tokens for API-only clients.",
+    details: [
+      "Never store sensitive claims in the payload — it's readable, not encrypted.",
+      "Rotate signing keys and plan a logout story (blocklist or short TTL).",
+    ],
+    href: "https://jwt.io/introduction",
+    hrefLabel: "jwt.io",
+  },
+  {
+    id: "argon2",
+    section: "auth",
+    title: "Argon2 password hashing",
+    tags: ["security", "passwords", "crypto"],
+    summary: "Memory-hard password hashing — resistant to GPU cracking, winner of the Password Hashing Competition.",
+    recommendation: "QuickPad hashes note passwords with Argon2 before storage. Plaintext passwords never touch the database — compare hashes server-side only.",
+    href: "https://github.com/P-H-C/phc-winner-argon2",
+    hrefLabel: "PHC Argon2",
+  },
+  {
+    id: "rbac",
+    section: "auth",
+    title: "RBAC & permission maps",
+    tags: ["authorization", "roles", "enterprise"],
+    summary: "Role-based access control — map roles to permissions and enforce the same rules in UI guards and API middleware.",
+    recommendation: "Healthcare and admin tools taught me to model permissions once and share them between frontend route guards and backend middleware. Drift between the two is how bugs become breaches.",
+    details: [
+      "Prefer resource + action permissions over hard-coded role checks in every handler.",
+      "Log denied access attempts — they're early signals of misconfiguration or abuse.",
+    ],
+  },
+  {
+    id: "rate-limiting",
+    section: "auth",
+    title: "Rate limiting",
+    tags: ["security", "abuse", "redis"],
+    summary: "Throttle requests per IP, user, or API key — protect login, public endpoints, and expensive operations.",
+    recommendation: "Public note creation and auth endpoints get rate limits first. Redis or Upstash counters with sliding windows — return 429 with Retry-After, not a silent hang.",
+    details: [
+      "Stricter limits on POST /login and password-unlock routes.",
+      "Separate budgets for read vs write on shared public APIs.",
+    ],
+  },
+  {
+    id: "owasp-api",
+    section: "auth",
+    title: "OWASP API Security Top 10",
+    tags: ["security", "reference", "checklist"],
+    summary: "Industry checklist for API risks — broken auth, excessive data exposure, lack of rate limiting, and more.",
+    recommendation: "I skim this before shipping any public endpoint. Good for interview prep and for catching gaps a feature checklist won't mention.",
+    href: "https://owasp.org/API-Security/editions/2023/en/0x00-header/",
+    hrefLabel: "owasp.org",
+  },
+  {
+    id: "nextauth-better-auth",
+    section: "auth",
+    title: "Better Auth / Auth.js",
+    tags: ["nextjs", "sessions", "oauth"],
+    summary: "Auth libraries for Next.js — email/password, OAuth providers, and session management without rolling your own.",
+    recommendation: "When the app is Next.js-first and doesn't need a separate Python API, start here instead of custom JWT glue. For split FastAPI + Next stacks, keep auth logic on the API and treat the client as a token holder.",
+    href: "https://www.better-auth.com/docs",
+    hrefLabel: "better-auth.com",
+  },
+
   // —— AI libraries ——
   {
     id: "vercel-ai-sdk",
@@ -169,26 +401,6 @@ export const KNOWLEDGE: KnowledgeItem[] = [
     href: "https://platform.openai.com/docs/libraries",
     hrefLabel: "openai.com",
   },
-  {
-    id: "tanstack-query",
-    section: "ai-libraries",
-    title: "TanStack Query",
-    tags: ["data-fetching", "cache"],
-    summary: "Server state for AI features — caching prompts, invalidating after tool runs, optimistic UI.",
-    recommendation: "Pairs well with streaming: cache metadata, stream the message body separately.",
-    href: "https://tanstack.com/query/latest",
-    hrefLabel: "tanstack.com",
-  },
-  {
-    id: "zod",
-    section: "ai-libraries",
-    title: "Zod",
-    tags: ["validation", "typescript"],
-    summary: "Schema validation for tool args, API responses, and structured LLM outputs.",
-    recommendation: "Essential when agents return JSON — validate before rendering tool-call cards.",
-    href: "https://zod.dev/",
-    hrefLabel: "zod.dev",
-  },
 
   // —— AI tools (dev-focused — not chatbots) ——
   {
@@ -197,7 +409,7 @@ export const KNOWLEDGE: KnowledgeItem[] = [
     title: "Cursor",
     tags: ["ide", "agent", "daily-driver"],
     summary: "AI-native code editor — codebase-aware chat, Composer for multi-file edits, and project rules.",
-    recommendation: "What I use every day for frontend work. Best for scoped features, refactors, and navigating unfamiliar repos.",
+    recommendation: "What I use every day for engineering work. Best for scoped features, refactors, and navigating unfamiliar repos.",
     details: [
       "Set up .cursor/rules for project conventions.",
       "Composer for end-to-end features; inline edit for small fixes.",
@@ -316,11 +528,25 @@ export const KNOWLEDGE: KnowledgeItem[] = [
 
   // —— Dev tools ——
   {
+    id: "tanstack-query",
+    section: "dev-tools",
+    title: "TanStack Query",
+    tags: ["data-fetching", "cache", "react"],
+    summary: "Server state for React — caching, background refetch, mutations, and optimistic updates.",
+    recommendation: "My default for anything that talks to an API: dashboards, lists, and forms. Stale-while-revalidate beats hand-rolled useEffect + fetch.",
+    details: [
+      "Invalidate queries after mutations so lists stay in sync with the server.",
+      "Pairs well with streaming AI UIs — cache session metadata, stream the message body separately.",
+    ],
+    href: "https://tanstack.com/query/latest",
+    hrefLabel: "tanstack.com",
+  },
+  {
     id: "chrome-devtools",
     section: "dev-tools",
     title: "Chrome DevTools",
     tags: ["debugging", "performance"],
-    summary: "Elements, Network, Performance, and Application tabs — non-negotiable for frontend.",
+    summary: "Elements, Network, Performance, and Application tabs — non-negotiable for full-stack debugging.",
     recommendation: "Network tab for SSE streams; Performance for layout jank; Application for PWA and storage.",
     href: "https://developer.chrome.com/docs/devtools/",
     hrefLabel: "Chrome docs",

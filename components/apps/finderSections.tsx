@@ -80,7 +80,7 @@ function FinderProjectCard({
   liveUrl,
   onLiveDemo,
   highlightsLabel = "My role",
-  challengesLabel = "Frontend challenges",
+  challengesLabel = "Engineering challenges",
 }: FinderProjectCardProps) {
   const a = ACCENT[accent];
   const hasLinks = Boolean(githubUrl || liveUrl);
@@ -199,8 +199,8 @@ export function ProjectsSection() {
 export function WorkSection() {
   return (
     <SectionDoc
-      title="Selected Work"
-      subtitle="Professional modules and product UIs — built for employers and clients."
+      title="Use cases"
+      subtitle="Problems I've shipped across employers and clients — UI, APIs, data, and auth working together."
     >
       <div className="space-y-5">
         {projects.map((p) => {
@@ -212,7 +212,9 @@ export function WorkSection() {
               title={p.title}
               overview={cs.overview}
               highlights={cs.role}
+              highlightsLabel="What I shipped"
               challenges={cs.challenges}
+              challengesLabel="Challenges"
               impact={cs.improved}
               stack={p.stack}
               accent={p.accent}
@@ -322,7 +324,7 @@ export function ExperienceSection() {
 
 export function NotesSection() {
   return (
-    <SectionDoc title="Notes" subtitle="How I think about frontend.">
+    <SectionDoc title="Notes" subtitle="How I think about building software — problems, trade-offs, and what I'd do again.">
       <div className="space-y-4">
         {notes.map((n) => (
           <article

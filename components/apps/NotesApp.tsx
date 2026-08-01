@@ -51,7 +51,7 @@ export function NotesApp() {
           >
             <div className="mb-1 flex items-center gap-2 text-mint">
               <NotebookPen className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase tracking-wider text-faint">Frontend note</span>
+              <span className="text-xs font-medium uppercase tracking-wider text-faint">Engineering note</span>
             </div>
             <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">{note.title}</h1>
             <p className="mt-1 text-xs text-faint">{note.updated}</p>

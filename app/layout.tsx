@@ -19,8 +19,8 @@ const display = Fraunces({
   weight: ["400", "500", "600", "700"],
 });
 
-const TITLE = "Jai Sehgal — Frontend Developer Portfolio";
-const DESCRIPTION = `Jai Sehgal is a Frontend Developer with ${experienceYM()} years of experience building Next.js, React and TypeScript apps — real-time dashboards, chat systems, payment flows and AI-driven product UIs. Explore the work in an interactive OS-style portfolio (JaiOS).`;
+const TITLE = "Jai Sehgal — Software Engineer Portfolio";
+const DESCRIPTION = `Jai Sehgal is a Software Engineer with ${experienceYM()} years of experience building full-stack products — Next.js, FastAPI, PostgreSQL, real-time systems, auth, and AI workflows. Explore use cases and projects in an interactive OS-style portfolio (JaiOS).`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -33,8 +33,7 @@ export const metadata: Metadata = {
   keywords: [
     "Jai Sehgal",
     "Jai Sehgal portfolio",
-    "Frontend Developer",
-    "Frontend Engineer",
+    "Software Engineer",
     "React Developer",
     "Next.js Developer",
     "TypeScript",
@@ -64,7 +63,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: TITLE,
-    description: "JaiOS — frontend craft, packaged as an operating system.",
+    description: `JaiOS — ${site.tagline}`,
   },
   robots: {
     index: true,
@@ -111,7 +110,9 @@ const jsonLd = {
         "Server-Sent Events",
         "Real-time UI",
         "AI product interfaces",
-        "Frontend architecture",
+        "Full-stack architecture",
+        "PostgreSQL",
+        "FastAPI",
       ],
       sameAs: [links.linkedin, links.github],
     },

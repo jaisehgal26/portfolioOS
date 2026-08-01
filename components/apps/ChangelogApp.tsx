@@ -38,7 +38,7 @@ function EntryCard({ entry, defaultOpen }: { entry: ChangelogEntry; defaultOpen:
   return (
     <article className="relative pl-8">
       <span
-        className="absolute left-0 top-5 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-accent bg-surface ring-4 ring-bg"
+        className="absolute left-3 top-5 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-accent bg-surface ring-4 ring-bg"
         aria-hidden
       />
 
@@ -86,9 +86,9 @@ function EntryCard({ entry, defaultOpen }: { entry: ChangelogEntry; defaultOpen:
           <div className="overflow-hidden">
             <ul className="space-y-2 border-t border-line pt-3">
               {entry.body.map((line, i) => (
-                <li key={i} className="flex gap-2 text-sm leading-relaxed text-ink/90">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
-                  {line}
+                <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-ink/90">
+                  <span className="mt-[0.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
+                  <span>{line}</span>
                 </li>
               ))}
             </ul>
@@ -145,7 +145,11 @@ export function ChangelogApp() {
       {entries.length === 0 ? (
         <p className="py-10 text-center text-sm text-faint">No entries for this filter.</p>
       ) : (
-        <div className="relative space-y-6 border-l border-line/80 pb-2 pl-4">
+        <div className="relative space-y-6 pb-2">
+          <div
+            className="pointer-events-none absolute bottom-2 left-3 top-2 w-px bg-line/80"
+            aria-hidden
+          />
           {entries.map((entry, i) => (
             <EntryCard key={entry.id} entry={entry} defaultOpen={i === 0} />
           ))}

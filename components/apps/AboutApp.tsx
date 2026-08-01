@@ -11,7 +11,7 @@ export function AboutApp() {
     { k: "Experience", v: profile.experience },
     { k: "Current", v: "Velotio Technologies" },
     { k: "Location", v: profile.location },
-    { k: "Focus", v: "Real-time Agentic UIs" },
+    { k: "Focus", v: "Full-stack product systems" },
   ];
 
   return (
@@ -68,12 +68,10 @@ export function AboutApp() {
 
       <figure className="mt-7 border-l-2 border-accent/40 pl-4">
         <blockquote className="text-pretty font-display text-base leading-relaxed text-muted">
-          “An interface is a promise. Every skeleton, every optimistic update, every quiet retry is
-          you telling the user I&apos;ve got this — and engineering is just keeping that promise at
-          sixty frames a second.”
+          &ldquo;{profile.quote}&rdquo;
         </blockquote>
         <figcaption className="mt-2 text-[11px] text-faint">
-          On building interfaces — {profile.name}
+          {profile.quoteLabel} — {profile.name}
         </figcaption>
       </figure>
 

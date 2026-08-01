@@ -28,34 +28,35 @@ const processes: { name: string; group: string; load: number }[] = [
   { name: "TypeScript", group: "Language", load: 96 },
   { name: "React.js", group: "Framework", load: 94 },
   { name: "Next.js", group: "Framework", load: 90 },
-  { name: "Tailwind CSS", group: "Styling", load: 88 },
-  { name: "Zustand / Redux", group: "State", load: 83 },
-  { name: "WebSockets / SSE", group: "Real-time", load: 80 },
-  { name: "Framer Motion", group: "Motion", load: 75 },
-  { name: "React Query", group: "Data", load: 71 },
-  { name: "shadcn/ui", group: "Styling", load: 68 },
-  { name: "Vercel AI SDK", group: "AI UI", load: 64 },
+  { name: "FastAPI", group: "Backend", load: 88 },
+  { name: "PostgreSQL", group: "Data", load: 86 },
+  { name: "Tailwind CSS", group: "Styling", load: 84 },
+  { name: "Zustand / Redux", group: "State", load: 81 },
+  { name: "WebSockets / SSE", group: "Real-time", load: 78 },
+  { name: "Redis / Upstash", group: "Data", load: 74 },
+  { name: "Vercel AI SDK", group: "AI", load: 70 },
 ];
 
 /** Skill groups resident in "memory" — width ∝ skill count. */
 const memory: { name: string; count: number }[] = [
-  { name: "Core frontend", count: 6 },
-  { name: "Styling & UI", count: 5 },
-  { name: "State & data", count: 5 },
-  { name: "Real-time", count: 5 },
-  { name: "Delivery", count: 5 },
-  { name: "AI product UI", count: 3 },
-  { name: "Testing", count: 3 },
+  { name: "Frontend stack", count: 5 },
+  { name: "Backend stack", count: 5 },
+  { name: "UI engineering", count: 4 },
+  { name: "Databases & state", count: 4 },
+  { name: "Real-time systems", count: 4 },
+  { name: "Auth & security", count: 3 },
+  { name: "AI & analytics", count: 3 },
+  { name: "Cloud & DevOps", count: 3 },
 ];
 const memoryTotal = memory.reduce((sum, g) => sum + g.count, 0);
-const memoryTiers = [1, 0.82, 0.66, 0.52, 0.42, 0.32, 0.24];
+const memoryTiers = [1, 0.84, 0.7, 0.58, 0.48, 0.38, 0.3, 0.22];
 
 const specs: { icon: LucideIcon; label: string; value: string; sub: string }[] = [
-  { icon: Cpu, label: "Chip", value: "Sehgal Frontend Engine", sub: `${experienceYM()} yrs · 8-core focus` },
-  { icon: MemoryStick, label: "Memory", value: "React · Next.js · TypeScript", sub: "Unified, fully typed" },
-  { icon: Sparkles, label: "Neural engine", value: "Streaming AI UI cores", sub: "SSE · tool-calls · reasoning" },
-  { icon: MonitorSmartphone, label: "Display", value: "Pixel-perfect Retina UI", sub: "Responsive · accessible" },
-  { icon: HardDrive, label: "Storage", value: "5 flagship case studies", sub: "Deep-dive narratives" },
+  { icon: Cpu, label: "Chip", value: "Sehgal Full-Stack Engine", sub: `${experienceYM()} yrs · UI + API + data` },
+  { icon: MemoryStick, label: "Memory", value: "React · Next.js · FastAPI", sub: "Typed end-to-end" },
+  { icon: Sparkles, label: "Neural engine", value: "Agentic + AI-assisted cores", sub: "SSE · tool-calls · MCP" },
+  { icon: MonitorSmartphone, label: "Display", value: "Product surfaces · APIs", sub: "Responsive · accessible" },
+  { icon: HardDrive, label: "Storage", value: "8 use cases · 3 projects", sub: "Deep-dive narratives" },
   { icon: Wifi, label: "Connectivity", value: "REST · GraphQL · WS · SSE", sub: "Resilient, reconnecting" },
 ];
 

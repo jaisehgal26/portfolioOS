@@ -19,6 +19,40 @@ export interface ChangelogEntry {
 /** Newest first — append new ships at the top. */
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "use-cases",
+    date: "2026-07-23",
+    version: "1.14.0",
+    title: "Use cases — problem domains at work",
+    tags: ["feature", "system"],
+    summary:
+      "Eight use-case cards in Finder — streaming agents, payments, RBAC, live messaging, clinical ops, and more.",
+    body: [
+      "Finder → Use cases: narrative cards for professional work — UI, APIs, data, and auth in each story.",
+      "Domains covered: agentic streaming UX, payment settlement, RBAC, real-time chat, healthcare ops, admin bulk tools, job portals, AI in-product.",
+      "Spotlight, shortcuts, notifications, and guided tour link here directly.",
+      "Kept separate from Projects — no public repo or live-demo links on these cards.",
+    ],
+    why: "Shows how I think about production problems without exposing client-specific URLs.",
+    relatedApp: "finder",
+  },
+  {
+    id: "projects-showcase",
+    date: "2026-07-23",
+    version: "1.13.0",
+    title: "Projects — GitHub repos & live demos",
+    tags: ["feature"],
+    summary:
+      "Finder → Projects: QuickPad, FormForge, and Old Portfolio — previews, stack, GitHub, and in-app live demo.",
+    body: [
+      "Each card: highlights, challenges, impact, and stack — same depth as use cases, with public links.",
+      "GitHub opens in a new tab; Live demo opens in the in-app Browser.",
+      "Browser bookmarks auto-populated from project live URLs.",
+      "Mini previews for portfolio, notepad, and formbuilder mockups.",
+    ],
+    why: "Code and a running demo beat a bullet list — click through when you want proof.",
+    relatedApp: "finder",
+  },
+  {
     id: "piano-app",
     date: "2026-07-19",
     version: "1.12.0",
@@ -90,7 +124,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "ASCII architecture diagram, GitHub source link, offline static content.",
       "Covers Zustand, Serwist, accessibility, and why-not-Electron decisions.",
     ],
-    why: "Senior frontend signal — I can explain my own system design, not just ship pixels.",
+    why: "Senior engineering signal — I can explain my own system design, not just ship features.",
     relatedApp: "finder",
   },
   {
@@ -187,7 +221,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "4-tier clearance meter persisted in localStorage.",
       "Camouflaged sparkle button on desktop (bottom-left).",
     ],
-    why: "Rewards curiosity — a frontend superpower I want on my team.",
+    why: "Rewards curiosity — an engineering superpower I want on my team.",
     relatedApp: "secret",
   },
   {
@@ -278,7 +312,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "Theme, wallpaper, accent, and sound preferences.",
       "Built with Next.js, React, TypeScript, Tailwind, Zustand, Framer Motion.",
     ],
-    why: "A portfolio should demonstrate product UI craft — not just list projects.",
+    why: "A portfolio should demonstrate full-stack engineering craft — not just list projects.",
     relatedApp: "about",
   },
 ];

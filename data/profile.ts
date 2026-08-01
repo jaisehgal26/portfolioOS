@@ -18,27 +18,40 @@ const EXP = experienceYM();
 
 export const profile = {
   name: "Jai Sehgal",
-  role: "Frontend Developer",
+  role: "Software Engineer",
   location: "India",
   experience: `${EXP} years`,
 
-  supporting: `I'm a Frontend Developer with ${EXP} years of experience building Next.js, React, TypeScript and SSE/WebSocket-powered interfaces — dashboards, chat systems, payment flows, AI-driven UIs, and scalable product experiences.`,
+  supporting: `I'm a Software Engineer with ${EXP} years of experience building full-stack products — Next.js and React on the surface, FastAPI and Postgres underneath, with real-time systems, auth, and AI-driven workflows shipped end to end.`,
 
   aboutIntro:
-    "I'm a frontend developer who builds polished, responsive, real-world product interfaces. My work usually sits around complex product flows — real-time dashboards, payment systems, chat interfaces, AI-driven UIs, healthcare tools, admin platforms, and scalable React/Next.js applications.",
+    "I'm a software engineer who ships complete product slices — not just screens. I work across UI, APIs, databases and deployment: real-time dashboards, payment flows, collaborative tools, form builders, healthcare ops, and agentic AI surfaces. I care about the seams where frontend state, server truth and auth have to agree.",
 
   highlights: [
-    `${EXP} years of frontend experience`,
-    "Strong in Next.js, React, TypeScript",
-    "Real-time UI using SSE and WebSockets",
-    "AI-driven frontend interfaces",
-    "Dashboards, payments, chat, RBAC, healthcare workflows",
-    "Production-ready component systems",
+    `${EXP} years building production software end to end`,
+    "Full-stack delivery — Next.js, FastAPI, PostgreSQL, Redis",
+    "Real-time systems — SSE, WebSockets, Yjs, pub/sub",
+    "Auth & RBAC — JWT sessions, role-scoped APIs, public endpoints",
+    "AI product surfaces — streaming agents, in-context suggestions",
+    "Shipped on Vercel, Neon, Railway, Render",
   ],
 
-  coreStack: ["Next.js", "React.js", "TypeScript", "Tailwind CSS", "Redux", "Zustand", "SSE", "WebSockets"],
+  coreStack: [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "FastAPI",
+    "PostgreSQL",
+    "Redis",
+    "Tailwind CSS",
+    "WebSockets",
+  ],
 
-  summary: `Frontend Developer with ${EXP} years of experience specializing in Next.js, React.js, TypeScript, JavaScript, Redux/Zustand, and scalable frontend systems. Skilled in real-time applications using WebSockets and SSE, REST/GraphQL integrations, testing, performance optimization, accessibility, and production-ready UI development.`,
+  quote:
+    "Software is a promise across every layer — the button, the API, the row in the database. My job is to engineer those layers so they still tell the same story when the network flakes, the model stalls, or three roles open the same screen.",
+  quoteLabel: "On engineering systems that hold up",
+
+  summary: `Software Engineer with ${EXP} years of experience across Next.js, React, TypeScript, FastAPI, PostgreSQL, and Redis. Builds real-time products with WebSockets and SSE, auth and RBAC, AI-assisted workflows, and production deployments on modern cloud platforms.`,
 
   education: {
     school: "Amity University",
@@ -65,8 +78,9 @@ export const links = {
 
 export const site = {
   name: "Jai Sehgal",
-  title: "Jai Sehgal — Frontend Developer",
+  title: "Jai Sehgal — Software Engineer",
   description:
-    "Frontend Developer specializing in Next.js, React, TypeScript, real-time UI, dashboards, and scalable product interfaces.",
+    "Software Engineer building full-stack products — Next.js, FastAPI, PostgreSQL, real-time systems, auth, and AI workflows.",
+  tagline: "Software engineering, packaged as an operating system.",
   url: "https://jaisehgal.com",
 } as const;

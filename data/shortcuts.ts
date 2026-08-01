@@ -96,7 +96,7 @@ export const SHORTCUTS: ShortcutDef[] = [
   },
   {
     id: "finder-work",
-    label: "Finder → Work",
+    label: "Finder → Use cases",
     category: "Apps",
     keys: ["mod", "2"],
     searchTerms: "projects case studies portfolio",

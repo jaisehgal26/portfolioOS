@@ -69,7 +69,7 @@ const QUOTES: Quote[] = [
   { content: "The details are not the details. They make the design.", author: "Charles Eames" },
   { content: "Programs must be written for people to read.", author: "Harold Abelson" },
   { content: "Any sufficiently advanced technology is indistinguishable from magic.", author: "Arthur C. Clarke" },
-  { content: "Curiosity is a frontend superpower.", author: "Jai Sehgal" },
+  { content: "Curiosity is an engineering superpower.", author: "Jai Sehgal" },
 ];
 
 function pickQuote(exclude?: Quote): Quote {

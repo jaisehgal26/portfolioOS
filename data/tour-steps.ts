@@ -19,14 +19,14 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "welcome",
     title: "Welcome to JaiOS",
-    body: "This is my portfolio packaged as an operating system — explore work, résumé, and contact like you would on a real desktop.",
+    body: "This is my portfolio packaged as an operating system — explore use cases, projects, résumé, and contact like you would on a real desktop.",
     placement: "center",
     action: { type: "none" },
   },
   {
     id: "dock-finder",
     title: "Start in Finder",
-    body: "Finder is your hub — about, selected work, experience, skills, résumé, and contact all live here.",
+    body: "Finder is your hub — about, use cases, experience, skills, résumé, and contact all live here.",
     target: "dock-finder",
     placement: "top",
     action: { type: "none" },
@@ -41,8 +41,8 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "finder-work",
-    title: "Selected work",
-    body: "The Work section holds case-study narratives — problem, role, architecture, and what shipped.",
+    title: "Use cases",
+    body: "The Use cases section covers full-stack problems — payments, real-time, RBAC, AI surfaces, and what shipped.",
     target: "finder-work",
     placement: "right",
     action: { type: "open-finder", section: "work" },

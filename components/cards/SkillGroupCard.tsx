@@ -3,11 +3,11 @@ import {
   Database,
   FlaskConical,
   Palette,
-  Plug,
   Radio,
   Rocket,
+  Server,
+  Shield,
   Sparkles,
-  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import type { SkillGroup } from "@/data/skills";
@@ -18,14 +18,14 @@ import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, LucideIcon> = {
   code: Code2,
+  server: Server,
   palette: Palette,
   database: Database,
   radio: Radio,
-  plug: Plug,
+  shield: Shield,
   sparkles: Sparkles,
   flask: FlaskConical,
   rocket: Rocket,
-  wrench: Wrench,
 };
 
 export function SkillGroupCard({ group }: { group: SkillGroup }) {

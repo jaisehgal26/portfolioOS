@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@/store/os-store";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { site } from "@/data/profile";
 import { JaiLogo } from "./JaiLogo";
 
 const STEPS = [
@@ -38,7 +39,7 @@ export function BootScreen() {
       >
         <JaiLogo className="h-20 w-20 drop-shadow-[0_14px_34px_rgba(240,97,47,0.4)]" />
         <h1 className="mt-6 font-display text-3xl font-semibold tracking-tight text-ink">JaiOS</h1>
-        <p className="mt-1.5 text-sm text-muted">Frontend craft, packaged as an operating system.</p>
+        <p className="mt-1.5 text-sm text-muted">{site.tagline}</p>
 
         <div className="mt-8 h-5 overflow-hidden text-center">
           <AnimatePresence mode="wait">

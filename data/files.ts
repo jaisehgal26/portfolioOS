@@ -79,7 +79,7 @@ export const fileTree: FsFolder = {
       title: "Read me",
       ext: "md",
       body: [
-        "Welcome to JaiOS — a frontend portfolio built as a tiny operating system.",
+        "Welcome to JaiOS — a full-stack software engineering portfolio built as a tiny operating system.",
         "Browse these files in the explorer and open apps from the dock.",
         "Everything here is real React, TypeScript and Tailwind — no screenshots.",
       ],

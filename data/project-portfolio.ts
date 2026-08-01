@@ -8,6 +8,7 @@ import type { Accent, ProjectPreview } from "./projects";
  * Projects  = things you can actually show — code + live URL.
  *
  * 👉 ADD YOUR PROJECTS HERE.
+ * - accent: "accent" | "blue" | "violet" | "mint" | "amber"
  * - githubUrl  → opens in a new browser tab
  * - liveUrl    → opens in the in-OS Browser app (iframe)
  */
@@ -70,13 +71,53 @@ export const portfolioProjects: PortfolioProject[] = [
     liveUrl: "https://quickpad.jaisehgal.com",
   },
   {
+    id: "formforge",
+    title: "FormForge",
+    category: "Form Builder SaaS",
+    overview:
+      "A production-grade form builder — Google Forms / Typeform style — where teams design drag-and-drop forms, publish branded public pages via shareable slugs, and analyze submissions with real-time analytics.",
+    highlights: [
+      "Built the full stack as a Next.js + FastAPI monorepo with TypeScript, Tailwind CSS, shadcn/ui, PostgreSQL, Redis, and Alembic migrations.",
+      "Shipped a drag-and-drop builder with 14 field types, conditional logic, multi-step flows, autosave, and undo/redo powered by Zustand and @dnd-kit.",
+      "Added password-protected forms, expiration dates, response limits, JWT auth (HttpOnly cookies), and Redis/Upstash rate limiting on public submissions.",
+      "Built analytics dashboards with funnel drop-off, per-question stats, completion trends (Recharts), and CSV export — backed by pytest API tests.",
+    ],
+    challenges: [
+      "Keeping builder schema, autosave, and normalized form_fields rows in sync without losing edits or collaborative state.",
+      "Evaluating conditional logic and multi-step branching correctly on the public form renderer.",
+      "Running a split Next.js + Python serverless monorepo on Vercel with Neon Postgres pooling and a Redis rate-limit fallback chain.",
+    ],
+    impact: [
+      "End-to-end form lifecycle — build, publish, collect responses, analyze, and export — in one product.",
+      "Frictionless sharing via /f/{slug} public URLs with mobile-first, accessible form rendering.",
+      "Production-ready deployment on Vercel + Neon with auth, access controls, and automated API test coverage.",
+    ],
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Zustand",
+      "Recharts",
+      "Vercel",
+      "Neon",
+    ],
+    accent: "violet",
+    preview: "formbuilder",
+    githubUrl: "https://github.com/jaisehgal26/dynamic-form-builder",
+    liveUrl: "https://formforge.jaisehgal.com",
+  },
+  {
     id: "old-portfolio",
     title: "Old Portfolio",
     category: "Personal Site",
     overview:
       "My previous personal portfolio — a single-page Next.js site with scroll-based sections for about, services, skills, resume, testimonials, and contact, deployed on Vercel.",
     highlights: [
-      "Built the full frontend with Next.js App Router, React 18, and TypeScript.",
+      "Built the full site with Next.js App Router, React 18, and TypeScript.",
       "Designed a dark, gold-accented single-page layout with Bootstrap 5 and custom CSS.",
       "Added scroll animations (AOS), a GSAP-powered custom cursor on desktop, and a typewriter hero.",
       "Structured resume content as animated timelines for experience, education, and projects.",

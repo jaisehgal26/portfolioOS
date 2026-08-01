@@ -134,7 +134,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
               )}
 
               {tab === "challenges" && (
-                <Block title="Frontend challenges">
+                <Block title="Engineering challenges">
                   <List items={cs.challenges} dot={accent.dot} />
                 </Block>
               )}

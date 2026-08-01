@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Jai Sehgal — Frontend Developer",
+    name: "Jai Sehgal — Software Engineer",
     short_name: "JaiOS",
     description:
-      "Interactive OS-style portfolio of Jai Sehgal — a Frontend Developer building Next.js, React and TypeScript product UIs.",
+      "Interactive OS-style portfolio of Jai Sehgal — a Software Engineer building full-stack products with Next.js, FastAPI, and PostgreSQL.",
     start_url: "/",
     scope: "/",
     display: "standalone",

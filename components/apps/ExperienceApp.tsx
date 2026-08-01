@@ -107,7 +107,7 @@ export function ExperienceDetail({ roleId }: { roleId: string }) {
           <div className={cn("mt-6 flex gap-3 rounded-2xl border p-4", accent.border, accent.softBg)}>
             <Lightbulb className={cn("mt-0.5 h-4 w-4 shrink-0", accent.text)} aria-hidden />
             <p className="text-sm text-ink">
-              <span className="font-semibold">Frontend lesson · </span>
+              <span className="font-semibold">Engineering lesson · </span>
               {role.lesson}
             </p>
           </div>

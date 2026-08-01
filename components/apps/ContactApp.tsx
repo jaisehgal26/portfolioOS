@@ -16,10 +16,10 @@ export function ContactApp() {
   return (
     <AppScroll>
       <h1 className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-        Let&apos;s build polished frontend products.
+        Let&apos;s build full-stack products.
       </h1>
       <p className="mt-2 max-w-xl leading-relaxed text-muted">
-        Have a frontend-heavy SaaS app, dashboard, real-time interface, or product UI to build? Let&apos;s connect.
+        Have a SaaS app, API, dashboard, real-time system, or end-to-end product slice to ship? Let&apos;s connect.
       </p>
 
       <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">

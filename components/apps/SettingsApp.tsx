@@ -5,6 +5,7 @@ import { Check, Clock, Moon, Sun, Zap, ZapOff } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { useOSStore } from "@/store/os-store";
 import { WALLPAPERS, ACCENTS } from "@/data/system";
+import { site } from "@/data/profile";
 import { JaiLogo } from "@/components/os/JaiLogo";
 import { cn } from "@/lib/utils";
 
@@ -122,12 +123,13 @@ export function SettingsApp() {
               <JaiLogo className="h-14 w-14 drop-shadow-[0_6px_16px_rgba(240,97,47,0.3)]" />
               <div>
                 <p className="font-display text-xl font-semibold tracking-tight text-ink">JaiOS</p>
-                <p className="text-sm text-muted">Version 1.0 · Frontend craft, packaged as an operating system.</p>
+                <p className="text-sm text-muted">Version 1.0 · {site.tagline}</p>
               </div>
             </div>
             <p className="text-sm leading-relaxed text-muted">
-              Built with Next.js, TypeScript, Tailwind CSS, Framer Motion and Zustand. Designed and
-              engineered by Jai Sehgal as an interactive portfolio.
+              Built with Next.js, TypeScript, Tailwind CSS, Framer Motion and Zustand — with FastAPI,
+              PostgreSQL, and Redis on production backends. Designed and engineered by Jai Sehgal as an
+              interactive portfolio.
             </p>
           </div>
         )}

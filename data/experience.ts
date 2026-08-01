@@ -18,7 +18,7 @@ export const experience: ExperienceItem[] = [
   {
     id: "velotio",
     company: "Velotio Technologies",
-    role: "Frontend Developer",
+    role: "Software Engineer",
     location: "Remote",
     period: "May 2025 — Present",
     current: true,
@@ -28,7 +28,7 @@ export const experience: ExperienceItem[] = [
       "Engineered an advanced chatbot interface using the Vercel AI SDK and Server-Sent Events.",
       "Built dynamic, adaptive UI that renders live tool calls, LLM actions and multi-step reasoning artifacts.",
       "Contributed to agentic solution architecture across voice bots and chatbots.",
-      "Led frontend development of a high-performance job portal and career page with Next.js and MUI.",
+      "Shipped a full-stack job portal and career page with Next.js, MUI, and API integration.",
     ],
     tech: ["Next.js", "React", "TypeScript", "Vercel AI SDK", "SSE", "MUI"],
     lesson: "Streaming UI needs first-class loading, partial, error and retry states — not just a happy path.",
@@ -43,7 +43,7 @@ export const experience: ExperienceItem[] = [
     summary:
       "Owned real-time, money-critical surfaces: payments, low-latency chat and dynamic role-based access.",
     contributions: [
-      "Led frontend design and development of a Payments module with React.js, Redux, TypeScript and backend APIs.",
+      "Owned end-to-end delivery of a Payments module — React.js, Redux, TypeScript, and backend APIs.",
       "Integrated SSE for real-time payment tracking.",
       "Built a scalable real-time chat application using WebSockets.",
       "Developed RBAC and dynamic permission management.",

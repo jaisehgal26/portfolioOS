@@ -19,7 +19,7 @@ export const META_CASE_STUDY = {
       id: "overview",
       title: "Overview — why an OS metaphor?",
       paragraphs: [
-        "Most portfolios are a long scroll. JaiOS is the opposite: a desktop you explore — open apps, drag windows, search with Spotlight, discover easter eggs. The metaphor isn't decoration; it's a UX frame that lets me show product thinking, interaction design, and frontend craft in one surface.",
+        "Most portfolios are a long scroll. JaiOS is the opposite: a desktop you explore — open apps, drag windows, search with Spotlight, discover easter eggs. The metaphor isn't decoration; it's a UX frame that lets me show product thinking, system design, and full-stack engineering craft in one surface.",
         "Recruiters get a memorable first impression. Engineers get a codebase they can actually read. Everyone gets a reason to stay longer than two minutes.",
       ],
     },

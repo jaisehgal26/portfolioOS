@@ -16,7 +16,7 @@ export function ContextMenu() {
   const menuRef = useDismissOnOutside<HTMLDivElement>(ctx.open, close);
 
   const items = [
-    { label: "Open Work", icon: FolderKanban, onClick: () => openFinderAt("work") },
+    { label: "Use cases", icon: FolderKanban, onClick: () => openFinderAt("work") },
     { label: "Open Resume", icon: FileText, onClick: () => openFinderAt("resume") },
     { label: "Open Contact", icon: Mail, onClick: () => openFinderAt("contact") },
     { sep: true as const },

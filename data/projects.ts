@@ -1,5 +1,10 @@
-export type ProjectPreview = "ai-chat" | "payments" | "chat" | "healthcare" | "inventory" | "portfolio" | "notepad";
+export type ProjectPreview = "ai-chat" | "payments" | "chat" | "healthcare" | "inventory" | "portfolio" | "notepad" | "formbuilder";
+
+/** Card accent colors — must match keys in lib/accent.ts */
 export type Accent = "accent" | "blue" | "violet" | "mint" | "amber";
+
+/** Use one of these for `accent` in project-portfolio.ts */
+export const PROJECT_ACCENTS = ["accent", "blue", "violet", "mint", "amber"] as const satisfies readonly Accent[];
 
 export interface CaseStudy {
   overview: string;
@@ -15,287 +20,365 @@ export interface CaseStudy {
 
 export interface Project {
   id: string;
+  /** Use-case headline — not a product codename. */
   title: string;
+  /** Domain tag, e.g. Fintech, Healthcare, Access control. */
   category: string;
-  /** Short problem statement shown on the card. */
   summary: string;
-  /** My contribution, one line. */
   contribution: string;
   stack: string[];
-  /** Key frontend challenge, one line. */
   challenge: string;
   accent: Accent;
   preview: ProjectPreview;
   caseStudy: CaseStudy;
 }
 
+/**
+ * Work tab — USE CASES you have shipped for employers/clients (no public links).
+ * Not a project gallery — each card is a problem class you have solved more than once.
+ * Showcase repos live in data/project-portfolio.ts.
+ *
+ * HOW TO EDIT:
+ * - title: name the use case ("Real-time payment settlement"), not the repo
+ * - role[]: mix UI + API + DB + auth bullets in one list — alternate layers
+ * - stack[]: interleave: ["Next.js", "PostgreSQL", "SSE", "Redis", "TypeScript"]
+ * - Reorder array to put strongest / most relevant use cases first
+ */
 export const projects: Project[] = [
   {
-    id: "agentic-ai-chat",
-    title: "Agentic AI Chat Interface",
-    category: "AI Product UI",
+    id: "agentic-streaming",
+    title: "Streaming agent & tool-call UX",
+    category: "AI product surfaces",
     summary:
-      "An AI assistant that runs long, multi-step tasks — but users were left staring at a spinner with no sense of progress or trust.",
+      "Long-running AI tasks where users need to see tools, reasoning and progress — not a spinner and silence.",
     contribution:
-      "Designed and built the streaming chat experience: live tool calls, reasoning artifacts and message states.",
-    stack: ["Next.js", "React", "TypeScript", "Vercel AI SDK", "SSE", "Tailwind CSS"],
-    challenge: "Make a long-running, streaming AI task feel transparent, calm and trustworthy.",
+      "End-to-end streaming surfaces — keyed UI state machines, SSE contracts, and recoverable multi-step runs.",
+    stack: ["Next.js", "TypeScript", "Vercel AI SDK", "SSE", "REST APIs", "Tailwind CSS"],
+    challenge: "Make opaque agent runs readable, trustworthy and recoverable.",
     accent: "violet",
     preview: "ai-chat",
     caseStudy: {
       overview:
-        "A dynamic chatbot interface that streams live tool calls, LLM actions and reasoning artifacts in real time using the Vercel AI SDK and Server-Sent Events. The interface lets people watch the assistant work instead of waiting in the dark.",
+        "When an assistant runs tools over many steps, the interface becomes the product. Streams arrive out of order, partial failures need retry paths, and users must understand what the system is doing before the final answer lands.",
       problem:
-        "Agent runs are opaque: a request goes in, then silence, then an answer. That erodes trust and makes failures impossible to read. The UI needed to narrate an unbounded, out-of-order stream of events clearly — without jumping around or stalling.",
+        "Agent runs feel like a black box: request in, silence, answer out. Without a narrated stream, users cannot trust slow work, cancel safely, or debug a bad tool call.",
       role: [
-        "Owned the end-to-end streaming chat UI.",
-        "Designed the contract that turns raw stream parts into stable, render-safe UI.",
-        "Built first-class loading, streaming, tool-call, error and retry states.",
+        "Built keyed message renderers with per-part state machines (pending → streaming → done → error).",
+        "Co-defined SSE event shapes with the API so tool calls and reasoning artifacts map to stable UI nodes.",
+        "Handled reconnect and partial-run recovery without duplicating conversation state.",
+        "Surfaced auth and rate-limit failures as explicit UI states instead of silent hangs.",
       ],
       challenges: [
-        "Rendering a continuous, out-of-order event stream without layout jumps.",
-        "Keeping the message tree stable while many parts update at once.",
-        "Communicating progress during slow, multi-step tasks.",
+        "Rendering unbounded, out-of-order streams without layout jumps.",
+        "Keeping client trees consistent when the API replays or corrects chunks.",
+        "Designing retry flows that preserve context across failed tool steps.",
       ],
-      uiStates: [
-        "Empty / first-run",
-        "Thinking & streaming",
-        "Tool-call in progress",
-        "Reasoning artifact",
-        "Error + retry",
-        "Final answer",
-      ],
+      uiStates: ["Empty", "Streaming", "Tool-call", "Reasoning", "Error + retry", "Final answer"],
       architecture: [
-        "Next.js App Router with a component-driven message renderer.",
-        "SSE transport feeding an event reducer into a keyed message model.",
-        "Each message part owns a small state machine (pending → streaming → done).",
+        "SSE reducer into a keyed message model shared with API types.",
+        "Component-level state machines per stream part.",
+        "Recoverable error boundaries tied to run ids.",
       ],
-      screens: [
-        "Streaming message bubbles with a soft typing caret.",
-        "Tool-call cards with arguments and status.",
-        "A reasoning-artifact timeline for multi-step plans.",
-      ],
+      screens: ["Streaming bubbles", "Tool-call cards", "Reasoning timeline"],
       improved: [
-        "Turned a black-box assistant into a transparent, readable experience.",
-        "Made failures recoverable without losing the conversation.",
+        "Turned opaque runs into inspectable, accountable workflows.",
+        "Reduced abandonment on slow multi-step tasks.",
       ],
-      next: [
-        "Add run replay so a conversation can be reviewed after the fact.",
-        "Virtualize very long runs to keep memory flat.",
-      ],
+      next: ["Run replay", "Virtualized long transcripts"],
     },
   },
   {
-    id: "realtime-payments",
-    title: "Real-Time Payments Module",
-    category: "Fintech UX",
+    id: "payment-settlement",
+    title: "Real-time payment settlement UX",
+    category: "Fintech",
     summary:
-      "Payments take time to settle, and uncertainty during that wait was driving anxiety and support tickets.",
+      "Money in flight — users, finance and support all need the same live truth about a transaction.",
     contribution:
-      "Led frontend development of the payments module with live, trustworthy status tracking.",
-    stack: ["React", "Redux", "TypeScript", "SSE", "REST APIs"],
-    challenge: "Turn unavoidable payment latency into calm, legible progress.",
+      "Payment timelines, Redux reconciliation, and webhook-aware status modelling across UI and Postgres.",
+    stack: ["React", "Redux", "TypeScript", "SSE", "PostgreSQL", "REST APIs"],
+    challenge: "Latency users cannot avoid — uncertainty they should never feel.",
     accent: "accent",
     preview: "payments",
     caseStudy: {
       overview:
-        "A payments module with real-time transaction tracking built on React, Redux, TypeScript and Server-Sent Events. It keeps people confident during the most anxious moment in any product — waiting for money to move.",
+        "Payments are asynchronous by nature. The use case is making pending → processing → settled/failed legible in the UI while Postgres and webhooks remain the source of truth after refresh or reconnect.",
       problem:
-        "Payment latency is unavoidable, but uncertainty is not. Users needed honest, live feedback through pending → processing → succeeded / failed, and a clear path to recover when something broke.",
+        "Users panic during settlement windows. Support tickets spike when the UI and database disagree. Duplicate submits make ambiguous states expensive.",
       role: [
-        "Led frontend design and development of the payments module.",
-        "Integrated SSE for real-time status transitions.",
-        "Designed the waiting-state UX so latency reads as progress, not a hang.",
+        "Designed per-transaction timelines and distinct success, failure and retry treatments.",
+        "Built a normalized client store reconciled against SSE feeds and REST snapshots.",
+        "Aligned idempotent payment intents and webhook transitions with shared status enums.",
+        "Mapped API error payloads to actionable next steps — retry, receipt, or contact support.",
       ],
       challenges: [
-        "Building trust during the wait without misleading the user.",
-        "Reconciling streamed events with REST snapshots.",
-        "Designing a recovery path that never leaves a transaction ambiguous.",
+        "Reconciling streams with Postgres rows when event order diverges.",
+        "Preventing double-submit without blocking legitimate retries.",
+        "Showing progress without promising settlement before webhook confirmation.",
       ],
       uiStates: ["Pending", "Processing", "Succeeded", "Failed", "Retrying", "Receipt"],
       architecture: [
-        "Normalized Redux transaction store reconciled against the SSE stream.",
-        "Per-transaction status machine driving the UI.",
-        "Error states that surface next steps, not dead ends.",
+        "SSE + REST into a keyed transaction store.",
+        "Shared status machine with the payments API.",
+        "Webhook-confirmed transitions only surfaced after server ack.",
       ],
-      screens: [
-        "A payment status timeline with soft transitions.",
-        "A transaction detail drawer with full history.",
-        "Distinct success, failed and retry treatments.",
-      ],
+      screens: ["Status timeline", "Detail drawer", "Receipt view"],
       improved: [
-        "Reduced support anxiety by making the wait legible.",
-        "Gave finance and support a shared, real-time view of state.",
+        "Cut support anxiety during settlement waits.",
+        "Gave finance and support a shared live view of state.",
       ],
-      next: [
-        "Optimistic settlement hints confirmed by webhooks.",
-        "A reconciliation diff when stream and snapshot disagree.",
-      ],
+      next: ["Settlement diff when stream and DB disagree"],
     },
   },
   {
-    id: "realtime-chat",
-    title: "Real-Time Chat Application",
-    category: "Real-Time UX",
+    id: "rbac-permissions",
+    title: "Role-based access & permission-driven UI",
+    category: "Access control",
     summary:
-      "A messaging product that needed to feel instant while staying correct across reconnects, devices and flaky networks.",
+      "Same product, different operators — doctors, admins, finance — each with different data and actions.",
     contribution:
-      "Built the WebSocket chat interface with presence, receipts and resilient reconnect behaviour.",
-    stack: ["React", "TypeScript", "WebSockets", "Redux"],
-    challenge: "Feel instant on the happy path while staying truthful at the edges.",
+      "RBAC across routes, components and APIs — permissions enforced on the server, reflected honestly in the UI.",
+    stack: ["React", "TypeScript", "JWT", "PostgreSQL", "REST APIs", "Redux"],
+    challenge: "Hide unauthorized actions without hiding the fact that roles differ.",
+    accent: "blue",
+    preview: "healthcare",
+    caseStudy: {
+      overview:
+        "Multi-role products fail when the UI only hides buttons. The use case is permission matrices that flow from JWT claims through API scopes into what each role can see, edit, or approve — in healthcare, admin and fintech settings alike.",
+      problem:
+        "Leaking an action a nurse cannot perform on the server is a safety issue. Leaking financial actions across roles is a compliance issue. Client-only guards are never enough.",
+      role: [
+        "Modelled role → permission maps shared between frontend route guards and API middleware.",
+        "Built view switchers that change data scope and controls together, not cosmetic tabs.",
+        "Handled forbidden states with clear messaging instead of broken screens.",
+        "Audited mutating endpoints to ensure UI affordances match server enforcement.",
+      ],
+      challenges: [
+        "Keeping role drift in sync when permissions change without redeploying all clients.",
+        "Rendering dense admin surfaces where every row action may be role-gated.",
+        "Testing matrix edge cases — impersonation, expired sessions, partial scopes.",
+      ],
+      uiStates: ["Role switch", "Scoped list", "Forbidden", "Elevated action", "Session expired"],
+      architecture: [
+        "JWT claims → permission resolver → route and component gates.",
+        "API returns 403 shapes the UI can render consistently.",
+        "Feature flags per role for gradual rollouts.",
+      ],
+      screens: ["Role switcher", "Scoped tables", "Permission-denied panel"],
+      improved: [
+        "Reduced unauthorized-action errors in clinical and admin flows.",
+        "Made role differences obvious to users instead of confusing.",
+      ],
+      next: ["Fine-grained field-level permissions"],
+    },
+  },
+  {
+    id: "live-messaging",
+    title: "Live messaging, presence & delivery truth",
+    category: "Real-time collaboration",
+    summary:
+      "Chat that must feel instant on good networks and honest on bad ones — reconnects included.",
+    contribution:
+      "WebSocket clients, optimistic sends, presence channels and offline queues reconciled with persisted messages.",
+    stack: ["React", "WebSockets", "Redis", "TypeScript", "REST APIs", "Redux"],
+    challenge: "Feel fast without lying about delivery when sockets flap.",
     accent: "blue",
     preview: "chat",
     caseStudy: {
       overview:
-        "A scalable WebSocket-based chat interface with low-latency updates and smooth cross-device UX. The hard part wasn't the happy path — it was staying correct through reconnects, ordering and offline gaps.",
+        "Messaging products live in the edges: typing indicators while disconnected, messages composed offline, read receipts across devices. The use case is optimistic UI bounded by server acks and a recovery story users can trust.",
       problem:
-        "Real-time messaging breaks at the edges: dropped sockets, out-of-order delivery, messages composed while offline. The UI had to feel instant while remaining honest about delivery state.",
+        "A chat that loses messages on reconnect destroys the product. A chat that shows 'delivered' too early destroys trust.",
       role: [
-        "Built the WebSocket client and message-state model.",
-        "Implemented typing indicators, presence and delivery / read receipts.",
-        "Designed reconnect and offline-queue behaviour.",
+        "Implemented multiplexed sockets with heartbeat and exponential backoff reconnect.",
+        "Designed optimistic append reconciled by server-issued message ids.",
+        "Built presence and typing on a side channel backed by Redis.",
+        "Flushed offline queues on reconnect without duplicate threads in the UI.",
       ],
       challenges: [
-        "Optimistic sends reconciled against server acknowledgements.",
-        "Presence and typing on a lightweight side channel.",
-        "Never losing a message across a reconnect.",
+        "Ordering and deduping after reconnect without visible jumps.",
+        "Matching delivery state to Redis presence when connections flap.",
+        "Keeping input enabled during reconnect with clear status affordances.",
       ],
-      uiStates: [
-        "Typing indicator",
-        "Online / offline presence",
-        "Delivered / read",
-        "Reconnecting",
-        "Offline queue",
-        "Message grouping",
-      ],
+      uiStates: ["Typing", "Online", "Delivered", "Reconnecting", "Offline queue"],
       architecture: [
-        "Single multiplexed socket with heartbeat + backoff reconnect.",
-        "Optimistic local append reconciled by message id.",
-        "Queued offline messages flushed on reconnect.",
+        "Socket client with backoff + idempotent send tokens.",
+        "Message store keyed by server id.",
+        "Presence fan-out separate from message stream.",
       ],
-      screens: [
-        "Grouped message threads with presence dots.",
-        "Animated typing indicator and receipts.",
-        "A reconnecting banner with backoff feedback.",
-      ],
+      screens: ["Thread view", "Typing indicator", "Reconnect banner"],
       improved: [
-        "Kept a low-latency feel without lying about delivery.",
-        "Survived flaky networks gracefully.",
+        "Maintained low-latency feel on flaky mobile networks.",
+        "Eliminated 'lost message' support tickets after reconnects.",
       ],
-      next: [
-        "Cross-device read-cursor sync for large threads.",
-        "End-to-end dedupe across multi-device sessions.",
-      ],
+      next: ["Cross-device read cursor sync"],
     },
   },
   {
-    id: "icu-ot",
-    title: "ICU & OT Management System",
-    category: "Healthcare Dashboards",
+    id: "clinical-live-ops",
+    title: "Clinical live ops & high-stakes dashboards",
+    category: "Healthcare",
     summary:
-      "Clinical teams needed live, role-aware dashboards where critical changes are impossible to miss — and impossible to misread.",
+      "Vitals, alerts and long forms under time pressure — where misread UI has real consequences.",
     contribution:
-      "Built live vitals dashboards, complex PAC forms, role-based views and discharge workflows.",
-    stack: ["React", "TypeScript", "Charts", "WebSockets", "RBAC"],
-    challenge: "High-stakes, multi-role data that must read clearly under pressure.",
+      "Live vitals boards, threshold alerts, PAC workflows and discharge summaries tied to clinical APIs.",
+    stack: ["React", "WebSockets", "PostgreSQL", "TypeScript", "RBAC", "REST APIs"],
+    challenge: "Dense, live data that must stay calm and unambiguous.",
     accent: "mint",
     preview: "healthcare",
     caseStudy: {
       overview:
-        "Healthcare dashboards with PAC forms, live vitals streaming, predictive visualizations, discharge workflows and role-based access control for doctors, nurses and admins.",
+        "ICU and OT tooling combines streaming vitals, legally sensitive forms and role-specific views. The use case is making critical changes impossible to miss without cry-wolf alert fatigue.",
       problem:
-        "Clinical UIs are high-stakes and multi-role. The same data must read differently for a doctor, a nurse and an admin, while live vitals and alert thresholds demand instant, unambiguous states.",
+        "Clinicians scan fast. A missed threshold or a form that loses progress mid-shift is not a UX bug — it is an operational risk.",
       role: [
-        "Built the live vitals visualizations and alert states.",
-        "Implemented complex PAC forms with clear, recoverable validation.",
-        "Built the role-based view switcher and discharge workflow.",
+        "Piped WebSocket vitals into charts with explicit, configurable thresholds.",
+        "Built PAC forms with inline validation aligned to server field rules.",
+        "Scoped dashboards per role using API-driven data filters, not hidden DOM.",
+        "Shipped discharge summaries from authoritative Postgres patient history.",
       ],
       challenges: [
-        "Designing alert states that can't be missed or misread.",
-        "Rendering role-aware UI without leaking unauthorized actions.",
-        "Keeping dense data calm and scannable.",
+        "Alert design that cannot be missed or ignored on noisy feeds.",
+        "Recoverable validation on multi-screen clinical workflows.",
+        "Performance when many vitals update per second across a ward view.",
       ],
-      uiStates: [
-        "Live vitals",
-        "Alert threshold",
-        "Role: doctor / nurse / admin",
-        "Form validation",
-        "Discharge summary",
-        "Loading & empty",
-      ],
+      uiStates: ["Live vitals", "Threshold breach", "Form error", "Discharge review"],
       architecture: [
-        "Streamed vitals updating charts with explicit thresholds.",
-        "Role drives both data scope and the rendered controls.",
-        "Accessible form engine with inline validation.",
+        "Stream → chart pipeline with threshold config per patient.",
+        "Form engine with server-aligned validation messages.",
+        "RBAC-scoped REST queries per clinical role.",
       ],
-      screens: [
-        "A live patient-vitals board with alert highlights.",
-        "Role-based view switcher.",
-        "A reviewable discharge summary.",
-      ],
+      screens: ["Vitals board", "PAC form", "Discharge summary"],
       improved: [
-        "Gave each role exactly the view and actions they need.",
-        "Made critical thresholds impossible to overlook.",
+        "Gave each role the right slice of patient data under pressure.",
+        "Made threshold breaches visually unmistakable.",
       ],
-      next: [
-        "Anomaly prediction overlays on the vitals charts.",
-        "Clinician-configurable thresholds per patient.",
-      ],
+      next: ["Clinician-configurable alert profiles"],
     },
   },
   {
-    id: "product-management",
-    title: "Product Management System",
-    category: "Admin Platform",
+    id: "admin-bulk-ops",
+    title: "Operational admin, bulk edits & inventory control",
+    category: "Enterprise admin",
     summary:
-      "An inventory tool drowning operators in rows, where spotting low stock and acting in bulk took far too long.",
+      "Thousands of rows, batch actions, stock thresholds — operators need speed without dangerous mistakes.",
     contribution:
-      "Built a responsive CRUD admin with auth, alerts, batch actions and AI-assisted suggestions.",
-    stack: ["React", "Redux", "Tailwind CSS", "Firebase Auth", "JWT", "REST APIs"],
-    challenge: "Make dense admin data effortless to scan and act on.",
+      "High-density tables, batch mutations, auth sessions and Postgres-backed alerts for low-stock workflows.",
+    stack: ["React", "Redux", "PostgreSQL", "Firebase Auth", "JWT", "Tailwind CSS"],
+    challenge: "Bulk speed with server-enforced safety rails.",
     accent: "amber",
     preview: "inventory",
     caseStudy: {
       overview:
-        "A responsive CRUD platform with role-based access, Firebase Auth, JWT sessions, AI-powered suggestions, notifications, inventory controls and stock alerts.",
+        "Inventory and ops admin is a use case of filters, selection, batch updates and threshold-driven notifications. The UI must stay fast while every mutation respects role scope and partial-failure semantics.",
       problem:
-        "Inventory tools drown operators in rows. The UI had to make low-stock and batch operations effortless while keeping auth and sessions robust.",
+        "Operators lose hours in spreadsheets-in-disguise. A batch update that half-fails without clarity creates inventory drift.",
       role: [
-        "Built the inventory table, filters, batch actions and stock alerts.",
-        "Wired Firebase Auth with JWT-based sessions.",
-        "Integrated AI-powered product suggestions and notifications.",
+        "Built sortable, selectable tables with filter state that survives navigation.",
+        "Wired Firebase Auth into JWT sessions with HttpOnly cookies and role guards.",
+        "Integrated REST bulk endpoints with optimistic UI bounded by per-row acks.",
+        "Surfaced Postgres-derived low-stock alerts without blocking core flows.",
       ],
       challenges: [
-        "Keeping a dense table fast, sortable and selectable.",
-        "Surfacing low stock without adding noise.",
-        "Safe, fast bulk operations.",
+        "Partial batch failure — surfacing which rows succeeded and which did not.",
+        "Keeping selection and scroll performant on large datasets.",
+        "Aligning every mutating action with server authorization rules.",
       ],
-      uiStates: [
-        "Inventory table",
-        "Filters",
-        "Batch actions",
-        "Empty state",
-        "Stock alert",
-        "Notification",
-      ],
+      uiStates: ["Filtered table", "Batch bar", "Partial failure", "Stock alert"],
       architecture: [
-        "Redux store with REST CRUD and derived stock selectors.",
-        "Role-scoped routes and controls.",
-        "Threshold-driven alerts and notifications.",
+        "Redux + derived selectors for stock thresholds.",
+        "Bulk API with row-level error payloads.",
+        "JWT middleware mirrored in client route guards.",
       ],
-      screens: [
-        "A sortable inventory table with selection.",
-        "Stock-alert cards for items below threshold.",
-        "A product-suggestion panel and batch action bar.",
-      ],
+      screens: ["Inventory grid", "Batch action bar", "Alert cards"],
       improved: [
-        "Cut the time to spot and act on low stock.",
-        "Made bulk operations safe and fast.",
+        "Cut time to spot and act on low stock.",
+        "Made bulk edits traceable and recoverable.",
       ],
-      next: [
-        "An audit trail for every inventory change.",
-        "Role-scoped batch permissions.",
+      next: ["Audit trail per inventory mutation"],
+    },
+  },
+  {
+    id: "job-portal-funnels",
+    title: "Job portals & high-traffic content funnels",
+    category: "Talent & growth",
+    summary:
+      "Search-heavy, SEO-sensitive career surfaces where performance and clarity directly affect conversion.",
+    contribution:
+      "Next.js job portals and career pages — fast listings, application flows and MUI-driven responsive layouts.",
+    stack: ["Next.js", "React", "TypeScript", "MUI", "REST APIs", "SSR"],
+    challenge: "Make complex hiring funnels feel simple on mobile and desktop.",
+    accent: "violet",
+    preview: "portfolio",
+    caseStudy: {
+      overview:
+        "Job portals combine search, filters, role pages and application handoffs. The use case is SSR-friendly listing performance, accessible forms and career content that still ships quickly as requirements change.",
+      problem:
+        "Slow listing pages hurt SEO and drop-off. Application flows that break on mobile kill conversion. Marketing and engineering need to iterate without rewriting the shell each time.",
+      role: [
+        "Led Next.js architecture for listing, detail and application routes with shared layout primitives.",
+        "Built filter and search UX with debounced queries against paginated REST APIs.",
+        "Optimised LCP on content-heavy pages with SSR and image discipline.",
+        "Structured MUI theming so career brand updates do not fork the codebase.",
       ],
+      challenges: [
+        "Balancing rich job metadata with fast first paint.",
+        "Accessible multi-step apply flows on small screens.",
+        "Keeping API pagination and UI filter state in sync across deep links.",
+      ],
+      uiStates: ["Search", "Filtered list", "Job detail", "Apply flow", "Confirmation"],
+      architecture: [
+        "App Router with SSR listings and client islands for interactivity.",
+        "Shared filter state in URL query params for shareable searches.",
+        "MUI theme tokens for marketing + app consistency.",
+      ],
+      screens: ["Job board", "Role detail", "Application form"],
+      improved: [
+        "Improved listing performance and mobile apply completion.",
+        "Gave recruiting a funnel they could iterate without full redeploys.",
+      ],
+      next: ["Saved searches and candidate return paths"],
+    },
+  },
+  {
+    id: "ai-in-product",
+    title: "AI-assisted recommendations inside product flows",
+    category: "Product intelligence",
+    summary:
+      "Suggestions and prompts embedded where users already work — not a separate chat window bolted on.",
+    contribution:
+      "In-context LLM suggestions with guardrails, loading states and fallbacks when models are slow or wrong.",
+    stack: ["React", "TypeScript", "ChatGPT API", "REST APIs", "Redis", "SSE"],
+    challenge: "Helpful suggestions without blocking the core task or hallucinating actions.",
+    accent: "mint",
+    preview: "ai-chat",
+    caseStudy: {
+      overview:
+        "Recommendation and assistive AI works best inside existing workflows — inventory suggestions, draft replies, classification hints. The use case is latency-aware UI, cached responses and clear human override.",
+      problem:
+        "Bolt-on chat distracts. Slow or wrong suggestions erode trust faster than no AI at all. Products need assistive patterns that fail open.",
+      role: [
+        "Embedded suggestion panels with explicit accept/dismiss and undo paths.",
+        "Cached and debounced prompt calls via Redis to protect rate limits and cost.",
+        "Designed loading, empty and low-confidence states so users keep working.",
+        "Worked with backend on prompt templates and output validation before render.",
+      ],
+      challenges: [
+        "Keeping suggestions non-blocking when model latency spikes.",
+        "Preventing unsafe actions from being one click away from a hallucination.",
+        "Measuring acceptance rate without creepy over-tracking.",
+      ],
+      uiStates: ["Suggestion loading", "Accepted", "Dismissed", "Low confidence", "Fallback manual"],
+      architecture: [
+        "Async suggestion fetch with stale-while-revalidate caching.",
+        "Server-side prompt assembly and output schema validation.",
+        "Feature-flagged rollout per operator role.",
+      ],
+      screens: ["Suggestion chip", "Expandable draft", "Manual override"],
+      improved: [
+        "Reduced time on repetitive catalog decisions.",
+        "Kept operators in flow when the model was uncertain.",
+      ],
+      next: ["Feedback loop from accept/dismiss into prompt tuning"],
     },
   },
 ];

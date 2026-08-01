@@ -19,6 +19,8 @@ export function ProjectPreview({ kind }: { kind: PreviewKind }) {
       return <PortfolioSitePreview />;
     case "notepad":
       return <NotepadPreview />;
+    case "formbuilder":
+      return <FormBuilderPreview />;
   }
 }
 
@@ -132,6 +134,33 @@ function HealthcarePreview() {
             <p className="text-[10px] text-faint">{t.k}</p>
           </div>
         ))}
+      </div>
+    </Panel>
+  );
+}
+
+function FormBuilderPreview() {
+  return (
+    <Panel className="w-full">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-xs font-medium text-muted">Form builder</span>
+        <span className="rounded-full bg-violet/12 px-2 py-0.5 text-[10px] font-semibold text-violet">Publish</span>
+      </div>
+      <div className="flex gap-2">
+        <div className="w-1/3 space-y-1 rounded-lg border border-line bg-surface-2 p-1.5">
+          <div className="h-1.5 w-full rounded bg-violet/20" />
+          <div className="h-1.5 w-4/5 rounded bg-ink/8" />
+          <div className="h-1.5 w-3/4 rounded bg-ink/8" />
+        </div>
+        <div className="flex-1 space-y-1.5 rounded-lg border border-violet/20 bg-violet/5 p-2">
+          <div className="h-2 w-2/3 rounded bg-ink/12" />
+          <div className="h-6 rounded border border-line bg-surface" />
+          <div className="h-2 w-1/2 rounded bg-ink/10" />
+          <div className="flex gap-1">
+            <div className="h-4 flex-1 rounded border border-line bg-surface" />
+            <div className="h-4 flex-1 rounded border border-line bg-surface" />
+          </div>
+        </div>
       </div>
     </Panel>
   );

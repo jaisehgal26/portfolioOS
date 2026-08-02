@@ -11,6 +11,7 @@ import {
   Lock,
   Monitor,
   RotateCw,
+  ShieldAlert,
   Smartphone,
   Tablet,
   WifiOff,
@@ -18,10 +19,14 @@ import {
 import { useOSStore } from "@/store/os-store";
 import { browserSites } from "@/data/sites";
 import { useOnline } from "@/hooks/use-online";
+import { isIframeLikelyBlocked } from "@/lib/embed-check";
 import { cn } from "@/lib/utils";
 
 type Device = "desktop" | "tablet" | "mobile";
+type EmbedStatus = "idle" | "checking" | "allowed" | "blocked";
+
 const DEVICE_WIDTH: Record<Device, number | null> = { desktop: null, tablet: 768, mobile: 390 };
+const IFRAME_FALLBACK_MS = 2_500;
 
 function normalizeUrl(input: string | undefined | null): string {
   const u = (input ?? "").trim();
@@ -54,7 +59,12 @@ export function BrowserApp() {
   const [loading, setLoading] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [device, setDevice] = useState<Device>("desktop");
+  const [embedStatus, setEmbedStatus] = useState<EmbedStatus>("idle");
   const inputRef = useRef<HTMLInputElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const embedStatusRef = useRef<EmbedStatus>("idle");
+  embedStatusRef.current = embedStatus;
 
   const current = history[index] ?? "";
   const canBack = index > 0;
@@ -82,16 +92,69 @@ export function BrowserApp() {
     setInput(current);
   }, [current]);
 
+  // Preflight: check whether the target allows in-app preview.
+  useEffect(() => {
+    if (!current || !online) {
+      setEmbedStatus("idle");
+      return;
+    }
+
+    let cancelled = false;
+    setEmbedStatus("checking");
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/embed-check?url=${encodeURIComponent(current)}`);
+        const data = (await res.json()) as { embeddable?: boolean };
+        if (!cancelled) setEmbedStatus(data.embeddable ? "allowed" : "blocked");
+      } catch {
+        if (!cancelled) setEmbedStatus("allowed");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [current, reloadKey, online]);
+
   // Loading indicator with a safety timeout (some sites never fire onLoad).
   useEffect(() => {
-    if (!current) {
+    if (!current || embedStatus === "blocked") {
       setLoading(false);
+      return;
+    }
+    if (embedStatus === "checking") {
+      setLoading(true);
       return;
     }
     setLoading(true);
     const t = setTimeout(() => setLoading(false), 8000);
     return () => clearTimeout(t);
-  }, [current, reloadKey]);
+  }, [current, reloadKey, embedStatus]);
+
+  const clearFallbackTimer = useCallback(() => {
+    if (fallbackTimerRef.current) {
+      clearTimeout(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
+  }, []);
+
+  const handleIframeLoad = useCallback(() => {
+    setLoading(false);
+    clearFallbackTimer();
+
+    const iframe = iframeRef.current;
+    if (!iframe || embedStatus !== "allowed") return;
+
+    fallbackTimerRef.current = setTimeout(() => {
+      if (embedStatusRef.current !== "allowed") return;
+      if (isIframeLikelyBlocked(iframe)) {
+        setEmbedStatus("blocked");
+      }
+    }, IFRAME_FALLBACK_MS);
+  }, [clearFallbackTimer, embedStatus]);
+
+  useEffect(() => () => clearFallbackTimer(), [clearFallbackTimer]);
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -99,12 +162,14 @@ export function BrowserApp() {
     inputRef.current?.blur();
   }
 
-  function openExternal() {
-    const url = current || normalizeUrl(input);
+  function openExternal(url = current || normalizeUrl(input)) {
     if (url) window.open(url, "_blank", "noopener,noreferrer");
   }
 
   const width = DEVICE_WIDTH[device];
+  const showBlocked = embedStatus === "blocked";
+  const showChecking = embedStatus === "checking";
+  const showIframe = embedStatus === "allowed";
 
   return (
     <div className="flex h-full flex-col bg-surface-2/40">
@@ -185,7 +250,7 @@ export function BrowserApp() {
 
         <button
           type="button"
-          onClick={openExternal}
+          onClick={() => openExternal()}
           aria-label="Open in new tab"
           title="Open in a new browser tab"
           className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-faint transition-colors hover:bg-ink/5 hover:text-ink"
@@ -198,6 +263,12 @@ export function BrowserApp() {
       <div className="relative min-h-0 flex-1 overflow-hidden">
         {current && !online ? (
           <OfflineViewport host={hostOf(current)} onHome={() => navigate("")} />
+        ) : current && showBlocked ? (
+          <UnavailableViewport
+            host={hostOf(current)}
+            onHome={() => navigate("")}
+            onOpen={() => openExternal(current)}
+          />
         ) : current ? (
           <div
             className={cn(
@@ -209,21 +280,24 @@ export function BrowserApp() {
               className="relative h-full shrink-0"
               style={width ? { width, maxWidth: "100%" } : { width: "100%" }}
             >
-              <iframe
-                key={`${current}-${reloadKey}-${device}`}
-                src={current}
-                title="JaiOS browser"
-                onLoad={() => setLoading(false)}
-                className={cn("h-full w-full border-0 bg-white", width && "rounded-2xl border border-line shadow-card")}
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals"
-                referrerPolicy="no-referrer-when-downgrade"
-                loading="lazy"
-              />
-              {loading && (
+              {showIframe && (
+                <iframe
+                  ref={iframeRef}
+                  key={`${current}-${reloadKey}-${device}`}
+                  src={current}
+                  title="JaiOS browser"
+                  onLoad={handleIframeLoad}
+                  className={cn("h-full w-full border-0 bg-white", width && "rounded-2xl border border-line shadow-card")}
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  loading="lazy"
+                />
+              )}
+              {(loading || showChecking) && (
                 <div className="pointer-events-none absolute inset-0 grid place-items-center bg-surface/60 backdrop-blur-sm">
                   <div className="flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm text-muted shadow-soft">
                     <Loader2 className="h-4 w-4 animate-spin text-accent" />
-                    Loading {hostOf(current)}…
+                    {showChecking ? "Checking preview…" : `Loading ${hostOf(current)}…`}
                   </div>
                 </div>
               )}
@@ -232,6 +306,48 @@ export function BrowserApp() {
         ) : (
           <StartPage onOpen={navigate} online={online} />
         )}
+      </div>
+    </div>
+  );
+}
+
+function UnavailableViewport({
+  host,
+  onHome,
+  onOpen,
+}: {
+  host: string;
+  onHome: () => void;
+  onOpen: () => void;
+}) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-4 px-6 text-center">
+      <span className="grid h-14 w-14 place-items-center rounded-2xl border border-line bg-surface text-muted shadow-soft">
+        <ShieldAlert className="h-7 w-7" />
+      </span>
+      <div>
+        <h2 className="font-display text-lg font-semibold text-ink">Preview not available</h2>
+        <p className="mt-1 max-w-sm text-sm text-muted">
+          <span className="font-medium text-ink">{host}</span> doesn&apos;t allow in-app previews. Open it in
+          your browser to continue.
+        </p>
+      </div>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={onOpen}
+          className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-bg transition-transform hover:-translate-y-0.5"
+        >
+          <ExternalLink className="h-4 w-4" />
+          Open site
+        </button>
+        <button
+          type="button"
+          onClick={onHome}
+          className="rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink hover:border-line-strong"
+        >
+          Back to start page
+        </button>
       </div>
     </div>
   );

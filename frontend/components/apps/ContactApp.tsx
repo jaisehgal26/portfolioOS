@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
+import { CalendlyBookButton } from "@/components/contact/CalendlyBookButton";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { AppScroll } from "@/components/ui/AppShell";
 import { CopyButton } from "@/components/ui/CopyButton";
@@ -22,6 +23,11 @@ export function ContactApp() {
       <p className="mt-2 max-w-xl leading-relaxed text-muted">
         Have a SaaS app, API, dashboard, real-time system, or end-to-end product slice to ship? Let&apos;s connect.
       </p>
+
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <CalendlyBookButton />
+        <span className="text-sm text-muted">or send a message below</span>
+      </div>
 
       <ContactForm />
 

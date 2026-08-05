@@ -1,14 +1,20 @@
 {
   "name": "portfolio-os",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "pnpm dev:frontend",
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "cd backend && .venv/Scripts/python -m uvicorn app.main:app --reload --port 8000",
-    "build": "pnpm --filter frontend build",
+    "build": "cd frontend && pnpm build",
     "lint": "pnpm --filter frontend lint",
     "typecheck": "pnpm --filter frontend typecheck",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down"
+  },
+  "dependencies": {
+    "next": "^15.3.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

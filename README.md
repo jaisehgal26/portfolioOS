@@ -12,7 +12,7 @@ portfolioOS/
 └── package.json       # pnpm workspace orchestration scripts
 ```
 
-**Production:** Single Vercel project (Root Directory = `frontend/`) — Next.js UI + FastAPI contact API as Python serverless · Postgres on Neon.
+**Production:** Single Vercel project (root directory `.`) — Next.js UI + FastAPI contact API via root `api/index.py` · Postgres on Neon. Same pattern as [FormForge](https://github.com/jaisehgal26/dynamic-form-builder).
 
 ## Prerequisites
 
@@ -96,16 +96,17 @@ Neon URLs use `postgresql://` — the backend normalizes to `postgresql+asyncpg:
 
 ## Deployment
 
-### Vercel (monorepo — frontend + contact API)
+### Vercel (monorepo — same as FormForge)
 
-1. **Settings → General → Root Directory** → set to **`frontend`**.
-2. **Environment variables** (Production + Preview):
-   - `DATABASE_URL` — Neon pooled connection string (from [Neon Console](https://console.neon.tech) → portfolioos → Connect)
+1. Deploy repo root (`.` ) — **no** Root Directory override needed.
+2. `vercel.json` builds `frontend/` and routes `/api/v1/*` → root `api/index.py` (FastAPI).
+3. **Environment variables** (Production + Preview):
+   - `DATABASE_URL` — Neon pooled connection string
    - `CORS_ORIGINS` — `https://jaisehgal.com,https://www.jaisehgal.com,http://localhost:3000`
-   - Do **not** set `NEXT_PUBLIC_API_URL` — the contact form uses the same deployment (`/api/v1/contact`).
-3. Push to `main` — Vercel builds Next.js and bundles the FastAPI handler at `frontend/api/index.py`.
+   - Do **not** set `NEXT_PUBLIC_API_URL` — contact form uses same-origin `/api/v1/contact`.
+4. Push to `main` — Vercel auto-deploys.
 
-The contact API runs as a Vercel Python serverless function. `frontend/vercel.json` rewrites `/api/v1/*` to that function. Next.js routes like `/api/embed-check` are unchanged.
+Next.js routes like `/api/embed-check` are **not** rewritten — only `/api/v1/*` hits Python.
 
 ### Neon (database)
 

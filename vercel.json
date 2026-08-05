@@ -1,7 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
   "installCommand": "pnpm install",
-  "buildCommand": "pnpm --filter frontend build",
-  "devCommand": "pnpm --filter frontend dev",
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- frontend/ backend/ package.json pnpm-lock.yaml pnpm-workspace.yaml"
+  "buildCommand": "cd frontend && pnpm build",
+  "outputDirectory": "frontend/.next",
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- frontend/ backend/ api/ package.json pnpm-lock.yaml pnpm-workspace.yaml pyproject.toml vercel.json",
+  "rewrites": [
+    { "source": "/api/v1/:path*", "destination": "/api" },
+    { "source": "/health", "destination": "/api" }
+  ],
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 30
+    }
+  }
 }

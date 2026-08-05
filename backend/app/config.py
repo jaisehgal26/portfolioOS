@@ -1,4 +1,5 @@
 from functools import lru_cache
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -10,11 +11,17 @@ def normalize_database_url(url: str) -> str:
     elif url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql+asyncpg://", 1)
 
-    if "neon.tech" in url and "ssl=" not in url:
-        separator = "&" if "?" in url else "?"
-        url = f"{url}{separator}ssl=require"
+    parsed = urlparse(url)
+    query = dict(parse_qsl(parsed.query, keep_blank_values=True))
 
-    return url
+    # asyncpg uses `ssl`, not libpq's `sslmode` / `channel_binding`
+    query.pop("sslmode", None)
+    query.pop("channel_binding", None)
+
+    if parsed.hostname and "neon.tech" in parsed.hostname:
+        query["ssl"] = "require"
+
+    return urlunparse(parsed._replace(query=urlencode(query)))
 
 
 class Settings(BaseSettings):

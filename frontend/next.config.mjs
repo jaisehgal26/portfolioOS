@@ -1,6 +1,12 @@
 import { spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { loadEnvConfig } from "@next/env";
 import withSerwistInit from "@serwist/next";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+loadEnvConfig(path.resolve(__dirname, ".."));
 
 const revision =
   spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf-8" }).stdout?.trim() || randomUUID();

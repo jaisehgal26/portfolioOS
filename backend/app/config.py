@@ -1,7 +1,20 @@
 from functools import lru_cache
+from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _env_file() -> Path | None:
+    root_env = REPO_ROOT / ".env"
+    if root_env.exists():
+        return root_env
+    legacy_env = REPO_ROOT / "backend" / ".env"
+    if legacy_env.exists():
+        return legacy_env
+    return None
 
 
 def normalize_database_url(url: str) -> str:
@@ -25,10 +38,17 @@ def normalize_database_url(url: str) -> str:
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=_env_file(),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     database_url: str = "postgresql+asyncpg://portfolio:portfolio@localhost:5433/portfolio"
     cors_origins: str = "http://localhost:3000"
+    resend_api_key: str = ""
+    resend_from_email: str = "JaiOS <onboarding@resend.dev>"
+    notify_email: str = "sehgaljai81@gmail.com"
 
     @property
     def async_database_url(self) -> str:

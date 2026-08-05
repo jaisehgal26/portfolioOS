@@ -47,7 +47,7 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install -r requirements.txt
-cp .env.example .env
+cp ../.env.example ../.env   # shared with frontend — edit at repo root
 alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
@@ -63,7 +63,7 @@ pnpm dev:backend
 ### 4. Frontend setup
 
 ```bash
-cp frontend/.env.example frontend/.env.local
+cp .env.example .env   # repo root — shared with backend (skip if already created)
 pnpm dev:frontend
 ```
 
@@ -79,30 +79,35 @@ docker exec -it portfolioos-postgres-1 psql -U portfolio -d portfolio -c "SELECT
 
 ## Environment variables
 
-### Frontend (`frontend/.env.local`)
+Single file at the **repo root**: `.env` (copy from `.env.example`). Both Next.js and FastAPI read from it locally.
+
+### Shared (`.env` at repo root)
 
 | Variable | Local | Production (Vercel) |
 |----------|-------|---------------------|
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | *(leave unset — same-origin `/api/v1/contact`)* |
-
-### Backend / API (`backend/.env` local · Vercel env vars in production)
-
-| Variable | Local | Production (Vercel) |
-|----------|-------|---------------------|
 | `DATABASE_URL` | `postgresql+asyncpg://portfolio:portfolio@127.0.0.1:5433/portfolio` | Neon **pooled** connection string |
 | `CORS_ORIGINS` | `http://localhost:3000` | `https://jaisehgal.com,https://www.jaisehgal.com,http://localhost:3000` |
+| `RESEND_API_KEY` | Your Resend API key | Same — from [resend.com/api-keys](https://resend.com/api-keys) |
+| `RESEND_FROM_EMAIL` | `JaiOS <onboarding@resend.dev>` | `Jai Sehgal <contact@jaisehgal.com>` after domain verified |
+| `NOTIFY_EMAIL` | `sehgaljai81@gmail.com` | Your inbox for new contact notifications |
 
 Neon URLs use `postgresql://` — the backend normalizes to `postgresql+asyncpg://` and adds `ssl=require` for Neon hosts.
 
+On contact submit, the API saves to Postgres then sends two emails via Resend: a **notification to you** and an **auto-reply to the sender**. If `RESEND_API_KEY` is unset, submissions still save — emails are skipped.
+
 ## Deployment
 
-### Vercel (monorepo — same as FormForge)
+### Vercel (monorepo)
 
 1. Deploy repo root (`.` ) — **no** Root Directory override needed.
 2. `vercel.json` builds `frontend/` and routes `/api/v1/*` → root `api/index.py` (FastAPI).
 3. **Environment variables** (Production + Preview):
    - `DATABASE_URL` — Neon pooled connection string
    - `CORS_ORIGINS` — `https://jaisehgal.com,https://www.jaisehgal.com,http://localhost:3000`
+   - `RESEND_API_KEY` — Resend API key
+   - `RESEND_FROM_EMAIL` — verified sender (e.g. `Jai Sehgal <contact@jaisehgal.com>`)
+   - `NOTIFY_EMAIL` — `sehgaljai81@gmail.com`
    - Do **not** set `NEXT_PUBLIC_API_URL` — contact form uses same-origin `/api/v1/contact`.
 4. Push to `main` — Vercel auto-deploys.
 
@@ -111,6 +116,12 @@ Next.js routes like `/api/embed-check` are **not** rewritten — only `/api/v1/*
 ### Neon (database)
 
 Project **portfolioos** on Neon. Table `contact_submissions` is already created. Use the **pooled** connection string as `DATABASE_URL` on Vercel.
+
+### Resend (email)
+
+1. Create a free account at [resend.com](https://resend.com) and an [API key](https://resend.com/api-keys).
+2. For production, [verify `jaisehgal.com`](https://resend.com/docs/dashboard/domains/introduction) and set `RESEND_FROM_EMAIL` to e.g. `Jai Sehgal <contact@jaisehgal.com>`.
+3. For local testing, use `JaiOS <onboarding@resend.dev>` (Resend test sender) — can only send to your own verified email until the domain is verified.
 
 ## API
 
@@ -154,5 +165,5 @@ Project **portfolioos** on Neon. Table `contact_submissions` is already created.
 ## Notes
 
 - Contact API cold starts on Vercel serverless (~1–3s first request after idle). The form shows "Sending…" until the response returns.
-- No email notifications or spam protection in v1 — see handoff doc for follow-ups.
+- Email delivery failures are logged but do not block a successful form submission (DB is source of truth).
 - The embed-check Next.js route stays in `frontend/app/api/embed-check/` for BrowserApp iframe previews.

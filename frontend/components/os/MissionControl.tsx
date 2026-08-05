@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@/store/os-store";
 import { getApp } from "@/data/apps";
@@ -45,7 +46,7 @@ export function MissionControl() {
                     initial={reduced ? false : { opacity: 0, scale: 0.9, y: 10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: reduced ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    onClick={(e) => {
+                    onClick={(e: MouseEvent) => {
                       e.stopPropagation();
                       focusWindow(w.id);
                       close();

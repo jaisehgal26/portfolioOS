@@ -1,11 +1,13 @@
 # dependencies
 /node_modules
+frontend/node_modules
 /.pnp
 .pnp.*
 
 # next.js
+frontend/.next/
+frontend/out/
 /.next/
-/out/
 
 # production
 /build
@@ -23,14 +25,22 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+backend/.env
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+frontend/next-env.d.ts
 
 # Serwist
-public/sw*
-public/swe-worker*
+frontend/public/sw*
+frontend/public/swe-worker*
+
+# Python backend
+backend/.venv/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/**/__pycache__/
+*.pyc
 
 .vscode/*
 !.vscode/extensions.json

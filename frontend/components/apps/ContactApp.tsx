@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
+import { ContactForm } from "@/components/contact/ContactForm";
 import { AppScroll } from "@/components/ui/AppShell";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { links } from "@/data/profile";
@@ -21,6 +22,8 @@ export function ContactApp() {
       <p className="mt-2 max-w-xl leading-relaxed text-muted">
         Have a SaaS app, API, dashboard, real-time system, or end-to-end product slice to ship? Let&apos;s connect.
       </p>
+
+      <ContactForm />
 
       <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
         {channels.map((ch) => {

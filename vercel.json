@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "buildCommand": "pnpm build",
-  "devCommand": "pnpm dev",
-  "installCommand": "pnpm install"
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter frontend build",
+  "devCommand": "pnpm --filter frontend dev",
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- frontend/ backend/ package.json pnpm-lock.yaml pnpm-workspace.yaml"
 }

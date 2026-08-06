@@ -14,6 +14,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import { getHealthStatus, type HealthServiceStatus } from "@/lib/api";
 import { AppScroll } from "@/components/ui/AppShell";
 import { ACHIEVEMENTS, TIER_ORDER, type AchievementTier } from "@/data/achievements";
 import { useOSStore } from "@/store/os-store";
@@ -59,6 +60,100 @@ const specs: { icon: LucideIcon; label: string; value: string; sub: string }[] =
   { icon: HardDrive, label: "Storage", value: "8 use cases · 3 projects", sub: "Deep-dive narratives" },
   { icon: Wifi, label: "Connectivity", value: "REST · GraphQL · WS · SSE", sub: "Resilient, reconnecting" },
 ];
+
+function formatRelativeTime(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
+
+const SERVICE_LABELS: Record<string, string> = {
+  "jaios-api": "JaiOS API",
+  quickpad: "QuickPad",
+  formforge: "FormForge",
+  jaisehgal: "jaisehgal.com",
+};
+
+function ServicesHealth() {
+  const [services, setServices] = useState<HealthServiceStatus[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const data = await getHealthStatus();
+        if (!cancelled) {
+          setServices(data.services);
+          setFailed(false);
+        }
+      } catch {
+        if (!cancelled) setFailed(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    const id = setInterval(load, 60000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  return (
+    <section className="mb-7 rounded-2xl border border-line bg-surface p-4 shadow-soft sm:p-5">
+      <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+        <Wifi className="h-3.5 w-3.5" /> Network · services
+      </h2>
+
+      {loading ? (
+        <p className="mt-3 text-sm text-muted">Checking services…</p>
+      ) : failed ? (
+        <p className="mt-3 text-sm text-muted">Could not load service status.</p>
+      ) : services.length === 0 ? (
+        <p className="mt-3 text-sm text-muted">No health data yet — cron runs every 5 minutes.</p>
+      ) : (
+        <div className="mt-3 overflow-hidden rounded-xl border border-line/70">
+          {services.map((s, i) => (
+            <div
+              key={s.target_key}
+              className={cn(
+                "flex items-center gap-3 px-4 py-2.5",
+                i !== services.length - 1 && "border-b border-line/70",
+              )}
+            >
+              <span
+                className={cn(
+                  "h-2.5 w-2.5 shrink-0 rounded-full",
+                  s.status === "up" ? "bg-emerald-500" : "bg-red-500",
+                )}
+                aria-hidden
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-ink">
+                  {SERVICE_LABELS[s.target_key] ?? s.target_key}
+                </p>
+                <p className="truncate text-[11px] text-faint">{s.url}</p>
+              </div>
+              <div className="shrink-0 text-right text-xs tabular-nums text-muted">
+                {s.latency_ms != null && <span>{s.latency_ms} ms</span>}
+                <span className="block text-faint">{formatRelativeTime(s.checked_at)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 
 function BlockMeter({ load }: { load: number }) {
   const reduced = usePrefersReducedMotion();
@@ -138,6 +233,8 @@ export function SystemMonitorApp() {
           <Battery level={battery} />
         </div>
       </div>
+
+      <ServicesHealth />
 
       {/* Skill memory */}
       <section className="rounded-2xl border border-line bg-surface p-4 shadow-soft sm:p-5">

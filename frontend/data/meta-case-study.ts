@@ -48,7 +48,7 @@ export const META_CASE_STUDY = {
       bullets: [
         "Single-page OS: `components/os/JaiOS.tsx` orchestrates boot → login → desktop.",
         "Apps are lazy-free registry entries in `appRegistry.tsx` — add an app in three files.",
-        "All portfolio content lives in `data/*.ts` — offline-safe, i18n-ready later.",
+        "All portfolio content lives in `data/*.ts` — offline-safe and easy to maintain.",
       ],
     },
     {
@@ -108,7 +108,7 @@ export const META_CASE_STUDY = {
         "Why Zustand over Context? Window state updates are frequent; Zustand avoids re-rendering the whole tree.",
         "Why manual changelog vs CMS? I ship iteratively — curated entries in `data/changelog.ts` prove consistency without infra.",
         "Why localStorage not a DB? No accounts, no server cost, no GDPR headaches. Achievements are fun, not competitive.",
-        "What I'd add next: i18n (Hindi), drag-and-drop desktop files, ambient sound app.",
+        "What I'd add next: drag-and-drop desktop files, ambient sound app.",
       ],
     },
   ] satisfies MetaSection[],

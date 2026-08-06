@@ -13,5 +13,8 @@
     "api/index.py": {
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    { "path": "/api/v1/health/cron", "schedule": "*/5 * * * *" }
+  ]
 }

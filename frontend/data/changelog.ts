@@ -19,6 +19,23 @@ export interface ChangelogEntry {
 /** Newest first — append new ships at the top. */
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "engagement-backend",
+    date: "2026-08-06",
+    version: "1.15.0",
+    title: "Engagement backend — reactions, health, guestbook",
+    tags: ["feature", "system"],
+    summary:
+      "Case-study reactions, live service health in Activity Monitor, moderated guestbook, and API rate limiting.",
+    body: [
+      "Case Studies: 👍 reactions persisted in Postgres — one per visitor per use case.",
+      "Activity Monitor: real Network · services status for JaiOS API, QuickPad, FormForge, and jaisehgal.com.",
+      "Guestbook app: leave short messages (anonymous or named); approve via admin API before they appear.",
+      "Rate limits on contact, guestbook, and reactions via Upstash Redis.",
+    ],
+    why: "Turn static portfolio apps into live, production-backed features recruiters can poke at.",
+    relatedApp: "system-monitor",
+  },
+  {
     id: "use-cases",
     date: "2026-07-23",
     version: "1.14.0",

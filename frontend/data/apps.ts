@@ -26,7 +26,8 @@ export type AppId =
   | "todo"
   | "notepad"
   | "clock"
-  | "unit-converter";
+  | "unit-converter"
+  | "guestbook";
 
 export type AppCategory = "favorites" | "career" | "case-studies" | "system" | "lab" | "utility";
 
@@ -356,6 +357,18 @@ export const APPS: AppMeta[] = [
     defaultSize: { w: 460, h: 520 },
     inDock: false,
     onDesktop: false,
+  },
+  {
+    id: "guestbook",
+    name: "Guestbook",
+    shortName: "Guestbook",
+    icon: "messageSquare",
+    accent: "amber",
+    category: "lab",
+    description: "Sign the guest wall — leave a short public note",
+    defaultSize: { w: 560, h: 580 },
+    inDock: false,
+    onDesktop: true,
   },
 ];
 

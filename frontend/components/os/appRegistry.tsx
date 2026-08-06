@@ -26,6 +26,7 @@ import { TodoApp } from "@/components/apps/TodoApp";
 import { NotepadApp } from "@/components/apps/NotepadApp";
 import { ClockApp } from "@/components/apps/ClockApp";
 import { UnitConverterApp } from "@/components/apps/UnitConverterApp";
+import { GuestbookApp } from "@/components/apps/GuestbookApp";
 
 export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   about: AboutApp,
@@ -54,4 +55,5 @@ export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   notepad: NotepadApp,
   clock: ClockApp,
   "unit-converter": UnitConverterApp,
+  guestbook: GuestbookApp,
 };

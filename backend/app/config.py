@@ -50,6 +50,20 @@ class Settings(BaseSettings):
     resend_from_email: str = "JaiOS <onboarding@resend.dev>"
     notify_email: str = "sehgaljai81@gmail.com"
 
+    upstash_redis_rest_url: str = ""
+    upstash_redis_rest_token: str = ""
+    cron_secret: str = ""
+    admin_api_key: str = ""
+    reaction_hash_salt: str = "dev-reaction-salt-change-in-production"
+    health_self_url: str = "https://jaisehgal.com"
+
+    rate_limit_contact: int = 5
+    rate_limit_guestbook: int = 3
+    rate_limit_reactions: int = 30
+    rate_limit_public_read: int = 120
+    rate_limit_write_window_seconds: int = 3600
+    rate_limit_read_window_seconds: int = 60
+
     @property
     def async_database_url(self) -> str:
         return normalize_database_url(self.database_url)

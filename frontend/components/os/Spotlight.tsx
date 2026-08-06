@@ -10,6 +10,7 @@ import {
   Github,
   Linkedin,
   Mail,
+  MessageSquare,
   MoonStar,
   Phone,
   Search,
@@ -40,7 +41,7 @@ const SECTIONS: { id: string; label: string; keywords: string }[] = [
   { id: "skills", label: "Skills", keywords: "tech stack tools" },
   { id: "notes", label: "Notes", keywords: "engineering writing perspectives backend ai" },
   { id: "resume", label: "Resume", keywords: "cv pdf" },
-  { id: "contact", label: "Contact", keywords: "email reach" },
+  { id: "contact", label: "Contact", keywords: "email reach guestbook wall note" },
 ];
 
 interface Command {
@@ -108,6 +109,15 @@ export function Spotlight() {
         keywords: "cv pdf cover letter",
         icon: <Download className={iconCls} />,
         run: () => downloadResume(),
+      },
+      {
+        id: "guestbook",
+        label: "Open Guestbook",
+        hint: "Leave a short note on the wall",
+        group: "Actions",
+        keywords: "guestbook wall message note sign visitor anonymous",
+        icon: <MessageSquare className={iconCls} />,
+        run: () => openApp("guestbook"),
       },
       {
         id: "copy-email",

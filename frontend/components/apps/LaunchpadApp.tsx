@@ -22,6 +22,7 @@ const LAUNCHER_IDS: AppId[] = [
   "changelog",
   "knowledge",
   "music",
+  "guestbook",
   "settings",
 ];
 

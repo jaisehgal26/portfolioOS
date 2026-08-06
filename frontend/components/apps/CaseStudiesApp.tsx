@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
+import { ReactionButton } from "@/components/reactions/ReactionButton";
 import { projects } from "@/data/projects";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { ACCENT } from "@/lib/accent";
@@ -74,10 +75,11 @@ export function CaseStudiesApp() {
                   {project.title}
                 </h1>
                 <p className="mt-2 leading-relaxed text-muted">{cs.overview}</p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
+                <div className="mt-3 flex flex-wrap items-center gap-2">
                   {project.stack.map((t) => (
                     <span key={t} className="chip">{t}</span>
                   ))}
+                  <ReactionButton targetType="case_study" targetId={project.id} />
                 </div>
               </div>
             </div>

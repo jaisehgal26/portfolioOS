@@ -72,10 +72,9 @@ function formatRelativeTime(iso: string): string {
 }
 
 const SERVICE_LABELS: Record<string, string> = {
-  "jaios-api": "JaiOS API",
+  jaios: "JaiOS",
   quickpad: "QuickPad",
   formforge: "FormForge",
-  jaisehgal: "jaisehgal.com",
 };
 
 function ServicesHealth() {

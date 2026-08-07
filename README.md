@@ -122,8 +122,7 @@ Next.js routes like `/api/embed-check` are **not** rewritten — only `/api/v1/*
 Pings monitored URLs and stores results for the Activity Monitor app.
 
 1. Set `CRON_SECRET` in Vercel (Production) — e.g. `openssl rand -hex 32`.
-2. Optional: `HEALTH_SELF_URL=https://jaisehgal.com` (default).
-3. Create a job at [cron-job.org](https://console.cron-job.org/jobs/create):
+2. Create a job at [cron-job.org](https://console.cron-job.org/jobs/create):
 
 | Field | Value |
 |-------|--------|
@@ -139,7 +138,7 @@ Alternative (header instead of query string):
 Success response (200):
 
 ```json
-{ "checked": 4, "results": [{ "target_key": "jaios-api", "status": "up", "latency_ms": 120 }] }
+{ "checked": 3, "results": [{ "target_key": "jaios", "status": "up", "latency_ms": 120 }] }
 ```
 
 Public read (no secret): `GET /api/v1/health/status` — returns latest cached results for the UI.

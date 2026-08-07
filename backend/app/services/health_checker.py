@@ -3,19 +3,11 @@ import time
 from datetime import datetime, timezone
 
 import httpx
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import get_settings
 from app.constants import HEALTH_TARGETS
 from app.models.health import HealthCheckLatest
-
-
-def _build_targets() -> dict[str, str]:
-    settings = get_settings()
-    base = settings.health_self_url.rstrip("/")
-    targets = dict(HEALTH_TARGETS)
-    targets["jaios-api"] = f"{base}/health"
-    return targets
 
 
 async def _check_url(client: httpx.AsyncClient, url: str) -> dict:
@@ -46,11 +38,10 @@ async def _check_target(client: httpx.AsyncClient, target_key: str, url: str) ->
 
 
 async def run_health_checks(db: AsyncSession) -> list[dict]:
-    targets = _build_targets()
     checked_at = datetime.now(timezone.utc)
 
     async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-        tasks = [_check_target(client, key, url) for key, url in targets.items()]
+        tasks = [_check_target(client, key, url) for key, url in HEALTH_TARGETS.items()]
         results = await asyncio.gather(*tasks)
 
     for row in results:
@@ -75,5 +66,8 @@ async def run_health_checks(db: AsyncSession) -> list[dict]:
                 )
             )
 
+    await db.execute(
+        delete(HealthCheckLatest).where(HealthCheckLatest.target_key.not_in(list(HEALTH_TARGETS.keys())))
+    )
     await db.commit()
     return results

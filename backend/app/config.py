@@ -66,7 +66,6 @@ class Settings(BaseSettings):
     cron_secret: str = ""
     admin_api_key: str = ""
     reaction_hash_salt: str = "dev-reaction-salt-change-in-production"
-    health_self_url: str = "https://jaisehgal.com"
 
     rate_limit_contact: int = 5
     rate_limit_guestbook: int = 3
@@ -75,7 +74,7 @@ class Settings(BaseSettings):
     rate_limit_write_window_seconds: int = 3600
     rate_limit_read_window_seconds: int = 60
 
-    @field_validator("upstash_redis_rest_url", "health_self_url", mode="before")
+    @field_validator("upstash_redis_rest_url", mode="before")
     @classmethod
     def normalize_http_urls(cls, value: object) -> object:
         if isinstance(value, str):

@@ -28,7 +28,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "Case-study reactions, live service health in Activity Monitor, moderated guestbook, and API rate limiting.",
     body: [
       "Case Studies: 👍 reactions persisted in Postgres — one per visitor per use case.",
-      "Activity Monitor: real Network · services status for JaiOS API, QuickPad, FormForge, and jaisehgal.com.",
+      "Activity Monitor: live Network · services status for JaiOS, QuickPad, and FormForge.",
       "Guestbook app: leave short messages (anonymous or named); approve via admin API before they appear.",
       "Rate limits on contact, guestbook, and reactions via Upstash Redis.",
     ],

@@ -12,7 +12,7 @@ CASE_STUDY_IDS: frozenset[str] = frozenset(
 )
 
 HEALTH_TARGETS: dict[str, str] = {
+    "jaios": "https://jaisehgal.com",
     "quickpad": "https://quickpad.jaisehgal.com",
     "formforge": "https://formforge.jaisehgal.com",
-    "jaisehgal": "https://jaisehgal.com",
 }

@@ -55,9 +55,14 @@ def test_health_cron_requires_auth():
     assert res.status_code in (401, 503)
 
 
-def test_admin_guestbook_requires_key():
+def test_admin_guestbook_requires_auth():
     res = client.get("/api/v1/admin/guestbook")
-    assert res.status_code == 422  # missing X-Admin-Key header
+    assert res.status_code in (401, 503)
+
+
+def test_admin_login_validation():
+    res = client.post("/api/v1/admin/auth/login", json={"username": "", "password": ""})
+    assert res.status_code == 422
 
 
 def test_guestbook_post_validation():

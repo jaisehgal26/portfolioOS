@@ -16,3 +16,21 @@ class ContactResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class ContactAdminItem(BaseModel):
+    id: UUID
+    created_at: datetime
+    name: str
+    email: str
+    subject: str | None
+    message: str
+
+    model_config = {"from_attributes": True}
+
+
+class ContactAdminListResponse(BaseModel):
+    items: list[ContactAdminItem]
+    total: int
+    limit: int
+    offset: int

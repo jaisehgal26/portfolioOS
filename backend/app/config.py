@@ -1,3 +1,4 @@
+import hashlib
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
@@ -65,6 +66,8 @@ class Settings(BaseSettings):
     upstash_redis_rest_token: str = ""
     cron_secret: str = ""
     admin_api_key: str = ""
+    admin_username: str = ""
+    admin_password: str = ""
     reaction_hash_salt: str = "dev-reaction-salt-change-in-production"
 
     rate_limit_contact: int = 5
@@ -98,6 +101,20 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def admin_session_secret(self) -> str:
+        """Secret for signing admin session tokens."""
+        if self.admin_api_key:
+            return self.admin_api_key
+        if self.admin_username and self.admin_password:
+            raw = f"{self.admin_username}:{self.admin_password}".encode()
+            return hashlib.sha256(raw).hexdigest()
+        return ""
+
+    @property
+    def admin_configured(self) -> bool:
+        return bool(self.admin_session_secret)
 
 
 @lru_cache

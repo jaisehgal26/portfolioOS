@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.routers.admin import router as admin_router
+from app.routers.admin_auth import router as admin_auth_router
 from app.routers.contact import router as contact_router
 from app.routers.guestbook import router as guestbook_router
 from app.routers.health import router as health_router
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
     app.include_router(reactions_router)
     app.include_router(health_router)
     app.include_router(guestbook_router)
+    app.include_router(admin_auth_router)
     app.include_router(admin_router)
 
     @app.get("/health")

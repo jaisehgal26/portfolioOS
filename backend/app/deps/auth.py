@@ -1,6 +1,8 @@
 from fastapi import Header, HTTPException, Query, status
+from secrets import compare_digest
 
 from app.config import get_settings
+from app.services.admin_session import verify_admin_token
 
 
 async def verify_cron_secret(
@@ -25,7 +27,23 @@ async def verify_cron_secret(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
 
 
-async def verify_admin_key(x_admin_key: str = Header(..., alias="X-Admin-Key")) -> None:
+async def verify_admin_key(
+    x_admin_key: str | None = Header(None, alias="X-Admin-Key"),
+    authorization: str | None = Header(None),
+) -> None:
     settings = get_settings()
-    if not settings.admin_api_key or x_admin_key != settings.admin_api_key:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    if not settings.admin_configured:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Admin not configured",
+        )
+
+    if x_admin_key and settings.admin_api_key and compare_digest(x_admin_key, settings.admin_api_key):
+        return
+
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization.removeprefix("Bearer ").strip()
+        if verify_admin_token(token, settings.admin_session_secret):
+            return
+
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")

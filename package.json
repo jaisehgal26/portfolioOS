@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "pnpm dev:frontend",
     "dev:frontend": "pnpm --filter frontend dev",
-    "dev:backend": "cd backend && .venv/Scripts/python -m uvicorn app.main:app --reload --port 8000",
+    "dev:backend": "node scripts/dev-backend.mjs",
     "build": "cd frontend && pnpm build",
     "lint": "pnpm --filter frontend lint",
     "typecheck": "pnpm --filter frontend typecheck",

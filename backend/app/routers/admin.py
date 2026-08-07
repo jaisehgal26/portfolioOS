@@ -1,12 +1,14 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.deps.auth import verify_admin_key
+from app.models.contact import ContactSubmission
 from app.models.guestbook import GuestbookEntry
+from app.schemas.contact import ContactAdminItem, ContactAdminListResponse
 from app.schemas.guestbook import (
     GuestbookAdminItem,
     GuestbookAdminListResponse,
@@ -53,3 +55,27 @@ async def admin_update_guestbook(
     await db.commit()
     await db.refresh(entry)
     return GuestbookAdminItem.model_validate(entry)
+
+
+@router.get("/contact", response_model=ContactAdminListResponse)
+async def admin_list_contact(
+    limit: int = Query(default=50, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    db: AsyncSession = Depends(get_db),
+) -> ContactAdminListResponse:
+    total_result = await db.execute(select(func.count()).select_from(ContactSubmission))
+    total = total_result.scalar_one()
+
+    result = await db.execute(
+        select(ContactSubmission)
+        .order_by(ContactSubmission.created_at.desc())
+        .limit(limit)
+        .offset(offset)
+    )
+    items = result.scalars().all()
+    return ContactAdminListResponse(
+        items=[ContactAdminItem.model_validate(i) for i in items],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )

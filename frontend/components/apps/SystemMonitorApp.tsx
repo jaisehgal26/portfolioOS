@@ -119,7 +119,7 @@ function ServicesHealth() {
       ) : failed ? (
         <p className="mt-3 text-sm text-muted">Could not load service status.</p>
       ) : services.length === 0 ? (
-        <p className="mt-3 text-sm text-muted">No health data yet — cron runs every 5 minutes.</p>
+        <p className="mt-3 text-sm text-muted">No health data yet — waiting for the next scheduled check.</p>
       ) : (
         <div className="mt-3 overflow-hidden rounded-xl border border-line/70">
           {services.map((s, i) => (

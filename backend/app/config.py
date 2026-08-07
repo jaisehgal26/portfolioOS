@@ -2,9 +2,20 @@ from functools import lru_cache
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _ensure_https_url(url: str) -> str:
+    """Ensure REST/base URLs include a scheme (common Vercel env typo)."""
+    cleaned = url.strip()
+    if not cleaned:
+        return ""
+    if cleaned.startswith(("http://", "https://")):
+        return cleaned
+    return f"https://{cleaned}"
 
 
 def _env_file() -> Path | None:
@@ -63,6 +74,13 @@ class Settings(BaseSettings):
     rate_limit_public_read: int = 120
     rate_limit_write_window_seconds: int = 3600
     rate_limit_read_window_seconds: int = 60
+
+    @field_validator("upstash_redis_rest_url", "health_self_url", mode="before")
+    @classmethod
+    def normalize_http_urls(cls, value: object) -> object:
+        if isinstance(value, str):
+            return _ensure_https_url(value)
+        return value
 
     @property
     def async_database_url(self) -> str:

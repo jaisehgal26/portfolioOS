@@ -33,7 +33,10 @@ def _get_redis_client():
     from upstash_redis import Redis
 
     settings = get_settings()
-    return Redis(url=settings.upstash_redis_rest_url, token=settings.upstash_redis_rest_token)
+    url = settings.upstash_redis_rest_url.strip()
+    if not url.startswith(("http://", "https://")):
+        raise ValueError(f"Invalid Upstash URL (missing https://): {url!r}")
+    return Redis(url=url, token=settings.upstash_redis_rest_token)
 
 
 def _enforce_sync(scope: str, ip_hash: str) -> None:
@@ -42,21 +45,26 @@ def _enforce_sync(scope: str, ip_hash: str) -> None:
     limit = getattr(settings, limit_key)
     window = getattr(settings, window_key)
 
-    redis = _get_redis_client()
-    key = f"rl:{scope}:{ip_hash}"
-    count = redis.incr(key)
-    if count == 1:
-        redis.expire(key, window)
+    try:
+        redis = _get_redis_client()
+        key = f"rl:{scope}:{ip_hash}"
+        count = redis.incr(key)
+        if count == 1:
+            redis.expire(key, window)
 
-    if count > limit:
-        retry_after = redis.ttl(key)
-        if retry_after is None or retry_after < 1:
-            retry_after = window
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail="Too many requests. Please try again later.",
-            headers={"Retry-After": str(retry_after)},
-        )
+        if count > limit:
+            retry_after = redis.ttl(key)
+            if retry_after is None or retry_after < 1:
+                retry_after = window
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail="Too many requests. Please try again later.",
+                headers={"Retry-After": str(retry_after)},
+            )
+    except HTTPException:
+        raise
+    except Exception:
+        logger.warning("Rate limit Redis error; allowing request (scope=%s)", scope, exc_info=True)
 
 
 async def enforce_rate_limit(request: Request, scope: str) -> None:

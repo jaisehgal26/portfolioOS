@@ -113,7 +113,7 @@ On contact submit, the API saves to Postgres then sends two emails via Resend: a
    - Do **not** set `NEXT_PUBLIC_API_URL` — contact form uses same-origin `/api/v1/contact`.
 4. Push to `main` — Vercel auto-deploys.
 
-**Note:** Vercel Hobby only allows **once-per-day** crons. Health checks use an external scheduler ([cron-job.org](https://cron-job.org)) instead — see [Health cron](#health-cron-cron-joborg).
+Health checks are triggered by an external scheduler ([cron-job.org](https://cron-job.org)) — see [Health cron](#health-cron-cron-joborg). No Vercel Cron configuration is required.
 
 Next.js routes like `/api/embed-check` are **not** rewritten — only `/api/v1/*` hits Python.
 

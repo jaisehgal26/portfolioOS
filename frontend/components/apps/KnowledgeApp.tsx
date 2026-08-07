@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ExternalLink, Search, Sparkles } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
+import { ReactionButton } from "@/components/reactions/ReactionButton";
 import {
   KNOWLEDGE_SECTIONS,
   searchKnowledge,
@@ -15,7 +16,10 @@ function RecommendationCard({ item }: { item: KnowledgeItem }) {
   return (
     <article className="rounded-2xl border border-line bg-surface p-4 shadow-soft sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <h2 className="font-display text-lg font-semibold tracking-tight text-ink">{item.title}</h2>
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-ink">{item.title}</h2>
+          <ReactionButton targetType="knowledge" targetId={item.id} className="shrink-0" />
+        </div>
         {item.href && (
           <a
             href={item.href}

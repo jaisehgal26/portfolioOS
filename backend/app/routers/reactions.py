@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
-from app.constants import CASE_STUDY_IDS
+from app.constants import REACTION_TARGET_IDS
 from app.database import get_db
 from app.deps.rate_limit import rate_limit_dep
 from app.models.reaction import ReactionEvent
@@ -27,6 +27,19 @@ def _visitor_hash(request: Request) -> str:
     ua = request.headers.get("user-agent", "")
     raw = f"{ip}|{ua}|{settings.reaction_hash_salt}"
     return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _resolve_target_ids(target_type: str, target_id: str | None) -> list[str]:
+    allowed = REACTION_TARGET_IDS.get(target_type)
+    if allowed is None:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid target_type")
+
+    if target_id:
+        if target_id not in allowed:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid target_id")
+        return [target_id]
+
+    return sorted(allowed)
 
 
 async def _count_for_target(
@@ -52,15 +65,7 @@ async def list_reactions(
     db: AsyncSession = Depends(get_db),
     _: None = Depends(rate_limit_dep("public_read")),
 ) -> ReactionsListResponse:
-    if target_type != "case_study":
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid target_type")
-
-    if target_id:
-        if target_id not in CASE_STUDY_IDS:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid target_id")
-        ids = [target_id]
-    else:
-        ids = sorted(CASE_STUDY_IDS)
+    ids = _resolve_target_ids(target_type, target_id)
 
     counts: list[ReactionCountItem] = []
     for pid in ids:
@@ -77,10 +82,7 @@ async def add_reaction(
     db: AsyncSession = Depends(get_db),
     _: None = Depends(rate_limit_dep("reactions_write")),
 ) -> ReactionResponse:
-    if payload.target_type != "case_study":
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid target_type")
-    if payload.target_id not in CASE_STUDY_IDS:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid target_id")
+    _resolve_target_ids(payload.target_type, payload.target_id)
 
     visitor = _visitor_hash(request)
     stmt = (

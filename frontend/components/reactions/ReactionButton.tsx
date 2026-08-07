@@ -21,7 +21,7 @@ export function ReactionButton({ targetType, targetId, className }: ReactionButt
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  const storageKey = `${STORAGE_PREFIX}${targetId}`;
+  const storageKey = `${STORAGE_PREFIX}${targetType}:${targetId}`;
 
   const load = useCallback(async () => {
     try {
@@ -74,7 +74,7 @@ export function ReactionButton({ targetType, targetId, className }: ReactionButt
         className,
       )}
       aria-pressed={reacted}
-      aria-label={reacted ? `You liked this (${count})` : `Like this case study (${count})`}
+      aria-label={reacted ? `You liked this (${count})` : `Like this (${count})`}
     >
       <ThumbsUp className={cn("h-4 w-4", reacted && "fill-current")} strokeWidth={2} />
       <span className="tabular-nums">{loading ? "—" : count}</span>

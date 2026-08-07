@@ -9,6 +9,7 @@ import { AppIcon } from "@/components/os/AppIcon";
 /** Built-in apps surfaced in the launcher. */
 const LAUNCHER_IDS: AppId[] = [
   "finder",
+  "case-studies",
   "calculator",
   "todo",
   "notepad",

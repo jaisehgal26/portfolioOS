@@ -27,15 +27,15 @@ import { cn } from "@/lib/utils";
 type Group = "Sections" | "Apps" | "Actions" | "Links" | "View";
 const GROUP_ORDER: Group[] = ["Sections", "Apps", "Actions", "Links", "View"];
 
-/** Apps now folded into the Finder hub (not launchable on their own). */
+/** Apps folded into Finder — hidden from Spotlight/Launchpad (career content lives in Finder). */
 const FOLDED = new Set([
-  "about", "projects", "case-studies", "skills", "experience", "resume",
+  "about", "projects", "skills", "experience", "resume",
   "contact", "notes", "text-viewer", "secret",
 ]);
 
 const SECTIONS: { id: string; label: string; keywords: string }[] = [
   { id: "about", label: "About", keywords: "bio who" },
-  { id: "work", label: "Use cases", keywords: "use cases professional client employer full-stack" },
+  { id: "work", label: "Use cases", keywords: "use cases case studies professional client employer full-stack" },
   { id: "projects", label: "Projects", keywords: "github live demo showcase open source repos" },
   { id: "experience", label: "Experience", keywords: "career roles jobs" },
   { id: "skills", label: "Skills", keywords: "tech stack tools" },

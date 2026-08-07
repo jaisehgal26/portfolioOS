@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NotebookPen } from "lucide-react";
 import { AppTwoPane } from "@/components/ui/AppShell";
+import { ReactionButton } from "@/components/reactions/ReactionButton";
 import { notes } from "@/data/notes";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
@@ -53,7 +54,10 @@ export function NotesApp() {
               <NotebookPen className="h-4 w-4" />
               <span className="text-xs font-medium uppercase tracking-wider text-faint">Engineering note</span>
             </div>
-            <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">{note.title}</h1>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">{note.title}</h1>
+              <ReactionButton targetType="note" targetId={note.id} className="shrink-0" />
+            </div>
             <p className="mt-1 text-xs text-faint">{note.updated}</p>
             <div className="mt-5 space-y-4">
               {note.body.map((p, i) => (

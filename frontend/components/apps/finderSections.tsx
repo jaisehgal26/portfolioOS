@@ -8,6 +8,7 @@ import { useOSStore } from "@/store/os-store";
 import { experience } from "@/data/experience";
 import { notes } from "@/data/notes";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
+import { ReactionButton } from "@/components/reactions/ReactionButton";
 import { ACCENT } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
@@ -64,6 +65,8 @@ interface FinderProjectCardProps {
   onLiveDemo?: (url: string) => void;
   highlightsLabel?: string;
   challengesLabel?: string;
+  /** When set, shows a thumbs-up reaction for this item. */
+  reaction?: { targetType: string; targetId: string };
 }
 
 function FinderProjectCard({
@@ -81,6 +84,7 @@ function FinderProjectCard({
   onLiveDemo,
   highlightsLabel = "My role",
   challengesLabel = "Engineering challenges",
+  reaction,
 }: FinderProjectCardProps) {
   const a = ACCENT[accent];
   const hasLinks = Boolean(githubUrl || liveUrl);
@@ -90,7 +94,16 @@ function FinderProjectCard({
       <div className={cn("flex flex-col gap-3", hasLinks && "sm:flex-row sm:items-start sm:justify-between")}>
         <div className="min-w-0">
           <p className={cn("text-xs font-semibold uppercase tracking-[0.16em]", a.text)}>{category}</p>
-          <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">{title}</h2>
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            <h2 className="font-display text-xl font-semibold tracking-tight text-ink">{title}</h2>
+            {reaction && (
+              <ReactionButton
+                targetType={reaction.targetType}
+                targetId={reaction.targetId}
+                className="shrink-0"
+              />
+            )}
+          </div>
         </div>
 
         {hasLinks && (
@@ -189,6 +202,7 @@ export function ProjectsSection() {
             githubUrl={p.githubUrl}
             liveUrl={p.liveUrl}
             onLiveDemo={openUrlInBrowser}
+            reaction={{ targetType: "portfolio", targetId: p.id }}
           />
         ))}
       </div>
@@ -219,6 +233,7 @@ export function WorkSection() {
               stack={p.stack}
               accent={p.accent}
               preview={p.preview}
+              reaction={{ targetType: "case_study", targetId: p.id }}
             />
           );
         })}
@@ -332,7 +347,10 @@ export function NotesSection() {
             className="rounded-2xl border border-line bg-surface p-5 shadow-soft"
           >
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-faint">{n.updated}</p>
-            <h2 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">{n.title}</h2>
+            <div className="mt-1 flex flex-wrap items-center gap-3">
+              <h2 className="font-display text-lg font-semibold tracking-tight text-ink">{n.title}</h2>
+              <ReactionButton targetType="note" targetId={n.id} className="shrink-0" />
+            </div>
             <div className="mt-3 space-y-3">
               {n.body.map((p, i) => (
                 <p key={i} className="text-sm leading-relaxed text-muted">{p}</p>

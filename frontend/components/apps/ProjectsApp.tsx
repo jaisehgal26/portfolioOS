@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AppTwoPane } from "@/components/ui/AppShell";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 import { ProjectPreview } from "@/components/cards/ProjectPreview";
+import { ReactionButton } from "@/components/reactions/ReactionButton";
 import { projects } from "@/data/projects";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { ACCENT } from "@/lib/accent";
@@ -71,9 +72,12 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
           <p className={cn("text-xs font-semibold uppercase tracking-[0.16em]", accent.text)}>
             {project.category}
           </p>
-          <h2 className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink">
-            {project.title}
-          </h2>
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">
+              {project.title}
+            </h2>
+            <ReactionButton targetType="case_study" targetId={project.id} className="shrink-0" />
+          </div>
           <div className="mt-3">
             <Tabs tabs={TABS} active={tab} onChange={setTab} layoutId={`proj-${project.id}`} ariaLabel="Project sections" />
           </div>

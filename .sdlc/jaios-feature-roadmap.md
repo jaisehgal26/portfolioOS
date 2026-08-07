@@ -19,7 +19,6 @@
 | 7 | F11 | Knowledge sharing | L | Tool & library recommendations — CSS, AI, dev tools |
 | 8 | F05 | Music / ambient sound app | M | Extends existing sound engine; atmosphere |
 | 9 | F06 | Drag-and-drop desktop files | M | OS realism; unlocks Text Viewer + future Trash |
-| 10 | F09 | i18n toggle (Hindi) | L | Touches many strings; do last to avoid rework |
 
 **Effort key:** S ≈ &lt;2h · M ≈ 2–5h · L ≈ half day+
 
@@ -30,7 +29,6 @@
 - **New apps:** register in `data/apps.ts`, `components/os/appRegistry.tsx`, `components/os/AppIcon.tsx`; add to Finder or Launchpad as appropriate.
 - **Persistence:** achievements, tour progress, changelog “read” state, music prefs → `localStorage` with typed keys (`jaios-*`).
 - **Sounds:** reuse `lib/sounds.ts`; respect `soundEnabled` and DND from `os-store`.
-- **i18n prep:** even before F09, new user-facing strings should live in `data/` files (not scattered in components) to make Hindi easier later.
 - **Changelog rule:** every shipped feature from this roadmap gets one entry in F12 before moving to the next.
 
 ---
@@ -417,50 +415,6 @@ Classic OS affordance; activates dormant Text Viewer infra.
 
 ---
 
-## F09 — i18n toggle (Hindi)
-
-**Slug:** `i18n-hindi`  
-**Effort:** L  
-**Depends on:** all prior UI stable (do last)
-
-### One-line goal
-Settings toggle for **English / Hindi (हिंदी)** — menu bar, system chrome, and key labels translated.
-
-### Why it matters
-Shows i18n awareness; personal touch for Indian recruiters/users.
-
-### In scope
-- `data/i18n/en.ts` + `data/i18n/hi.ts` — parallel string maps
-- `locale` in persisted prefs (`en` | `hi`)
-- Settings → Language picker
-- Phase 1 translated surfaces:
-  - TopBar menus (JaiOS, File, Window, Help)
-  - Dock tooltips
-  - Boot / Login screen
-  - Settings app
-  - Common buttons (Close, Open, Download)
-- `useLocale()` hook → `t('key')`
-- `document.documentElement.lang = hi` when Hindi
-- **Not required v1:** translate full case study bodies (too much); Hindi for chrome only
-
-### Out of scope
-- RTL
-- Auto-detect browser locale (manual toggle only for v1)
-
-### Acceptance criteria
-- [ ] Toggle persists across reload
-- [ ] No layout breaks with longer Hindi strings (test TopBar)
-- [ ] 80+ keys translated minimum
-
-### Files likely involved
-- `data/i18n/en.ts`, `data/i18n/hi.ts` (new)
-- `hooks/use-locale.ts` (new)
-- `store/os-store.ts` — `locale`, `setLocale`
-- `SettingsApp.tsx`, `TopBar.tsx`, `BootScreen.tsx`, `LoginScreen.tsx`
-- Gradual migration of hardcoded strings
-
----
-
 ## Per-feature SDLC workflow
 
 When starting a feature:
@@ -482,7 +436,6 @@ When starting a feature:
 - [x] F11 Knowledge
 - [x] F05 Ambient sound
 - [ ] F06 Desktop drop
-- [ ] F09 Hindi i18n
 
 ---
 
@@ -499,15 +452,11 @@ flowchart TD
   F11[F11 Knowledge]
   F05[F05 Music]
   F06[F06 Desktop drop]
-  F09[F09 Hindi i18n]
 
   F03 --> F04
   F03 --> F01
   F12 --> F01
   F12 --> F02
-  F09 --> F02
-  F09 --> F11
-  F06 --> F09
 ```
 
 ---

@@ -108,10 +108,41 @@ On contact submit, the API saves to Postgres then sends two emails via Resend: a
    - `RESEND_API_KEY` — Resend API key
    - `RESEND_FROM_EMAIL` — verified sender (e.g. `Jai Sehgal <contact@jaisehgal.com>`)
    - `NOTIFY_EMAIL` — `sehgaljai81@gmail.com`
+   - `CRON_SECRET` — long random string for health cron (see below)
+   - `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` — rate limiting
    - Do **not** set `NEXT_PUBLIC_API_URL` — contact form uses same-origin `/api/v1/contact`.
 4. Push to `main` — Vercel auto-deploys.
 
+**Note:** Vercel Hobby only allows **once-per-day** crons. Health checks use an external scheduler ([cron-job.org](https://cron-job.org)) instead — see [Health cron](#health-cron-cron-joborg).
+
 Next.js routes like `/api/embed-check` are **not** rewritten — only `/api/v1/*` hits Python.
+
+### Health cron (cron-job.org)
+
+Pings monitored URLs and stores results for the Activity Monitor app.
+
+1. Set `CRON_SECRET` in Vercel (Production) — e.g. `openssl rand -hex 32`.
+2. Optional: `HEALTH_SELF_URL=https://jaisehgal.com` (default).
+3. Create a job at [cron-job.org](https://console.cron-job.org/jobs/create):
+
+| Field | Value |
+|-------|--------|
+| **URL** | `https://jaisehgal.com/api/v1/health/cron?secret=YOUR_CRON_SECRET` |
+| **Schedule** | Every 5–15 minutes (your choice) |
+| **Request method** | `GET` |
+
+Alternative (header instead of query string):
+
+- URL: `https://jaisehgal.com/api/v1/health/cron`
+- Header: `Authorization: Bearer YOUR_CRON_SECRET`
+
+Success response (200):
+
+```json
+{ "checked": 4, "results": [{ "target_key": "jaios-api", "status": "up", "latency_ms": 120 }] }
+```
+
+Public read (no secret): `GET /api/v1/health/status` — returns latest cached results for the UI.
 
 ### Neon (database)
 
@@ -127,7 +158,9 @@ Project **portfolioos** on Neon. Table `contact_submissions` is already created.
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/health` | Health check (Render) |
+| `GET` | `/health` | Health check |
+| `GET` | `/api/v1/health/status` | Latest service health (Activity Monitor) |
+| `GET` | `/api/v1/health/cron` | Run health checks (requires `CRON_SECRET`) |
 | `POST` | `/api/v1/contact` | Submit contact form |
 
 **Request body:**

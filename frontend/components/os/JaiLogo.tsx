@@ -2,7 +2,7 @@
  * The JaiOS brand mark — a monochrome "tile" with a negative-space aperture:
  * concentric rounded diamonds around a pinhole core, like a system lens. No
  * literal initial. Uses `currentColor`, so it adapts to the surrounding ink.
- * Mirrored in app/icon.svg (favicon) and app/apple-icon.svg.
+ * Mirrored in app/icon.svg (favicon) and app/apple-icon.png.
  */
 export function JaiLogo({ className }: { className?: string }) {
   return (

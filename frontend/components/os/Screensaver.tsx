@@ -50,13 +50,13 @@ export function Screensaver() {
           transition={{ duration: reduced ? 0 : 0.6 }}
           className="fixed inset-0 z-[150] flex flex-col items-center justify-center bg-[#0d0b09] text-[#efe7db]"
         >
-          <p className="font-display text-8xl font-semibold tabular-nums" suppressHydrationWarning>
+          <p className="type-hero tabular-nums text-[#efe7db]" suppressHydrationWarning>
             {time}
           </p>
           <p className="mt-2 text-lg text-[#efe7db]/70" suppressHydrationWarning>
             {date}
           </p>
-          <p className="absolute bottom-10 text-xs uppercase tracking-[0.3em] text-[#efe7db]/40">
+          <p className="absolute bottom-10 text-xs uppercase tracking-label-wide text-[#efe7db]/40">
             move to wake
           </p>
         </motion.div>

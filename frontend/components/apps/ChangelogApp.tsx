@@ -46,7 +46,7 @@ function EntryCard({ entry, defaultOpen }: { entry: ChangelogEntry; defaultOpen:
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div className="min-w-0">
             <p className="text-xs font-medium text-muted">{formatDate(entry.date)}</p>
-            <h2 className="mt-0.5 font-display text-lg font-semibold tracking-tight text-ink">{entry.title}</h2>
+            <h2 className="mt-0.5 type-window-title">{entry.title}</h2>
           </div>
           <span className="shrink-0 rounded-full border border-line bg-surface-2 px-2.5 py-0.5 font-mono text-[11px] text-muted">
             v{entry.version}
@@ -120,7 +120,7 @@ export function ChangelogApp() {
   return (
     <AppScroll>
       <div className="mb-5">
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">Changelog</h1>
+        <h1 className="type-title">Changelog</h1>
         <p className="mt-1 text-sm text-muted">What shipped in JaiOS and when.</p>
       </div>
 

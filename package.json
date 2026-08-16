@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm dev:frontend",
-    "dev:frontend": "pnpm --filter frontend dev",
+    "dev": "node scripts/dev.mjs",
+    "dev:frontend": "node scripts/dev-frontend.mjs",
     "dev:backend": "node scripts/dev-backend.mjs",
+    "setup:frontend": "node scripts/ensure-frontend-deps.mjs",
+    "setup:backend": "node scripts/ensure-backend-venv.mjs",
     "build": "cd frontend && pnpm build",
     "lint": "pnpm --filter frontend lint",
     "typecheck": "pnpm --filter frontend typecheck",

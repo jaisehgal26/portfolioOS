@@ -25,7 +25,7 @@ function SectionDoc({
   return (
     <div className="h-full overflow-y-auto p-5 sm:p-7">
       <div className="mb-5">
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">{title}</h1>
+        <h1 className="type-title">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-muted">{subtitle}</p>}
       </div>
       {children}
@@ -34,7 +34,7 @@ function SectionDoc({
 }
 
 function Head({ children }: { children: React.ReactNode }) {
-  return <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-faint">{children}</h3>;
+  return <h3 className="mb-2 type-section">{children}</h3>;
 }
 
 function Bullets({ items, dot = "bg-accent" }: { items: string[]; dot?: string }) {
@@ -261,7 +261,7 @@ export function BuildingJaiOSSection() {
       <div className="space-y-8">
         {sections.map((section) => (
           <article key={section.id} className="rounded-2xl border border-line bg-surface p-5 shadow-soft">
-            <h2 className="font-display text-lg font-semibold tracking-tight text-ink">{section.title}</h2>
+            <h2 className="type-window-title">{section.title}</h2>
 
             {section.paragraphs?.map((p, i) => (
               <p key={i} className="mt-3 text-sm leading-relaxed text-muted">
@@ -348,7 +348,7 @@ export function NotesSection() {
           >
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-faint">{n.updated}</p>
             <div className="mt-1 flex flex-wrap items-center gap-3">
-              <h2 className="font-display text-lg font-semibold tracking-tight text-ink">{n.title}</h2>
+              <h2 className="type-window-title">{n.title}</h2>
               <ReactionButton targetType="note" targetId={n.id} className="shrink-0" />
             </div>
             <div className="mt-3 space-y-3">

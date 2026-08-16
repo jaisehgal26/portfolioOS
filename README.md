@@ -22,50 +22,71 @@ portfolioOS/
 
 ## Local development
 
-### 1. Install dependencies
+### Quick start (everything in one command)
+
+```bash
+cp .env.example .env   # first time only — edit at repo root
+pnpm dev
+```
+
+This will:
+
+1. Start Docker Postgres (port **5433**)
+2. Run `pnpm install` for the frontend workspace
+3. Create `backend/.venv` if missing and `pip install -r requirements.txt`
+4. Free ports **3000** and **8000** if something is already listening (kills the old process)
+5. Start Next.js on **http://localhost:3000** and FastAPI on **http://localhost:8000**
+
+Press **Ctrl+C** to stop both servers.
+
+### Separate terminals
+
+```bash
+pnpm dev:frontend   # install deps + Next.js only
+pnpm dev:backend    # create venv if needed + FastAPI only
+pnpm docker:up      # Postgres only
+```
+
+### One-time backend migrations
+
+After the first `pnpm dev:backend` (or `pnpm setup:backend`):
+
+```bash
+cd backend
+# Windows: .venv\Scripts\activate   |   macOS/Linux: source .venv/bin/activate
+alembic upgrade head
+```
+
+### Manual setup (optional)
+
+<details>
+<summary>Expand if you prefer doing steps yourself</summary>
 
 ```bash
 pnpm install
-```
-
-### 2. Start PostgreSQL
-
-```bash
 pnpm docker:up
-# or: docker compose up -d
 ```
 
-### 3. Backend setup
+**Backend:**
 
 ```bash
 cd backend
 python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
-
+# Windows: .venv\Scripts\activate   |   macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-cp ../.env.example ../.env   # shared with frontend — edit at repo root
+cp ../.env.example ../.env
 alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
 
-From repo root you can also run:
+**Frontend:**
 
 ```bash
-pnpm dev:backend
-```
-
-(requires venv already created and dependencies installed)
-
-### 4. Frontend setup
-
-```bash
-cp .env.example .env   # repo root — shared with backend (skip if already created)
+cp .env.example .env
 pnpm dev:frontend
 ```
+
+</details>
 
 Open [http://localhost:3000](http://localhost:3000). Submit the Contact form — you should get a 201 response.
 
@@ -186,9 +207,11 @@ Project **portfolioos** on Neon. Table `contact_submissions` is already created.
 
 | Command | Description |
 |---------|-------------|
-| `pnpm dev` | Start frontend dev server |
-| `pnpm dev:frontend` | Same as above |
-| `pnpm dev:backend` | Start FastAPI with reload (Windows venv path) |
+| `pnpm dev` | Docker + install deps + frontend + backend together |
+| `pnpm dev:frontend` | Install deps + Next.js dev server |
+| `pnpm dev:backend` | Create venv if needed + install deps + FastAPI with reload |
+| `pnpm setup:frontend` | `pnpm install` for the workspace |
+| `pnpm setup:backend` | Create `.venv` if missing + `pip install -r requirements.txt` |
 | `pnpm build` | Build frontend for production |
 | `pnpm typecheck` | TypeScript check for frontend |
 | `pnpm docker:up` | Start local Postgres |

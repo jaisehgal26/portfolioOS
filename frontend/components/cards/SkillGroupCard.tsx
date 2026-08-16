@@ -38,10 +38,10 @@ export function SkillGroupCard({ group }: { group: SkillGroup }) {
         <span className={cn("grid h-11 w-11 place-items-center rounded-2xl", accent.tile)}>
           <Icon className="h-5 w-5" aria-hidden />
         </span>
-        <h3 className="font-display text-xl font-semibold tracking-tight text-ink">{group.title}</h3>
+        <h3 className="font-display text-display-sm font-semibold text-ink">{group.title}</h3>
       </div>
 
-      <p className="mt-4 text-sm leading-relaxed text-muted">{group.description}</p>
+      <p className="mt-4 text-sm leading-prose text-muted">{group.description}</p>
 
       <div className="mt-4 flex flex-wrap gap-1.5">
         {group.skills.map((skill) => (

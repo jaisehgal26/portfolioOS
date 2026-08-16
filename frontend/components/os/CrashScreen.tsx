@@ -58,10 +58,10 @@ export function CrashScreen() {
       />
 
       <div className="relative flex h-full max-w-3xl flex-col justify-center px-8 sm:px-20">
-        <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-accent">kernel panic</p>
+        <p className="font-mono text-xs uppercase tracking-label-wide text-accent">kernel panic</p>
 
         <h1
-          className="mt-4 font-display text-5xl font-semibold leading-[1.04] tracking-tight sm:text-7xl"
+          className="mt-4 font-display text-display-lg font-semibold text-balance sm:text-[4.5rem] sm:leading-[1.02]"
           style={{ textShadow: "0.022em 0 rgba(224,122,78,0.6), -0.022em 0 rgba(79,110,247,0.45)" }}
         >
           Well, that
@@ -69,12 +69,12 @@ export function CrashScreen() {
           escalated.
         </h1>
 
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-[#cdbfae] sm:text-lg">
+        <p className="mt-5 max-w-xl type-body text-[#cdbfae] sm:text-lg">
           You ran <span className="font-mono text-[#efe7db]">rm -rf</span>. Bold. JaiOS intercepted the
           blast radius and is quietly putting itself back together.
         </p>
 
-        <div className="mt-7 font-mono text-[13px] leading-relaxed text-[#9fd8b0]">
+        <div className="mt-7 font-mono text-sm leading-relaxed text-[#9fd8b0]">
           {DUMP.slice(0, shown).map((line, i) => (
             <motion.p
               key={i}
@@ -100,7 +100,7 @@ export function CrashScreen() {
           Reboot JaiOS
         </button>
 
-        <p className={cn("mt-8 font-mono text-[11px] tracking-wider text-white/35")}>
+        <p className={cn("mt-8 font-mono text-xs tracking-label text-white/35")}>
           JaiOS · recovery console · stop code JAI_RM_RF
         </p>
       </div>

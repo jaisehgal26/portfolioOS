@@ -384,7 +384,7 @@ function StartPage({ onOpen, online }: { onOpen: (url: string) => void; online: 
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-blue to-violet text-white shadow-card">
           <Globe className="h-7 w-7" />
         </span>
-        <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-ink">Browser</h1>
+        <h1 className="mt-4 type-title">Browser</h1>
         <p className="mt-1 text-sm text-muted">
           Open live projects right here, or type any URL in the address bar.
         </p>

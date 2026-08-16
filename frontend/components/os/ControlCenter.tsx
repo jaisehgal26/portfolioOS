@@ -98,7 +98,7 @@ export function ControlCenter() {
             </div>
 
             <div className="rounded-2xl border border-line bg-surface p-3.5">
-              <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-faint">
+              <div className="mb-2 flex items-center gap-2 type-section">
                 <SunDim className="h-4 w-4" /> Brightness
               </div>
               <input
@@ -113,7 +113,7 @@ export function ControlCenter() {
             </div>
 
             <div className="rounded-2xl border border-line bg-surface p-3.5">
-              <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-faint">Wallpaper</p>
+              <p className="mb-2.5 type-section">Wallpaper</p>
               <div className="grid grid-cols-4 gap-2">
                 {WALLPAPERS.map((w) => (
                   <button
@@ -141,14 +141,14 @@ export function ControlCenter() {
               }}
               className="flex w-full items-center justify-between rounded-2xl border border-line bg-surface p-3.5 text-left transition-colors hover:border-line-strong"
             >
-              <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-faint">
+              <span className="flex items-center gap-2 type-section">
                 <Music2 className="h-4 w-4" /> Ambience
               </span>
               <span className="text-sm font-medium text-ink">{playingLabel}</span>
             </button>
 
             <div className="flex items-center justify-between rounded-2xl border border-line bg-surface p-3.5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-faint">Accent</p>
+              <p className="type-section">Accent</p>
               <div className="flex gap-2">
                 {ACCENTS.map((a) => (
                   <button

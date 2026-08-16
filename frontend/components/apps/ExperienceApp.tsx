@@ -76,7 +76,7 @@ export function ExperienceDetail({ roleId }: { roleId: string }) {
               </span>
             )}
           </div>
-          <h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink">{role.company}</h1>
+          <h1 className="mt-2 type-title">{role.company}</h1>
           <p className={cn("text-sm font-medium", accent.text)}>{role.role}</p>
           <p className="mt-1 flex items-center gap-3 text-sm text-muted">
             <span>{role.period}</span>
@@ -87,7 +87,7 @@ export function ExperienceDetail({ roleId }: { roleId: string }) {
 
           <p className="mt-4 leading-relaxed text-muted">{role.summary}</p>
 
-          <h2 className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-faint">Contributions</h2>
+          <h2 className="mt-6 type-section">Contributions</h2>
           <ul className="mt-3 space-y-2.5">
             {role.contributions.map((c, i) => (
               <li key={i} className="flex gap-3 text-sm leading-relaxed text-ink/90">
@@ -97,7 +97,7 @@ export function ExperienceDetail({ roleId }: { roleId: string }) {
             ))}
           </ul>
 
-          <h2 className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-faint">Technologies</h2>
+          <h2 className="mt-6 type-section">Technologies</h2>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {role.tech.map((t) => (
               <span key={t} className="chip">{t}</span>

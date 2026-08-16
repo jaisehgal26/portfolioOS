@@ -21,7 +21,7 @@ export function ContactApp() {
 
   return (
     <AppScroll>
-      <h1 className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+      <h1 className="type-title sm:text-3xl">
         Let&apos;s build full-stack products.
       </h1>
       <p className="mt-2 max-w-xl leading-relaxed text-muted">

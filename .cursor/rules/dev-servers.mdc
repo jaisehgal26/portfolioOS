@@ -1,0 +1,50 @@
+---
+description: Do not start dev servers for agent testing; kill any the agent starts when done
+alwaysApply: true
+---
+
+# Dev servers — user-owned only
+
+Do **not** start `pnpm dev`, `pnpm dev:frontend`, `pnpm dev:backend`, `next dev`, `uvicorn`, or similar local servers for your own verification or testing.
+
+## Default behavior
+
+- Assume the **user** runs the dev stack in their terminal.
+- Use **http://localhost:3000** (frontend) and **http://localhost:8000** (backend) only if they already have servers running.
+- Do not start a second instance — that causes port conflicts (3000 vs 3001) and duplicate Next.js / uvicorn processes.
+
+## This project's dev stack
+
+| Command | What it does |
+|---------|--------------|
+| `pnpm dev` | Start Docker, free ports 3000/8000, install deps, then frontend + backend together |
+| `pnpm dev:frontend` | Free port 3000, install frontend deps, then Next.js on port **3000** |
+| `pnpm dev:backend` | Free port 8000, create `.venv` if needed, install Python deps, then FastAPI on port **8000** |
+| `pnpm setup:frontend` | Run `pnpm install` for the workspace |
+| `pnpm setup:backend` | Create backend `.venv` if missing and `pip install -r requirements.txt` |
+| `pnpm docker:up` | Start local Postgres (port **5433**) |
+| `pnpm docker:down` | Stop local Postgres |
+
+Run frontend and backend in **separate terminals** with `dev:frontend` / `dev:backend`, or use `pnpm dev` for the full stack in one terminal.
+
+## When starting a server is unavoidable
+
+Only start a dev server if the task **cannot** be completed otherwise (e.g. no build alternative, user explicitly asks you to run it).
+
+If you must start one:
+
+1. Check for an existing server first (`terminals` folder or user message).
+2. Prefer compile-only checks over `pnpm dev` when that is enough.
+3. **Stop the process when finished** — do not leave it running in the background.
+4. On Windows, if you started it: `taskkill /PID <pid> /F` or stop the background shell task you created.
+5. If ports 3000 or 8000 are stuck, help the user free them — do not spawn another instance on 3001.
+
+## What to do instead of starting dev
+
+- `pnpm typecheck` — frontend TypeScript
+- `pnpm lint` — frontend ESLint
+- `pnpm build` — frontend production build
+- `cd backend && python -m pytest` — backend API tests
+- `ReadLints` — IDE diagnostics on edited files
+- Inspect code and configs directly
+- Ask the user to refresh their running dev server if they need a visual check

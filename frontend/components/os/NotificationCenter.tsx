@@ -49,7 +49,7 @@ export function NotificationCenter() {
             className="glass-strong fixed right-2.5 top-12 z-[70] flex max-h-[80vh] w-[min(22rem,calc(100vw-1.25rem))] flex-col overflow-hidden rounded-3xl shadow-window"
           >
             <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
-              <h2 className="font-display text-lg font-semibold tracking-tight text-ink">Notifications</h2>
+              <h2 className="type-window-title">Notifications</h2>
               <div className="flex items-center gap-1">
                 {notifications.length > 0 && (
                   <button

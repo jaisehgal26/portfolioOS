@@ -27,7 +27,7 @@ export function Desktop() {
               aria-label={`Open ${app.name}`}
             >
               <AppIcon app={app} size="md" />
-              <span className="line-clamp-1 text-center text-[11px] font-medium text-ink">
+              <span className="line-clamp-1 text-center text-xs font-medium leading-snug text-ink">
                 {app.shortName}
               </span>
             </button>
@@ -62,7 +62,7 @@ export function Desktop() {
             aria-label={`Open ${app.name}`}
           >
             <AppIcon app={app} size="md" className="transition-transform duration-200 group-hover:scale-105" />
-            <span className="line-clamp-1 text-center text-[11px] font-medium text-ink drop-shadow-sm">
+            <span className="line-clamp-1 text-center text-xs font-medium leading-snug text-ink drop-shadow-sm">
               {app.shortName}
             </span>
           </button>

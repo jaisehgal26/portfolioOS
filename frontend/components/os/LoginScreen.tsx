@@ -36,7 +36,7 @@ export function LoginScreen() {
       {/* Lock-screen clock */}
       <div className="text-center" suppressHydrationWarning>
         <p className="text-sm font-medium text-muted">{date}</p>
-        <p className="font-display text-7xl font-semibold tracking-tight text-ink sm:text-8xl">{time}</p>
+        <p className="type-hero tabular-nums" suppressHydrationWarning>{time}</p>
       </div>
 
       {/* User tile */}
@@ -53,7 +53,7 @@ export function LoginScreen() {
           className="group flex flex-col items-center gap-3 rounded-3xl p-2 outline-none"
         >
           <Monogram size="xl" className="transition-transform group-hover:scale-105 group-focus-visible:scale-105" />
-          <span className="font-display text-xl font-semibold tracking-tight text-ink">{profile.name}</span>
+          <span className="font-display text-display-sm font-semibold text-ink">{profile.name}</span>
          
         </button>
 
@@ -84,7 +84,7 @@ export function LoginScreen() {
           </button>
         </motion.div>
 
-        <p className="mt-2 text-[11px] text-faint">Any password works</p>
+        <p className="type-caption">Any password works</p>
 
         <button
           type="button"

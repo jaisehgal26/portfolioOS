@@ -73,7 +73,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
             {project.category}
           </p>
           <div className="mt-1 flex flex-wrap items-center gap-3">
-            <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">
+            <h2 className="type-title">
               {project.title}
             </h2>
             <ReactionButton targetType="case_study" targetId={project.id} className="shrink-0" />
@@ -181,7 +181,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-faint">{title}</h3>
+      <h3 className="mb-3 type-section">{title}</h3>
       {children}
     </div>
   );

@@ -109,7 +109,7 @@ function ServicesHealth() {
 
   return (
     <section className="mb-7 rounded-2xl border border-line bg-surface p-4 shadow-soft sm:p-5">
-      <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+      <h2 className="flex items-center gap-2 type-section">
         <Wifi className="h-3.5 w-3.5" /> Network · services
       </h2>
 
@@ -225,7 +225,7 @@ export function SystemMonitorApp() {
     <AppScroll>
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">Activity Monitor</h1>
+          <h1 className="type-title">Activity Monitor</h1>
           <p className="mt-1 text-sm text-muted">A live read-out of the stack running this engineer.</p>
         </div>
         <div className="shrink-0 rounded-full border border-line bg-surface px-3 py-1.5 shadow-soft">
@@ -238,7 +238,7 @@ export function SystemMonitorApp() {
       {/* Skill memory */}
       <section className="rounded-2xl border border-line bg-surface p-4 shadow-soft sm:p-5">
         <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+          <h2 className="flex items-center gap-2 type-section">
             <MemoryStick className="h-3.5 w-3.5" /> Memory · skills resident
           </h2>
           <span className="font-display text-sm font-semibold tabular-nums text-ink">
@@ -274,7 +274,7 @@ export function SystemMonitorApp() {
       </section>
 
       {/* Processes */}
-      <h2 className="mt-7 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+      <h2 className="mt-7 flex items-center gap-2 type-section">
         <Layers className="h-3.5 w-3.5" /> Processes · top skills by load
       </h2>
       <div className="mt-3 overflow-hidden rounded-2xl border border-line bg-surface shadow-soft">
@@ -299,7 +299,7 @@ export function SystemMonitorApp() {
       </div>
 
       {/* Hardware */}
-      <h2 className="mt-7 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+      <h2 className="mt-7 flex items-center gap-2 type-section">
         <Cpu className="h-3.5 w-3.5" /> Hardware
       </h2>
       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -318,7 +318,7 @@ export function SystemMonitorApp() {
       </div>
 
       {/* Session */}
-      <h2 className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-faint">Session</h2>
+      <h2 className="mt-7 type-section">Session</h2>
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {session.map((s) => (
           <div key={s.k} className="rounded-2xl border border-line bg-surface p-3.5 shadow-soft">
@@ -331,7 +331,7 @@ export function SystemMonitorApp() {
       </div>
 
       {/* Achievements */}
-      <h2 className="mt-7 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+      <h2 className="mt-7 flex items-center gap-2 type-section">
         <Trophy className="h-3.5 w-3.5" /> Achievements · {unlocked.size}/{ACHIEVEMENTS.length}
       </h2>
       <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2">

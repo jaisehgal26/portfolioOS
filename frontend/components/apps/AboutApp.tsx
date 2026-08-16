@@ -20,7 +20,7 @@ export function AboutApp() {
       <div className="flex flex-col items-center gap-4 rounded-3xl border border-line bg-surface-2/50 p-7 text-center sm:flex-row sm:text-left">
         <Monogram size="lg" className="rounded-3xl" />
         <div>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">{profile.name}</h1>
+          <h1 className="font-display text-display-xl font-semibold text-balance text-ink">{profile.name}</h1>
           <p className="text-muted">{profile.role}</p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-sm text-muted sm:justify-start">
             <span className="inline-flex items-center gap-1.5">
@@ -34,17 +34,17 @@ export function AboutApp() {
       <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((s) => (
           <div key={s.k} className="rounded-2xl border border-line bg-surface p-3.5 shadow-soft">
-            <dt className="text-xs font-medium uppercase tracking-wider text-faint">{s.k}</dt>
+            <dt className="type-label">{s.k}</dt>
             <dd className="mt-1 text-sm font-semibold text-ink">{s.v}</dd>
           </div>
         ))}
       </dl>
 
       {/* Intro */}
-      <p className="mt-6 text-pretty leading-relaxed text-muted">{profile.aboutIntro}</p>
+      <p className="mt-6 type-body">{profile.aboutIntro}</p>
 
       {/* Highlights */}
-      <h2 className="mt-7 text-xs font-semibold uppercase tracking-[0.16em] text-faint">Highlights</h2>
+      <h2 className="mt-7 type-section">Highlights</h2>
       <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
         {profile.highlights.map((h) => (
           <li key={h} className="flex items-start gap-2.5 text-sm text-ink">
@@ -57,7 +57,7 @@ export function AboutApp() {
       </ul>
 
       {/* Core stack */}
-      <h2 className="mt-7 text-xs font-semibold uppercase tracking-[0.16em] text-faint">Core stack</h2>
+      <h2 className="mt-7 type-section">Core stack</h2>
       <div className="mt-3 flex flex-wrap gap-1.5">
         {profile.coreStack.map((t) => (
           <span key={t} className="chip">
@@ -67,10 +67,10 @@ export function AboutApp() {
       </div>
 
       <figure className="mt-7 border-l-2 border-accent/40 pl-4">
-        <blockquote className="text-pretty font-display text-base leading-relaxed text-muted">
+        <blockquote className="text-pretty font-display text-base leading-prose text-muted">
           &ldquo;{profile.quote}&rdquo;
         </blockquote>
-        <figcaption className="mt-2 text-[11px] text-faint">
+        <figcaption className="mt-2 type-caption">
           {profile.quoteLabel} — {profile.name}
         </figcaption>
       </figure>

@@ -1,29 +1,12 @@
 import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { ensureBackendVenv } from "./ensure-backend-venv.mjs";
+import { freePort } from "./lib/free-port.mjs";
+import { backend } from "./lib/paths.mjs";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const backend = join(root, "backend");
-const isWin = process.platform === "win32";
-const python = join(backend, ".venv", isWin ? "Scripts" : "bin", isWin ? "python.exe" : "python");
+const python = ensureBackendVenv();
+freePort(8000);
 
-if (!existsSync(python)) {
-  console.error(
-    [
-      "Backend venv not found.",
-      "",
-      "  cd backend",
-      "  python -m venv .venv",
-      isWin ? "  .venv\\Scripts\\activate" : "  source .venv/bin/activate",
-      "  pip install -r requirements.txt",
-      "  alembic upgrade head",
-      "",
-      "Then run: pnpm dev:backend",
-    ].join("\n"),
-  );
-  process.exit(1);
-}
+console.log("\n→ Starting backend dev server (http://localhost:8000)…\n");
 
 const child = spawn(
   python,

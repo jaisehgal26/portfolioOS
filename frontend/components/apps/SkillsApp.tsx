@@ -8,7 +8,7 @@ export function SkillsApp() {
   return (
     <AppScroll>
       <div className="mb-5">
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">Skills</h1>
+        <h1 className="type-title">Skills</h1>
         <p className="mt-1 text-sm text-muted">
           Full-stack craft — frontend, backend, data, and delivery, grouped by how I actually use them.
         </p>

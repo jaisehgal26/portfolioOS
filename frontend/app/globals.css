@@ -70,7 +70,9 @@ body {
   background-color: rgb(var(--bg));
   color: rgb(var(--ink));
   font-feature-settings: "cv02", "cv03", "cv11", "ss01";
+  font-variant-ligatures: common-ligatures contextual;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
@@ -148,14 +150,51 @@ body {
     @apply rounded-2xl border border-line bg-surface shadow-soft;
   }
 
+  /* ---- Typography scale (Fraunces display + Jakarta body) ---- */
+
+  /* Lock screen / screensaver clock */
+  .type-hero {
+    @apply font-display text-display-hero font-semibold text-ink sm:text-[5rem] sm:leading-[0.92];
+  }
+
+  /* App page titles (Guestbook, Skills, Changelog, …) */
+  .type-title {
+    @apply font-display text-display-md font-semibold tracking-tight text-balance text-ink;
+  }
+
+  /* Floating window chrome titles */
+  .type-window-title {
+    @apply font-display text-display-sm font-semibold tracking-tight text-ink;
+  }
+
+  /* Section kickers inside apps */
+  .type-section {
+    @apply text-xs font-semibold uppercase tracking-label text-faint;
+  }
+
+  /* Stat keys, metadata labels */
+  .type-label {
+    @apply text-xs font-medium uppercase tracking-label text-faint;
+  }
+
+  /* Long-form body copy */
+  .type-body {
+    @apply text-pretty leading-prose text-muted;
+  }
+
+  /* Secondary captions — 12px minimum for UI legibility */
+  .type-caption {
+    @apply text-xs leading-snug text-faint;
+  }
+
   /* Small uppercase kicker used above section titles */
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent;
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-label-wide text-accent;
   }
 
   /* Pill chip for tech tags */
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2 px-2.5 py-1 text-xs font-medium text-muted;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2 px-2.5 py-1 text-xs font-medium leading-snug text-muted;
   }
 
   /* Translucent OS panel (dock, top bar, popovers, windows) —

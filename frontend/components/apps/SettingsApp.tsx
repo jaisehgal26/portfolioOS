@@ -141,7 +141,7 @@ export function SettingsApp() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-faint">{label}</h3>
+      <h3 className="mb-3 type-section">{label}</h3>
       {children}
     </div>
   );

@@ -38,7 +38,7 @@ export function BootScreen() {
         className="flex flex-col items-center"
       >
         <JaiLogo className="h-20 w-20 drop-shadow-[0_14px_34px_rgba(240,97,47,0.4)]" />
-        <h1 className="mt-6 font-display text-3xl font-semibold tracking-tight text-ink">JaiOS</h1>
+        <h1 className="mt-6 font-display text-display-xl font-semibold text-balance text-ink">JaiOS</h1>
         <p className="mt-1.5 text-sm text-muted">{site.tagline}</p>
 
         <div className="mt-8 h-5 overflow-hidden text-center">
@@ -49,7 +49,7 @@ export function BootScreen() {
               animate={{ opacity: 1, y: 0 }}
               exit={reduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
               transition={{ duration: reduced ? 0 : 0.3 }}
-              className="text-xs font-medium uppercase tracking-[0.2em] text-faint"
+              className="type-label"
             >
               {STEPS[step]}
             </motion.p>

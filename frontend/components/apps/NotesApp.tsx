@@ -55,7 +55,7 @@ export function NotesApp() {
               <span className="text-xs font-medium uppercase tracking-wider text-faint">Engineering note</span>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">{note.title}</h1>
+              <h1 className="type-title">{note.title}</h1>
               <ReactionButton targetType="note" targetId={note.id} className="shrink-0" />
             </div>
             <p className="mt-1 text-xs text-faint">{note.updated}</p>

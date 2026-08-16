@@ -32,7 +32,7 @@ export function AppHeader({
     <div className="flex items-center gap-3 border-b border-line px-5 py-3 sm:px-6">
       {icon}
       <div className="min-w-0">
-        <h2 className="truncate font-display text-lg font-semibold tracking-tight text-ink">{title}</h2>
+        <h2 className="truncate type-window-title">{title}</h2>
         {subtitle && <p className="truncate text-xs text-muted">{subtitle}</p>}
       </div>
       {actions && <div className="ml-auto flex shrink-0 items-center gap-2">{actions}</div>}

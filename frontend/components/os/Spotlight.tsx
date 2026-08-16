@@ -259,7 +259,7 @@ export function Spotlight() {
               )}
               {grouped.map(({ group, items }) => (
                 <div key={group} className="mb-1.5 last:mb-0">
-                  <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-faint">{group}</p>
+                  <p className="px-3 pb-1 pt-2 type-section">{group}</p>
                   {items.map((cmd) => {
                     flat += 1;
                     const i = flat;

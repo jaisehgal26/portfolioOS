@@ -92,7 +92,7 @@ export function GuestbookApp() {
   return (
     <AppScroll>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">Guestbook</h1>
+        <h1 className="type-title">Guestbook</h1>
         <p className="mt-1 text-sm text-muted">Leave a short note on the wall — messages appear after moderation.</p>
       </div>
 
@@ -178,7 +178,7 @@ export function GuestbookApp() {
         </div>
       </form>
 
-      <h2 className="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-faint">
+      <h2 className="mt-8 type-section">
         On the wall · {total}
       </h2>
 

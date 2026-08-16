@@ -38,6 +38,21 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      },
+      fontSize: {
+        "display-hero": ["4.5rem", { lineHeight: "0.95", letterSpacing: "-0.03em" }],
+        "display-xl": ["3rem", { lineHeight: "1.05", letterSpacing: "-0.025em" }],
+        "display-lg": ["2.25rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        "display-md": ["1.5rem", { lineHeight: "1.15", letterSpacing: "-0.015em" }],
+        "display-sm": ["1.125rem", { lineHeight: "1.25", letterSpacing: "-0.01em" }],
+      },
+      letterSpacing: {
+        label: "0.18em",
+        "label-wide": "0.24em",
+      },
+      lineHeight: {
+        prose: "1.7",
       },
       maxWidth: {
         content: "72rem",

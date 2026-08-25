@@ -3,6 +3,7 @@ export interface ContactPayload {
   email: string;
   message: string;
   subject?: string;
+  turnstile_token?: string;
 }
 
 export interface ContactResponse {
@@ -122,11 +123,19 @@ export async function getReactions(targetType: string, targetId?: string): Promi
   return apiFetch<ReactionsListResponse>(`/api/v1/reactions?${params}`);
 }
 
-export async function postReaction(targetType: string, targetId: string): Promise<ReactionResponse> {
+export async function postReaction(
+  targetType: string,
+  targetId: string,
+  turnstileToken?: string,
+): Promise<ReactionResponse> {
   return apiFetch<ReactionResponse>("/api/v1/reactions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ target_type: targetType, target_id: targetId }),
+    body: JSON.stringify({
+      target_type: targetType,
+      target_id: targetId,
+      turnstile_token: turnstileToken,
+    }),
   });
 }
 
@@ -144,6 +153,7 @@ export async function submitGuestbook(body: {
   name?: string;
   email?: string;
   is_anonymous: boolean;
+  turnstile_token?: string;
 }): Promise<GuestbookSubmitResponse> {
   return apiFetch<GuestbookSubmitResponse>("/api/v1/guestbook", {
     method: "POST",

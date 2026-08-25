@@ -66,12 +66,20 @@ async function adminFetch<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export async function adminLogin(username: string, password: string): Promise<void> {
+export async function adminLogin(
+  username: string,
+  password: string,
+  turnstileToken?: string,
+): Promise<void> {
   const res = await fetch("/api/admin/auth/login", {
     method: "POST",
     credentials: "same-origin",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({
+      username,
+      password,
+      turnstile_token: turnstileToken,
+    }),
   });
   if (!res.ok) {
     throw new AdminApiError(await parseError(res), res.status);

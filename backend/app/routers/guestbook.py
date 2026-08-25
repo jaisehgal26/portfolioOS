@@ -13,6 +13,7 @@ from app.schemas.guestbook import (
 )
 from app.services.guestbook_notify import send_guestbook_notification
 from app.services.rate_limit import get_client_ip, hash_ip
+from app.services.turnstile import verify_turnstile_token
 
 router = APIRouter(prefix="/api/v1", tags=["guestbook"])
 
@@ -68,6 +69,8 @@ async def submit_guestbook(
     db: AsyncSession = Depends(get_db),
     _: None = Depends(rate_limit_dep("guestbook_write")),
 ) -> GuestbookSubmitResponse:
+    await verify_turnstile_token(payload.turnstile_token, get_client_ip(request))
+
     visitor = hash_ip(get_client_ip(request))
 
     if payload.is_anonymous:

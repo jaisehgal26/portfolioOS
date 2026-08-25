@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ThumbsUp } from "lucide-react";
 import { ApiError, getReactions, postReaction } from "@/lib/api";
+import { isTurnstileEnabled, TurnstileWidget, type TurnstileHandle } from "@/components/ui/TurnstileWidget";
 import { useOSStore } from "@/store/os-store";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,8 @@ export function ReactionButton({ targetType, targetId, className }: ReactionButt
   const [reacted, setReacted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const turnstileRef = useRef<TurnstileHandle | null>(null);
+  const pendingSubmitRef = useRef(false);
 
   const storageKey = `${STORAGE_PREFIX}${targetType}:${targetId}`;
 
@@ -41,43 +44,84 @@ export function ReactionButton({ targetType, targetId, className }: ReactionButt
     load();
   }, [load]);
 
-  async function handleClick() {
-    if (reacted || submitting) return;
-    setSubmitting(true);
-    try {
-      const res = await postReaction(targetType, targetId);
-      setCount(res.count);
-      setReacted(true);
-      localStorage.setItem(storageKey, "1");
-      if (res.already_reacted) {
+  const submitReaction = useCallback(
+    async (turnstileToken?: string) => {
+      setSubmitting(true);
+      try {
+        const res = await postReaction(targetType, targetId, turnstileToken);
+        setCount(res.count);
         setReacted(true);
+        localStorage.setItem(storageKey, "1");
+        if (res.already_reacted) {
+          setReacted(true);
+        }
+      } catch (err) {
+        const msg = err instanceof ApiError ? err.message : "Could not save your reaction.";
+        pushToast(msg);
+        turnstileRef.current?.reset();
+      } finally {
+        setSubmitting(false);
+        pendingSubmitRef.current = false;
       }
-    } catch (err) {
-      const msg = err instanceof ApiError ? err.message : "Could not save your reaction.";
-      pushToast(msg);
-    } finally {
-      setSubmitting(false);
+    },
+    [targetType, targetId, storageKey, pushToast],
+  );
+
+  function handleClick() {
+    if (reacted || submitting) return;
+
+    if (isTurnstileEnabled()) {
+      if (!turnstileRef.current) {
+        pushToast("Please wait a moment and try again.");
+        return;
+      }
+      pendingSubmitRef.current = true;
+      turnstileRef.current.execute();
+      return;
+    }
+
+    void submitReaction();
+  }
+
+  function handleTurnstileVerify(token: string) {
+    if (pendingSubmitRef.current) {
+      void submitReaction(token);
     }
   }
 
+  function handleTurnstileExpire() {
+    pendingSubmitRef.current = false;
+  }
+
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={loading || reacted || submitting}
-      className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
-        reacted
-          ? "border-accent/40 bg-accent/10 text-accent"
-          : "border-line bg-surface text-ink hover:border-line-strong hover:bg-surface-2",
-        (loading || submitting) && "opacity-70",
-        className,
-      )}
-      aria-pressed={reacted}
-      aria-label={reacted ? `You liked this (${count})` : `Like this (${count})`}
-    >
-      <ThumbsUp className={cn("h-4 w-4", reacted && "fill-current")} strokeWidth={2} />
-      <span className="tabular-nums">{loading ? "—" : count}</span>
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={loading || reacted || submitting}
+        className={cn(
+          "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
+          reacted
+            ? "border-accent/40 bg-accent/10 text-accent"
+            : "border-line bg-surface text-ink hover:border-line-strong hover:bg-surface-2",
+          (loading || submitting) && "opacity-70",
+          className,
+        )}
+        aria-pressed={reacted}
+        aria-label={reacted ? `You liked this (${count})` : `Like this (${count})`}
+      >
+        <ThumbsUp className={cn("h-4 w-4", reacted && "fill-current")} strokeWidth={2} />
+        <span className="tabular-nums">{loading ? "—" : count}</span>
+      </button>
+
+      <TurnstileWidget
+        handleRef={turnstileRef}
+        size="invisible"
+        onVerify={handleTurnstileVerify}
+        onExpire={handleTurnstileExpire}
+        onError={handleTurnstileExpire}
+        className="hidden"
+      />
+    </>
   );
 }

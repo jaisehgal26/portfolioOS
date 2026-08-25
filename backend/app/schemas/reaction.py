@@ -14,6 +14,7 @@ class ReactionsListResponse(BaseModel):
 class ReactionCreate(BaseModel):
     target_type: str = Field(min_length=1, max_length=32)
     target_id: str = Field(min_length=1, max_length=64)
+    turnstile_token: str | None = None
 
 
 class ReactionResponse(BaseModel):

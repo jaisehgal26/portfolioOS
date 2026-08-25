@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,6 +7,8 @@ from app.deps.rate_limit import rate_limit_dep
 from app.models.contact import ContactSubmission
 from app.schemas.contact import ContactCreate, ContactResponse
 from app.services.email import send_contact_emails
+from app.services.rate_limit import get_client_ip
+from app.services.turnstile import verify_turnstile_token
 
 router = APIRouter(prefix="/api/v1", tags=["contact"])
 
@@ -14,9 +16,11 @@ router = APIRouter(prefix="/api/v1", tags=["contact"])
 @router.post("/contact", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
 async def submit_contact(
     payload: ContactCreate,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     _: None = Depends(rate_limit_dep("contact_write")),
 ) -> ContactSubmission:
+    await verify_turnstile_token(payload.turnstile_token, get_client_ip(request))
     submission = ContactSubmission(
         name=payload.name,
         email=payload.email,

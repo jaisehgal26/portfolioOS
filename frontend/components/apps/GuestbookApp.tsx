@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { AppScroll } from "@/components/ui/AppShell";
+import { isTurnstileEnabled, TurnstileWidget, type TurnstileHandle } from "@/components/ui/TurnstileWidget";
 import { ApiError, getGuestbook, submitGuestbook, type GuestbookPublicItem } from "@/lib/api";
 import { useOSStore } from "@/store/os-store";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,8 @@ export function GuestbookApp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,6 +69,12 @@ export function GuestbookApp() {
       return;
     }
 
+    if (isTurnstileEnabled() && !turnstileToken) {
+      setError("Please complete the security check.");
+      setFormState("error");
+      return;
+    }
+
     setFormState("submitting");
 
     try {
@@ -74,11 +83,14 @@ export function GuestbookApp() {
         is_anonymous: isAnonymous,
         name: isAnonymous ? undefined : name.trim() || undefined,
         email: isAnonymous ? undefined : email.trim() || undefined,
+        turnstile_token: turnstileToken ?? undefined,
       });
       setMessage("");
       setName("");
       setEmail("");
       setIsAnonymous(false);
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
       setFormState("success");
       pushToast(res.message);
     } catch (err) {
@@ -86,6 +98,8 @@ export function GuestbookApp() {
       setError(msg);
       setFormState("error");
       pushToast(msg);
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
     }
   }
 
@@ -170,6 +184,14 @@ export function GuestbookApp() {
             </label>
           </div>
         )}
+
+        <TurnstileWidget
+          handleRef={turnstileRef}
+          onVerify={setTurnstileToken}
+          onExpire={() => setTurnstileToken(null)}
+          onError={() => setTurnstileToken(null)}
+          className="mt-4"
+        />
 
         <div className="mt-4 flex justify-end">
           <Button type="submit" variant="primary" disabled={formState === "submitting"}>

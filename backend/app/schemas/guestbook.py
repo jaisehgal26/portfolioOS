@@ -9,6 +9,7 @@ class GuestbookCreate(BaseModel):
     name: str | None = Field(default=None, max_length=100)
     email: EmailStr | None = None
     is_anonymous: bool = False
+    turnstile_token: str | None = None
 
     @field_validator("name", mode="before")
     @classmethod

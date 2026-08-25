@@ -77,6 +77,8 @@ class Settings(BaseSettings):
     rate_limit_write_window_seconds: int = 3600
     rate_limit_read_window_seconds: int = 60
 
+    turnstile_secret_key: str = ""
+
     @field_validator("upstash_redis_rest_url", mode="before")
     @classmethod
     def normalize_http_urls(cls, value: object) -> object:

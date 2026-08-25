@@ -2,9 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE, getBackendUrl, SESSION_TTL_SECONDS } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
-  let body: { username?: string; password?: string };
+  let body: { username?: string; password?: string; turnstile_token?: string };
   try {
-    body = (await request.json()) as { username?: string; password?: string };
+    body = (await request.json()) as { username?: string; password?: string; turnstile_token?: string };
   } catch {
     return NextResponse.json({ detail: "Invalid request body" }, { status: 400 });
   }
@@ -19,7 +19,11 @@ export async function POST(request: Request) {
   const res = await fetch(`${backend}/api/v1/admin/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({
+      username,
+      password,
+      turnstile_token: body.turnstile_token,
+    }),
   });
 
   if (!res.ok) {

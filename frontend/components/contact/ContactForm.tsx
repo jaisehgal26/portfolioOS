@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
+import { isTurnstileEnabled, TurnstileWidget, type TurnstileHandle } from "@/components/ui/TurnstileWidget";
 import { submitContact } from "@/lib/api";
 import { useOSStore } from "@/store/os-store";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,8 @@ export function ContactForm() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle | null>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -26,6 +29,12 @@ export function ContactForm() {
 
     if (!name.trim() || !email.trim() || !message.trim()) {
       setError("Please fill in name, email, and message.");
+      setState("error");
+      return;
+    }
+
+    if (isTurnstileEnabled() && !turnstileToken) {
+      setError("Please complete the security check.");
       setState("error");
       return;
     }
@@ -38,11 +47,14 @@ export function ContactForm() {
         email: email.trim(),
         message: message.trim(),
         subject: subject.trim() || undefined,
+        turnstile_token: turnstileToken ?? undefined,
       });
       setName("");
       setEmail("");
       setSubject("");
       setMessage("");
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
       setState("success");
       pushToast("Message sent — I'll get back to you soon.");
     } catch (err) {
@@ -50,6 +62,8 @@ export function ContactForm() {
       setError(msg);
       setState("error");
       pushToast(msg);
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
     }
   }
 
@@ -139,6 +153,14 @@ export function ContactForm() {
               />
             </label>
           </div>
+
+          <TurnstileWidget
+            handleRef={turnstileRef}
+            onVerify={setTurnstileToken}
+            onExpire={() => setTurnstileToken(null)}
+            onError={() => setTurnstileToken(null)}
+            className="mt-4"
+          />
 
           <div className="mt-4 flex justify-end">
             <Button type="submit" variant="primary" disabled={state === "submitting"}>

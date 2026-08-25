@@ -1,15 +1,19 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
 from secrets import compare_digest
 
 from app.config import get_settings
 from app.schemas.admin_auth import AdminLoginRequest, AdminLoginResponse
 from app.services.admin_session import SESSION_TTL_SECONDS, create_admin_token
+from app.services.rate_limit import get_client_ip
+from app.services.turnstile import verify_turnstile_token
 
 router = APIRouter(prefix="/api/v1/admin/auth", tags=["admin-auth"])
 
 
 @router.post("/login", response_model=AdminLoginResponse)
-async def admin_login(payload: AdminLoginRequest) -> AdminLoginResponse:
+async def admin_login(payload: AdminLoginRequest, request: Request) -> AdminLoginResponse:
+    await verify_turnstile_token(payload.turnstile_token, get_client_ip(request))
+
     settings = get_settings()
     if not settings.admin_username or not settings.admin_password:
         raise HTTPException(

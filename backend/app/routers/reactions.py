@@ -17,6 +17,7 @@ from app.schemas.reaction import (
     ReactionsListResponse,
 )
 from app.services.rate_limit import get_client_ip
+from app.services.turnstile import verify_turnstile_token
 
 router = APIRouter(prefix="/api/v1", tags=["reactions"])
 
@@ -82,6 +83,8 @@ async def add_reaction(
     db: AsyncSession = Depends(get_db),
     _: None = Depends(rate_limit_dep("reactions_write")),
 ) -> ReactionResponse:
+    await verify_turnstile_token(payload.turnstile_token, get_client_ip(request))
+
     _resolve_target_ids(payload.target_type, payload.target_id)
 
     visitor = _visitor_hash(request)

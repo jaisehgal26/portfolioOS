@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, Suspense, useRef, useState } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { adminInputClass } from "@/components/admin/admin-styles";
 import { JaiLogo } from "@/components/os/JaiLogo";
 import { Button } from "@/components/ui/Button";
+import { isTurnstileEnabled, TurnstileWidget, type TurnstileHandle } from "@/components/ui/TurnstileWidget";
 import { adminLogin, AdminApiError } from "@/lib/admin-api";
 
 function LoginForm() {
@@ -15,18 +16,28 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle | null>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (isTurnstileEnabled() && !turnstileToken) {
+      setError("Please complete the security check.");
+      return;
+    }
+
     setLoading(true);
     try {
-      await adminLogin(username, password);
+      await adminLogin(username, password, turnstileToken ?? undefined);
       const from = searchParams.get("from");
       router.push(from?.startsWith("/admin") ? from : "/admin/guestbook");
       router.refresh();
     } catch (err) {
       setError(err instanceof AdminApiError ? err.message : "Login failed");
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -84,6 +95,14 @@ function LoginForm() {
           {error}
         </p>
       ) : null}
+
+      <TurnstileWidget
+        handleRef={turnstileRef}
+        onVerify={setTurnstileToken}
+        onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
+        className="flex justify-center"
+      />
 
       <Button type="submit" variant="secondary" size="md" className="w-full" disabled={loading}>
         {loading ? "Signing in…" : "Sign in"}

@@ -9,6 +9,7 @@ class ContactCreate(BaseModel):
     email: EmailStr
     message: str = Field(min_length=1, max_length=5000)
     subject: str | None = Field(default=None, max_length=255)
+    turnstile_token: str | None = None
 
 
 class ContactResponse(BaseModel):

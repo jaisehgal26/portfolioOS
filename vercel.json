@@ -5,6 +5,14 @@
   "buildCommand": "cd frontend && pnpm build",
   "outputDirectory": "frontend/.next",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet -- frontend/ backend/ api/ package.json pnpm-lock.yaml pnpm-workspace.yaml pyproject.toml vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.jaisehgal.com" }],
+      "destination": "https://jaisehgal.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/api/v1/:path*", "destination": "/api" },
     { "source": "/health", "destination": "/api" }

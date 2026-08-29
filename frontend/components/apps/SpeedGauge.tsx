@@ -18,8 +18,8 @@ interface SpeedGaugeProps {
 }
 
 const CX = 120;
-const CY = 118;
-const R = 88;
+const CY = 108;
+const R = 78;
 
 function polar(angleDeg: number, radius: number) {
   const rad = (angleDeg * Math.PI) / 180;
@@ -35,9 +35,11 @@ export function SpeedGauge({ mbps, mode, phase, pingMs, active = false, classNam
   const display = showPing ? formatLatency(pingMs) : formatMbps(smoothMbps);
   const unit = showPing ? "ms" : `Mbps ${mode === "download" ? "↓" : "↑"}`;
 
+  const tip = polar(needleAngle, R - 4);
+
   return (
-    <div className={cn("relative w-full max-w-[280px]", className)}>
-      <svg viewBox="0 0 240 150" className="h-auto w-full" aria-hidden>
+    <div className={cn("flex w-full max-w-[280px] flex-col items-center", className)}>
+      <svg viewBox="0 0 240 118" className="h-auto w-full" aria-hidden>
         <path
           d={describeArc(180, 0, R)}
           fill="none"
@@ -48,8 +50,8 @@ export function SpeedGauge({ mbps, mode, phase, pingMs, active = false, classNam
 
         {ticks.map((tick, i) => {
           const angle = 180 - (i / (ticks.length - 1)) * 180;
-          const outer = polar(angle, R + 6);
-          const inner = polar(angle, R - (i % 2 === 0 ? 10 : 6));
+          const outer = polar(angle, R + 5);
+          const inner = polar(angle, R - (i % 2 === 0 ? 9 : 5));
           return (
             <line
               key={tick}
@@ -66,7 +68,7 @@ export function SpeedGauge({ mbps, mode, phase, pingMs, active = false, classNam
 
         {ticks.map((tick, i) => {
           const angle = 180 - (i / (ticks.length - 1)) * 180;
-          const pos = polar(angle, R + 18);
+          const pos = polar(angle, R + 16);
           return (
             <text
               key={`label-${tick}`}
@@ -81,22 +83,20 @@ export function SpeedGauge({ mbps, mode, phase, pingMs, active = false, classNam
           );
         })}
 
-        <g transform={`rotate(${180 - needleAngle} ${CX} ${CY})`}>
-          <line
-            x1={CX}
-            y1={CY}
-            x2={CX - R + 14}
-            y2={CY}
-            stroke="rgb(var(--accent))"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          <circle cx={CX} cy={CY} r="5" fill="rgb(var(--accent))" />
-          <circle cx={CX} cy={CY} r="2.5" fill="rgb(var(--bg))" />
-        </g>
+        <line
+          x1={CX}
+          y1={CY}
+          x2={tip.x}
+          y2={tip.y}
+          stroke="rgb(var(--accent))"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+        <circle cx={CX} cy={CY} r="5" fill="rgb(var(--accent))" />
+        <circle cx={CX} cy={CY} r="2.5" fill="rgb(var(--bg))" />
       </svg>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-2 text-center">
+      <div className="-mt-1 text-center">
         <p
           className={cn(
             "font-display text-4xl font-semibold tabular-nums tracking-tight text-ink",

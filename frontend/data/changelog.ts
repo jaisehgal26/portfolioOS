@@ -19,6 +19,26 @@ export interface ChangelogEntry {
 /** Newest first — append new ships at the top. */
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "feature-expansion",
+    date: "2026-08-29",
+    version: "1.16.0",
+    title: "JaiOS feature expansion — widgets, utilities, games",
+    tags: ["feature", "easter-egg"],
+    summary:
+      "Desktop GitHub + uptime widgets, World Clock, Dev Tools, QR, OG Preview, Files browser, Typing Test, 2048, Trophies, and Konami secrets.",
+    body: [
+      "Desktop: GitHub stats widget and live service uptime beside the clock.",
+      "Uptime widget: live edge probes when the backend health DB is empty or offline.",
+      "Clock: new World tab with Mumbai, New York, London, and local time.",
+      "Apps: Dev Tools (JSON/Base64), QR Generator, Link Preview, Files, Typing Test, 2048, Trophies.",
+      "Files: Archive and Case Studies shortcuts; hidden .classified folder via ls -a or Konami code.",
+      "Terminal: ls/cat file tree, sudo open secret, open new apps.",
+      "Achievements: konami-code, speed-typist, tile-master, archive-diver, classified-access, og-inspector.",
+    ],
+    why: "Ship the planned JaiOS expansion — more polish, dev tools, games, and discoverable easter eggs.",
+    relatedApp: "launchpad",
+  },
+  {
     id: "engagement-backend",
     date: "2026-08-06",
     version: "1.15.0",

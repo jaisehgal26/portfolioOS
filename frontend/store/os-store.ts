@@ -45,6 +45,7 @@ interface ContextMenuState {
 const STORAGE_KEY = "jaios-prefs";
 const AMBIENCE_KEY = "jaios-ambience";
 const SESSION_KEY = "jaios-session";
+const CLASSIFIED_KEY = "jaios-classified";
 const TOP_BAR = 44;
 const APP_IDS = new Set<AppId>(APPS.map((a) => a.id));
 
@@ -89,6 +90,9 @@ interface OSState extends Persisted {
   finderSection: string | null;
 
   unlockedAchievements: AchievementId[];
+
+  /** Reveals hidden `.classified` folder in Files and `ls -a`. */
+  classifiedUnlocked: boolean;
 
   tourOpen: boolean;
   tourStep: number;
@@ -149,6 +153,7 @@ interface OSState extends Persisted {
   removeToast: (id: string) => void;
 
   tryUnlock: (id: AchievementId) => boolean;
+  unlockClassified: () => void;
 
   startTour: () => void;
   nextTourStep: () => void;
@@ -257,6 +262,7 @@ export const useOSStore = create<OSState>((set, get) => ({
   openFileId: null,
   finderSection: null,
   unlockedAchievements: [],
+  classifiedUnlocked: false,
   tourOpen: false,
   tourStep: 0,
 
@@ -511,6 +517,19 @@ export const useOSStore = create<OSState>((set, get) => ({
     return true;
   },
 
+  unlockClassified: () => {
+    if (get().classifiedUnlocked) return;
+    set({ classifiedUnlocked: true });
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem(CLASSIFIED_KEY, "1");
+      } catch {
+        /* ignore */
+      }
+    }
+    get().tryUnlock("classified-access");
+  },
+
   startTour: () => {
     set({
       tourOpen: true,
@@ -626,6 +645,14 @@ export const useOSStore = create<OSState>((set, get) => ({
     }
 
     patch.unlockedAchievements = loadUnlockedAchievements();
+
+    try {
+      if (window.localStorage.getItem(CLASSIFIED_KEY) === "1") {
+        patch.classifiedUnlocked = true;
+      }
+    } catch {
+      /* ignore */
+    }
 
     set(patch);
 

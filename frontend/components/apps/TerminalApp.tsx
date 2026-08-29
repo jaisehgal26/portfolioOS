@@ -18,6 +18,9 @@ const LINE_COLOR: Record<TerminalLine["kind"], string> = {
 
 export function TerminalApp() {
   const openApp = useOSStore((s) => s.openApp);
+  const openFile = useOSStore((s) => s.openFile);
+  const openUrlInBrowser = useOSStore((s) => s.openUrlInBrowser);
+  const unlockClassified = useOSStore((s) => s.unlockClassified);
   const setTheme = useOSStore((s) => s.setTheme);
   const setWallpaper = useOSStore((s) => s.setWallpaper);
   const crash = useOSStore((s) => s.crash);
@@ -61,6 +64,11 @@ export function TerminalApp() {
 
     const result = runTerminalCommand(cmd, {
       openApp,
+      openFile,
+      openUrlInBrowser,
+      unlockClassified,
+      tryUnlock,
+      getClassifiedUnlocked: () => useOSStore.getState().classifiedUnlocked,
       setTheme,
       setWallpaper,
       getSysinfo: () => ({

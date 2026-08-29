@@ -1,20 +1,28 @@
+import type { AppId } from "./apps";
 import { notes } from "./notes";
 import { profile, links } from "./profile";
+
+export type FsAction =
+  | { kind: "app"; appId: AppId }
+  | { kind: "url"; url: string };
 
 export interface FsFile {
   type: "file";
   id: string;
   name: string;
   title: string;
-  ext: "md" | "txt";
+  ext: "md" | "txt" | "url";
   updated?: string;
   body: string[];
+  hidden?: boolean;
+  action?: FsAction;
 }
 
 export interface FsFolder {
   type: "folder";
   id: string;
   name: string;
+  hidden?: boolean;
   children: FsNode[];
 }
 
@@ -73,6 +81,86 @@ export const fileTree: FsFolder = {
       ],
     },
     {
+      type: "folder",
+      id: "archive",
+      name: "Archive",
+      children: [
+        {
+          type: "file",
+          id: "old-portfolio",
+          name: "old-portfolio.url",
+          title: "Previous portfolio",
+          ext: "url",
+          body: [`Opens ${links.oldPortfolio} in Browser.`],
+          action: { kind: "url", url: links.oldPortfolio },
+        },
+        {
+          type: "file",
+          id: "legacy-readme",
+          name: "README.txt",
+          title: "Archive notes",
+          ext: "txt",
+          body: [
+            "Snapshots from earlier portfolio iterations.",
+            "The .url shortcut opens the last static site before JaiOS.",
+          ],
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "case-studies-fs",
+      name: "Case Studies",
+      children: [
+        {
+          type: "file",
+          id: "cs-hub",
+          name: "index.shortcut",
+          title: "Case Studies app",
+          ext: "txt",
+          body: ["Shortcut — opens the Case Studies app."],
+          action: { kind: "app", appId: "case-studies" },
+        },
+        {
+          type: "file",
+          id: "cs-projects",
+          name: "projects.shortcut",
+          title: "Projects app",
+          ext: "txt",
+          body: ["Shortcut — opens the Projects gallery."],
+          action: { kind: "app", appId: "projects" },
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "classified",
+      name: ".classified",
+      hidden: true,
+      children: [
+        {
+          type: "file",
+          id: "classified-readme",
+          name: "README.txt",
+          title: "Classified",
+          ext: "txt",
+          body: [
+            "You weren't supposed to find this folder.",
+            "Try `sudo open secret` in Terminal — or keep exploring the dossier.",
+          ],
+        },
+        {
+          type: "file",
+          id: "secret-shortcut",
+          name: "secret.shortcut",
+          title: "Secret app",
+          ext: "txt",
+          body: ["Opens the Secret app."],
+          action: { kind: "app", appId: "secret" },
+        },
+      ],
+    },
+    {
       type: "file",
       id: "readme",
       name: "README.md",
@@ -82,6 +170,7 @@ export const fileTree: FsFolder = {
         "Welcome to JaiOS — a full-stack software engineering portfolio built as a tiny operating system.",
         "Browse these files in the explorer and open apps from the dock.",
         "Everything here is real React, TypeScript and Tailwind — no screenshots.",
+        "Hint: try `ls -a` in Terminal for hidden folders.",
       ],
     },
   ],
@@ -125,4 +214,47 @@ export function folderPath(id: string): FsFolder[] {
   }
   walk(fileTree, []);
   return result;
+}
+
+/** List child names for a folder path (e.g. "" or "notes"). */
+export function listFolderEntries(pathArg: string, showHidden: boolean): string[] {
+  const parts = pathArg.split("/").filter(Boolean);
+  let folder: FsFolder = fileTree;
+  for (const part of parts) {
+    const child = folder.children.find(
+      (c) => c.type === "folder" && (c.name === part || c.id === part),
+    );
+    if (!child || child.type !== "folder") return [];
+    folder = child;
+  }
+  return folder.children
+    .filter((c) => {
+      if (!showHidden && c.hidden) return false;
+      return true;
+    })
+    .map((c) => (c.type === "folder" ? `${c.name}/` : c.name));
+}
+
+/** Resolve a file by path like `notes/problem-first.md` or id. */
+export function resolveFilePath(pathArg: string): FsFile | undefined {
+  const trimmed = pathArg.trim();
+  if (!trimmed) return undefined;
+  const byId = getFile(trimmed);
+  if (byId) return byId;
+
+  const parts = trimmed.split("/").filter(Boolean);
+  const fileName = parts.pop();
+  if (!fileName) return undefined;
+
+  let folder: FsFolder = fileTree;
+  for (const part of parts) {
+    const child = folder.children.find(
+      (c) => c.type === "folder" && (c.name === part || c.id === part || c.name === `.${part}`),
+    );
+    if (!child || child.type !== "folder") return undefined;
+    folder = child;
+  }
+
+  const file = folder.children.find((c) => c.type === "file" && c.name === fileName);
+  return file?.type === "file" ? file : undefined;
 }

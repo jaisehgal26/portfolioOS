@@ -29,6 +29,13 @@ import {
   SquareTerminal,
   User,
   Zap,
+  Files,
+  Grid3x3,
+  Keyboard,
+  Link,
+  QrCode,
+  Trophy,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import type { AppMeta } from "@/data/apps";
@@ -66,6 +73,13 @@ const GLYPHS: Record<string, LucideIcon> = {
   piano: Piano,
   clock: Clock,
   ruler: Ruler,
+  wrench: Wrench,
+  qrCode: QrCode,
+  link: Link,
+  files: Files,
+  keyboard: Keyboard,
+  grid3x3: Grid3x3,
+  trophy: Trophy,
 };
 
 const SIZES = {

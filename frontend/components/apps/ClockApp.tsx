@@ -4,21 +4,23 @@ import { useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Tab = "clock" | "stopwatch" | "timer";
+type Tab = "clock" | "stopwatch" | "timer" | "world";
+
+const TABS: Tab[] = ["clock", "stopwatch", "timer", "world"];
 
 export function ClockApp() {
   const [tab, setTab] = useState<Tab>("clock");
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-1 border-b border-line px-3 py-2">
-        {(["clock", "stopwatch", "timer"] as Tab[]).map((t) => (
+      <div className="flex items-center gap-1 overflow-x-auto border-b border-line px-3 py-2">
+        {TABS.map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setTab(t)}
             className={cn(
-              "rounded-lg px-3 py-1.5 text-sm font-medium capitalize transition-colors",
+              "shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium capitalize transition-colors",
               tab === t ? "bg-ink/5 text-ink" : "text-muted hover:text-ink",
             )}
           >
@@ -30,6 +32,7 @@ export function ClockApp() {
         {tab === "clock" && <ClockFace />}
         {tab === "stopwatch" && <Stopwatch />}
         {tab === "timer" && <Timer />}
+        {tab === "world" && <WorldClock />}
       </div>
     </div>
   );
@@ -201,6 +204,54 @@ function Timer() {
         />
       </div>
     </div>
+  );
+}
+
+const WORLD_ZONES = [
+  { label: "Local", tz: "" },
+  { label: "Mumbai", tz: "Asia/Kolkata" },
+  { label: "New York", tz: "America/New_York" },
+  { label: "London", tz: "Europe/London" },
+] as const;
+
+function WorldClock() {
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setNow(new Date());
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!now) return <div className="h-32" />;
+
+  const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  return (
+    <ul className="w-full max-w-xs space-y-3" suppressHydrationWarning>
+      {WORLD_ZONES.map(({ label, tz }) => {
+        const zone = tz || localTz;
+        const time = now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          timeZone: zone,
+        });
+        const offset = now.toLocaleTimeString([], { timeZoneName: "shortOffset", timeZone: zone }).split(" ").pop();
+        return (
+          <li key={label} className="flex items-center justify-between rounded-xl border border-line bg-surface px-4 py-3">
+            <div>
+              <p className="text-sm font-semibold text-ink">{label}</p>
+              <p className="text-xs text-muted">{zone}</p>
+            </div>
+            <div className="text-right">
+              <p className="font-display text-lg font-semibold tabular-nums text-ink">{time}</p>
+              <p className="text-xs text-faint">{offset}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

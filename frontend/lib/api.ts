@@ -143,6 +143,24 @@ export async function getHealthStatus(): Promise<HealthStatusResponse> {
   return apiFetch<HealthStatusResponse>("/api/v1/health/status");
 }
 
+/** Live probes via Next.js — works without the Python backend or DB cron data. */
+export async function getHealthStatusLive(): Promise<HealthStatusResponse> {
+  const res = await fetch("/api/health-widget", { cache: "no-store" });
+  if (!res.ok) throw new ApiError("Health probe failed", res.status);
+  return res.json() as Promise<HealthStatusResponse>;
+}
+
+/** Backend status when available; otherwise live edge probes. */
+export async function getHealthStatusWithFallback(): Promise<HealthStatusResponse> {
+  try {
+    const data = await getHealthStatus();
+    if (data.services.length > 0) return data;
+  } catch {
+    /* fall through */
+  }
+  return getHealthStatusLive();
+}
+
 export async function getGuestbook(limit = 20, offset = 0): Promise<GuestbookListResponse> {
   const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
   return apiFetch<GuestbookListResponse>(`/api/v1/guestbook?${params}`);

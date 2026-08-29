@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useOSStore } from "@/store/os-store";
 import { getAccentPreset, getWallpaperClass } from "@/data/system";
 import { useGlobalShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { useKonamiCode } from "@/hooks/use-konami-code";
 import { BootScreen } from "./BootScreen";
 import { CrashScreen } from "./CrashScreen";
 import { LoginScreen } from "./LoginScreen";
@@ -41,6 +42,7 @@ export function JaiOS() {
   const liveFired = useRef(false);
 
   useGlobalShortcuts();
+  useKonamiCode();
 
   useEffect(() => {
     hydrate();

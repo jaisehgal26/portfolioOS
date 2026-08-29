@@ -17,7 +17,13 @@ export type AchievementId =
   | "explorer"
   | "night-owl"
   | "wallpaper-artist"
-  | "tour-complete";
+  | "tour-complete"
+  | "konami-code"
+  | "speed-typist"
+  | "tile-master"
+  | "archive-diver"
+  | "classified-access"
+  | "og-inspector";
 
 export interface Achievement {
   id: AchievementId;
@@ -164,6 +170,54 @@ export const ACHIEVEMENTS: Achievement[] = [
     tier: "gold",
     hidden: true,
     icon: "💥",
+  },
+  {
+    id: "konami-code",
+    title: "Konami Code",
+    description: "Entered the classic cheat sequence.",
+    tier: "gold",
+    hidden: true,
+    icon: "🎮",
+  },
+  {
+    id: "speed-typist",
+    title: "Speed Typist",
+    description: "Typed 60+ WPM in the typing test.",
+    tier: "silver",
+    hidden: false,
+    icon: "⌨️",
+  },
+  {
+    id: "tile-master",
+    title: "Tile Master",
+    description: "Reached the 2048 tile.",
+    tier: "gold",
+    hidden: false,
+    icon: "🧩",
+  },
+  {
+    id: "archive-diver",
+    title: "Archive Diver",
+    description: "Opened the Archive folder in Files.",
+    tier: "bronze",
+    hidden: false,
+    icon: "📦",
+  },
+  {
+    id: "classified-access",
+    title: "Classified Access",
+    description: "Found the hidden .classified folder.",
+    tier: "silver",
+    hidden: true,
+    icon: "🔐",
+  },
+  {
+    id: "og-inspector",
+    title: "OG Inspector",
+    description: "Ran a link preview in the OG app.",
+    tier: "bronze",
+    hidden: false,
+    icon: "🔗",
   },
 ];
 

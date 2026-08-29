@@ -28,6 +28,13 @@ import { ClockApp } from "@/components/apps/ClockApp";
 import { UnitConverterApp } from "@/components/apps/UnitConverterApp";
 import { SpeedTestApp } from "@/components/apps/SpeedTestApp";
 import { GuestbookApp } from "@/components/apps/GuestbookApp";
+import { DevToolsApp } from "@/components/apps/DevToolsApp";
+import { QrApp } from "@/components/apps/QrApp";
+import { OgPreviewApp } from "@/components/apps/OgPreviewApp";
+import { FilesApp } from "@/components/apps/FilesApp";
+import { TypingTestApp } from "@/components/apps/TypingTestApp";
+import { Game2048App } from "@/components/apps/Game2048App";
+import { TrophyApp } from "@/components/apps/TrophyApp";
 
 export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   about: AboutApp,
@@ -58,4 +65,11 @@ export const APP_COMPONENTS: Record<AppId, ComponentType> = {
   "unit-converter": UnitConverterApp,
   "speed-test": SpeedTestApp,
   guestbook: GuestbookApp,
+  "dev-tools": DevToolsApp,
+  "qr-code": QrApp,
+  "og-preview": OgPreviewApp,
+  files: FilesApp,
+  "typing-test": TypingTestApp,
+  "game-2048": Game2048App,
+  trophies: TrophyApp,
 };

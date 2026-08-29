@@ -28,7 +28,14 @@ export type AppId =
   | "clock"
   | "unit-converter"
   | "speed-test"
-  | "guestbook";
+  | "guestbook"
+  | "dev-tools"
+  | "qr-code"
+  | "og-preview"
+  | "files"
+  | "typing-test"
+  | "game-2048"
+  | "trophies";
 
 export type AppCategory = "favorites" | "career" | "case-studies" | "system" | "lab" | "utility";
 
@@ -342,7 +349,7 @@ export const APPS: AppMeta[] = [
     icon: "clock",
     accent: "violet",
     category: "utility",
-    description: "Clock, stopwatch and timer",
+    description: "Clock, stopwatch, timer and world zones",
     defaultSize: { w: 460, h: 520 },
     inDock: false,
     onDesktop: false,
@@ -382,6 +389,90 @@ export const APPS: AppMeta[] = [
     defaultSize: { w: 560, h: 580 },
     inDock: false,
     onDesktop: true,
+  },
+  {
+    id: "dev-tools",
+    name: "Dev Tools",
+    shortName: "Dev Tools",
+    icon: "wrench",
+    accent: "mint",
+    category: "utility",
+    description: "Format JSON and encode or decode Base64",
+    defaultSize: { w: 520, h: 560 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "qr-code",
+    name: "QR Code",
+    shortName: "QR",
+    icon: "qrCode",
+    accent: "violet",
+    category: "utility",
+    description: "Generate QR codes for links and resume",
+    defaultSize: { w: 400, h: 480 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "og-preview",
+    name: "Link Preview",
+    shortName: "Preview",
+    icon: "link",
+    accent: "blue",
+    category: "utility",
+    description: "Inspect Open Graph metadata for any URL",
+    defaultSize: { w: 480, h: 520 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "files",
+    name: "Files",
+    shortName: "Files",
+    icon: "files",
+    accent: "accent",
+    category: "system",
+    description: "Browse portfolio files and easter eggs",
+    defaultSize: { w: 640, h: 480 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "typing-test",
+    name: "Typing Test",
+    shortName: "Typing",
+    icon: "keyboard",
+    accent: "amber",
+    category: "lab",
+    description: "Measure WPM on engineering snippets",
+    defaultSize: { w: 520, h: 560 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "game-2048",
+    name: "2048",
+    shortName: "2048",
+    icon: "grid3x3",
+    accent: "mint",
+    category: "lab",
+    description: "Classic tile puzzle — reach 2048",
+    defaultSize: { w: 360, h: 520 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "trophies",
+    name: "Trophies",
+    shortName: "Trophies",
+    icon: "trophy",
+    accent: "amber",
+    category: "lab",
+    description: "Achievement wall and progress",
+    defaultSize: { w: 640, h: 560 },
+    inDock: false,
+    onDesktop: false,
   },
 ];
 

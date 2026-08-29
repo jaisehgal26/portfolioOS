@@ -2,11 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Quote as QuoteIcon, RefreshCw } from "lucide-react";
+import { Github, Quote as QuoteIcon, RefreshCw, Wifi } from "lucide-react";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { useCurrentTime } from "@/hooks/use-current-time";
+import { getHealthStatusWithFallback, type HealthServiceStatus } from "@/lib/api";
+import { links } from "@/data/profile";
 import { WatchDial } from "./WatchDial";
 import { cn } from "@/lib/utils";
+
+const POLL_MS = 60_000;
+const GITHUB_USER = "jaisehgal26";
 
 function Widget({ className, children, delay = 0 }: { className?: string; children: React.ReactNode; delay?: number }) {
   const reduced = usePrefersReducedMotion();
@@ -23,9 +28,13 @@ function Widget({ className, children, delay = 0 }: { className?: string; childr
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-faint">{children}</p>
-  );
+  return <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-faint">{children}</p>;
+}
+
+interface GitHubProfile {
+  public_repos: number;
+  followers: number;
+  avatar_url: string;
 }
 
 export function ClockWidget({ delay = 0 }: { delay?: number }) {
@@ -48,12 +57,127 @@ export function ClockWidget({ delay = 0 }: { delay?: number }) {
   );
 }
 
-export function DesktopWidgets() {
+export function GitHubWidget({ delay = 0 }: { delay?: number }) {
+  const [profile, setProfile] = useState<GitHubProfile | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch(`https://api.github.com/users/${GITHUB_USER}`, { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as GitHubProfile;
+        if (!cancelled) setProfile(data);
+      } catch {
+        /* offline */
+      }
+    }
+    load();
+    const id = setInterval(load, POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
   return (
-    <div className="flex w-64 flex-col gap-3">
-      <ClockWidget delay={0.04} />
-      <QuoteWidget delay={0.1} />
-    </div>
+    <Widget delay={delay}>
+      <div className="flex items-center gap-3">
+        {profile ? (
+          <img src={profile.avatar_url} alt="" className="h-10 w-10 rounded-full ring-1 ring-line" />
+        ) : (
+          <div className="h-10 w-10 animate-pulse rounded-full bg-ink/10" />
+        )}
+        <div className="min-w-0 flex-1">
+          <Eyebrow>GitHub</Eyebrow>
+          <p className="truncate text-sm font-semibold text-ink">@{GITHUB_USER}</p>
+          {profile ? (
+            <p className="text-xs text-muted">
+              {profile.public_repos} repos · {profile.followers} followers
+            </p>
+          ) : (
+            <p className="text-xs text-faint">Loading…</p>
+          )}
+        </div>
+        <Github className="h-4 w-4 shrink-0 text-muted" />
+      </div>
+      <a
+        href={links.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3 block text-center text-xs font-medium text-accent hover:underline"
+      >
+        View profile
+      </a>
+    </Widget>
+  );
+}
+
+function serviceLabel(key: string): string {
+  if (key.includes("jaios") || key.includes("portfolio")) return "JaiOS";
+  if (key.includes("quickpad")) return "QuickPad";
+  if (key.includes("formforge")) return "FormForge";
+  return key;
+}
+
+export function UptimeWidget({ delay = 0 }: { delay?: number }) {
+  const [services, setServices] = useState<HealthServiceStatus[] | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const data = await getHealthStatusWithFallback();
+        if (!cancelled) {
+          setServices(data.services);
+          setFailed(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setServices([]);
+          setFailed(true);
+        }
+      }
+    }
+    load();
+    const id = setInterval(load, POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const offline = typeof navigator !== "undefined" && !navigator.onLine;
+
+  return (
+    <Widget delay={delay}>
+      <div className="flex items-center gap-1.5">
+        <Wifi className="h-3.5 w-3.5 text-muted" />
+        <Eyebrow>Uptime</Eyebrow>
+      </div>
+      <ul className="mt-2 space-y-1.5">
+        {services === null ? (
+          <li className="text-xs text-faint">Checking…</li>
+        ) : failed || services.length === 0 ? (
+          <li className="text-xs text-faint">
+            {offline ? "Offline — connect to check services" : "Could not reach services"}
+          </li>
+        ) : (
+          services.map((s) => {
+            const up = s.status === "up";
+            return (
+              <li key={s.target_key} className="flex items-center justify-between gap-2 text-xs">
+                <span className="truncate text-ink">{serviceLabel(s.target_key)}</span>
+                <span className={cn("shrink-0 tabular-nums", up ? "text-emerald-600 dark:text-emerald-400" : "text-red-500")}>
+                  {up ? `${s.latency_ms ?? "—"} ms` : "down"}
+                </span>
+              </li>
+            );
+          })
+        )}
+      </ul>
+    </Widget>
   );
 }
 
@@ -62,7 +186,6 @@ interface Quote {
   author: string;
 }
 
-/** Local quotes — no network required (offline-first). */
 const QUOTES: Quote[] = [
   { content: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
   { content: "Make it work, make it right, make it fast.", author: "Kent Beck" },
@@ -101,9 +224,7 @@ export function QuoteWidget({ delay = 0 }: { delay?: number }) {
           <RefreshCw className="h-3.5 w-3.5" />
         </button>
       </div>
-
       <QuoteIcon className="mt-2 h-4 w-4 text-accent/70" aria-hidden />
-
       {quote ? (
         <figure className="mt-1.5">
           <blockquote className="text-sm leading-relaxed text-ink">{quote.content}</blockquote>
@@ -111,5 +232,16 @@ export function QuoteWidget({ delay = 0 }: { delay?: number }) {
         </figure>
       ) : null}
     </Widget>
+  );
+}
+
+export function DesktopWidgets() {
+  return (
+    <div className="flex w-64 flex-col gap-3">
+      <ClockWidget delay={0.04} />
+      <GitHubWidget delay={0.07} />
+      <UptimeWidget delay={0.1} />
+      <QuoteWidget delay={0.13} />
+    </div>
   );
 }

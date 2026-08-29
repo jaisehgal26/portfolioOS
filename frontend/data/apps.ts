@@ -27,6 +27,7 @@ export type AppId =
   | "notepad"
   | "clock"
   | "unit-converter"
+  | "speed-test"
   | "guestbook";
 
 export type AppCategory = "favorites" | "career" | "case-studies" | "system" | "lab" | "utility";
@@ -355,6 +356,18 @@ export const APPS: AppMeta[] = [
     category: "utility",
     description: "Convert length, weight and temperature",
     defaultSize: { w: 460, h: 520 },
+    inDock: false,
+    onDesktop: false,
+  },
+  {
+    id: "speed-test",
+    name: "Speed Test",
+    shortName: "Speed",
+    icon: "gauge",
+    accent: "blue",
+    category: "utility",
+    description: "Quick ping and download check",
+    defaultSize: { w: 480, h: 580 },
     inDock: false,
     onDesktop: false,
   },

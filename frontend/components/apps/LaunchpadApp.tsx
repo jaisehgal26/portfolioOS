@@ -15,6 +15,7 @@ const LAUNCHER_IDS: AppId[] = [
   "notepad",
   "clock",
   "unit-converter",
+  "speed-test",
   "snake",
   "piano",
   "terminal",
